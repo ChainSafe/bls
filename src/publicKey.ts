@@ -48,8 +48,8 @@ export class PublicKey {
     return agg;
   }
 
-  public verifyMessage(signature: Signature, messageHash: Uint8Array, domain: Uint8Array): boolean {
-    return this.value.verifyHashWithDomain(signature.getValue(), Buffer.concat([messageHash, domain]));
+  public verifyMessage(signature: Signature, messageHash: Uint8Array): boolean {
+    return this.value.verifyHashWithDomain(signature.getValue(), messageHash);
   }
 
   public toBytesCompressed(): Buffer {

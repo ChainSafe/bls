@@ -3,7 +3,7 @@ import {FP_POINT_LENGTH} from "./constants";
 import {SignatureType} from "@chainsafe/eth2-bls-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
-import {EMPTY_SIGNATURE, padLeft} from "./helpers/utils";
+import {EMPTY_SIGNATURE} from "./helpers/utils";
 
 export class Signature {
 
@@ -42,16 +42,14 @@ export class Signature {
     return this.value;
   }
 
-  public verify(publicKey: PublicKey, message: Uint8Array, domain: Uint8Array): boolean {
-    domain = padLeft(domain, 8);
-    return publicKey.verifyMessage(this, message, domain);
+  public verify(publicKey: PublicKey, message: Uint8Array): boolean {
+    return publicKey.verifyMessage(this, message);
   }
 
-  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], domain: Uint8Array): boolean {
-    domain = padLeft(domain, 8);
+  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
     return this.value.verifyAggregatedHashWithDomain(
       publicKeys.map((key) => key.getValue()),
-      messages.map((message) => Buffer.concat([message, domain]))
+      messages
     );
   }
 
