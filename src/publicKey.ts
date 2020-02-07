@@ -49,7 +49,7 @@ export class PublicKey {
   }
 
   public verifyMessage(signature: Signature, messageHash: Uint8Array): boolean {
-    return this.value.verifyHashWithDomain(signature.getValue(), messageHash);
+    return this.value.verify(signature.getValue(), messageHash);
   }
 
   public toBytesCompressed(): Buffer {

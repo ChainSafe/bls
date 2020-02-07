@@ -48,11 +48,11 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
  */
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
   assert(signatures, "signatures is null or undefined");
-  return signatures.map((signature): Signature => {
-    return Signature.fromCompressedBytes(toBuffer(signature));
-  }).reduce((previousValue, currentValue): Signature => {
-    return previousValue.add(currentValue);
-  }).toBytesCompressed();
+  return Signature.aggregate(
+    signatures.map((signature): Signature => {
+      return Signature.fromCompressedBytes(signature);
+    })
+  ).toBytesCompressed();
 }
 
 /**
@@ -90,15 +90,36 @@ export function verify(publicKey: Uint8Array, messageHash: Uint8Array, signature
 }
 
 /**
+ * Verifies if aggregated signature is same message signed with given public keys.
+ * @param publicKeys
+ * @param messageHash
+ * @param signature
+ */
+export function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean {
+  assert(publicKeys, "publicKey is null or undefined");
+  assert(messageHash, "messageHash is null or undefined");
+  assert(signature, "signature is null or undefined");
+  try {
+    return Signature
+      .fromCompressedBytes(signature)
+      .verifyAggregate(publicKeys, messageHash);
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
  * Verifies if signature is list of message signed with corresponding public key.
  * @param publicKeys
  * @param messageHashes
  * @param signature
+ * @param fast Check if all messages are different
  */
 export function verifyMultiple(
   publicKeys: Uint8Array[],
   messageHashes: Uint8Array[],
   signature: Uint8Array,
+  fast = false
 ): boolean {
   assert(publicKeys, "publicKey is null or undefined");
   assert(messageHashes, "messageHash is null or undefined");
@@ -113,6 +134,7 @@ export function verifyMultiple(
       .verifyMultiple(
         publicKeys.map((key) => PublicKey.fromBytes(toBuffer(key))),
         messageHashes.map((m) => toBuffer(m)),
+        fast
       );
   } catch (e) {
     return false;
@@ -126,5 +148,6 @@ export default {
   aggregateSignatures,
   aggregatePubkeys,
   verify,
+  verifyAggregate,
   verifyMultiple
 };

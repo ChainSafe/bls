@@ -50,7 +50,7 @@ export class PrivateKey {
   // }
 
   public signMessage(message: Uint8Array): Signature {
-    return Signature.fromValue(this.value.signHashWithDomain(message));
+    return Signature.fromValue(this.value.sign(message));
   }
 
   public toPublicKey(): PublicKey {
