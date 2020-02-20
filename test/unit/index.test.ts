@@ -1,8 +1,8 @@
 import bls, {aggregatePubkeys, aggregateSignatures, initBLS, Keypair, verify, verifyMultiple} from "../../src";
-import {sha256} from "js-sha256";
+import SHA256 from "@chainsafe/as-sha256";
 import {expect} from "chai";
 import {destroy} from "../../src/context";
-import {padLeft} from "../../lib/helpers/utils";
+import {padLeft} from "../../src/helpers/utils";
 
 describe("test bls", function () {
 
@@ -23,7 +23,7 @@ describe("test bls", function () {
   describe("verify", function() {
     it("should verify signature", () => {
       const keypair = Keypair.generate();
-      const messageHash = Buffer.from(sha256.arrayBuffer("Test"));
+      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
       const domain = Buffer.alloc(8, 1);
       const signature = keypair.privateKey.signMessage(
         messageHash,
@@ -41,7 +41,7 @@ describe("test bls", function () {
 
     it("should not modify original pubkey when verifying", () => {
       const keypair = Keypair.generate();
-      const messageHash = Buffer.from(sha256.arrayBuffer("Test"));
+      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
       const domain = Buffer.alloc(8, 1);
       const signature = keypair.privateKey.signMessage(
         messageHash,
@@ -60,7 +60,7 @@ describe("test bls", function () {
 
     it("should fail verify empty signature", () => {
       const keypair = Keypair.generate();
-      const messageHash2 = Buffer.from(sha256.arrayBuffer("Test message2"));
+      const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
       const domain = Buffer.from("01", "hex");
       const signature = Buffer.alloc(96);
       const result = verify(
@@ -74,8 +74,8 @@ describe("test bls", function () {
 
     it("should fail verify signature of different message", () => {
       const keypair = Keypair.generate();
-      const messageHash = Buffer.from(sha256.arrayBuffer("Test message"));
-      const messageHash2 = Buffer.from(sha256.arrayBuffer("Test message2"));
+      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
+      const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
       const domain = padLeft(Buffer.from("01", "hex"), 8);
       const signature = keypair.privateKey.signMessage(
         messageHash,
@@ -92,7 +92,7 @@ describe("test bls", function () {
 
     it("should fail verify signature of different domain", () => {
       const keypair = Keypair.generate();
-      const messageHash = Buffer.from(sha256.arrayBuffer("Test message"));
+      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
       const domain = padLeft(Buffer.from("01", "hex"), 8);
       const domain2 = padLeft(Buffer.from("02", "hex"), 8);
       const signature = keypair.privateKey.signMessage(
@@ -111,7 +111,7 @@ describe("test bls", function () {
     it("should fail verify signature signed by different key", () => {
       const keypair = Keypair.generate();
       const keypair2 = Keypair.generate();
-      const messageHash = Buffer.from(sha256.arrayBuffer("Test message"));
+      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
       const domain = Buffer.from("01", "hex");
       const signature = keypair.privateKey.signMessage(
         messageHash,
@@ -140,8 +140,8 @@ describe("test bls", function () {
       const keypair3 = Keypair.generate();
       const keypair4 = Keypair.generate();
 
-      const message1 = Buffer.from(sha256.arrayBuffer("Test1"));
-      const message2 = Buffer.from(sha256.arrayBuffer("Test2"));
+      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
+      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
       const signature1 = keypair1.privateKey.signMessage(message1, domain);
       const signature2 = keypair2.privateKey.signMessage(message1, domain);
@@ -186,7 +186,7 @@ describe("test bls", function () {
       const keypair3 = Keypair.generate();
       const keypair4 = Keypair.generate();
 
-      const message = Buffer.from(sha256.arrayBuffer("Test1"));
+      const message = Buffer.from(SHA256.digest(Buffer.from("Test1")));
 
       const signature1 = keypair1.privateKey.signMessage(message, domain);
       const signature2 = keypair2.privateKey.signMessage(message, domain);
@@ -225,8 +225,8 @@ describe("test bls", function () {
       const keypair3 = Keypair.generate();
       const keypair4 = Keypair.generate();
 
-      const message1 = Buffer.from(sha256.arrayBuffer("Test1"));
-      const message2 = Buffer.from(sha256.arrayBuffer("Test2"));
+      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
+      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
       const signature1 = keypair1.privateKey.signMessage(message1, domain);
       const signature2 = keypair2.privateKey.signMessage(message1, domain);
@@ -269,8 +269,8 @@ describe("test bls", function () {
       const keypair3 = Keypair.generate();
       const keypair4 = Keypair.generate();
 
-      const message1 = Buffer.from(sha256.arrayBuffer("Test1"));
-      const message2 = Buffer.from(sha256.arrayBuffer("Test2"));
+      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
+      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
       const signature1 = keypair1.privateKey.signMessage(message1, domain);
       const signature2 = keypair2.privateKey.signMessage(message1, domain);
@@ -310,8 +310,8 @@ describe("test bls", function () {
       const keypair3 = Keypair.generate();
       const keypair4 = Keypair.generate();
 
-      const message1 = Buffer.from(sha256.arrayBuffer("Test1"));
-      const message2 = Buffer.from(sha256.arrayBuffer("Test2"));
+      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
+      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
       const signature1 = keypair1.privateKey.signMessage(message1, domain);
       const signature2 = keypair2.privateKey.signMessage(message1, domain);
@@ -348,8 +348,8 @@ describe("test bls", function () {
 
       const signature = Buffer.alloc(96);
 
-      const message1 = Buffer.from(sha256.arrayBuffer("Test1"));
-      const message2 = Buffer.from(sha256.arrayBuffer("Test2"));
+      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
+      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
       const result = bls.verifyMultiple(
         [],
