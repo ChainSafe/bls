@@ -1,10 +1,10 @@
 {
   "name": "@chainsafe/bls",
-  "version": "0.2.2",
+  "version": "0.3.0",
   "description": "Implementation of bls signature verification for ethereum 2.0",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
-  "homepage": "https://github.com/chainsafe/lodestar",
+  "homepage": "https://github.com/chainsafe/bls",
   "author": "ChainSafe Systems",
   "license": "Apache-2.0",
   "files": [
