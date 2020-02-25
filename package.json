@@ -39,7 +39,7 @@
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.0.2",
-    "@chainsafe/eth2-bls-wasm": "^0.2.1",
+    "@chainsafe/eth2-bls-wasm": "^0.4.0",
     "assert": "^1.4.1"
   },
   "devDependencies": {

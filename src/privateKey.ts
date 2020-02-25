@@ -5,7 +5,6 @@ import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
-import {padLeft} from "./helpers/utils";
 
 export class PrivateKey {
 
@@ -50,9 +49,8 @@ export class PrivateKey {
   //   return Signature.fromValue(this.value.sign(message));
   // }
 
-  public signMessage(message: Uint8Array, domain: Uint8Array): Signature {
-    domain = padLeft(domain, 8);
-    return Signature.fromValue(this.value.signHashWithDomain(Buffer.concat([message, domain])));
+  public signMessage(message: Uint8Array): Signature {
+    return Signature.fromValue(this.value.sign(message));
   }
 
   public toPublicKey(): PublicKey {

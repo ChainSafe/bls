@@ -24,16 +24,13 @@ describe("test bls", function () {
     it("should verify signature", () => {
       const keypair = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
-      const domain = Buffer.alloc(8, 1);
       const signature = keypair.privateKey.signMessage(
         messageHash,
-        domain
       );
       const result = verify(
         keypair.publicKey.toBytesCompressed(),
         messageHash,
         signature.toBytesCompressed(),
-        domain
       );
       expect(result).to.be.true;
     });
@@ -42,17 +39,14 @@ describe("test bls", function () {
     it("should not modify original pubkey when verifying", () => {
       const keypair = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
-      const domain = Buffer.alloc(8, 1);
       const signature = keypair.privateKey.signMessage(
         messageHash,
-        domain
       );
       const pubKey = keypair.publicKey.toBytesCompressed();
       verify(
         pubKey,
         messageHash,
         signature.toBytesCompressed(),
-        domain
       );
       expect("0x" + pubKey.toString("hex")).to.be.equal(keypair.publicKey.toHexString());
     });
@@ -61,13 +55,11 @@ describe("test bls", function () {
     it("should fail verify empty signature", () => {
       const keypair = Keypair.generate();
       const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
-      const domain = Buffer.from("01", "hex");
       const signature = Buffer.alloc(96);
       const result = verify(
         keypair.publicKey.toBytesCompressed(),
         messageHash2,
         signature,
-        domain
       );
       expect(result).to.be.false;
     });
@@ -76,34 +68,13 @@ describe("test bls", function () {
       const keypair = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
       const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
-      const domain = padLeft(Buffer.from("01", "hex"), 8);
       const signature = keypair.privateKey.signMessage(
         messageHash,
-        domain
       );
       const result = verify(
         keypair.publicKey.toBytesCompressed(),
         messageHash2,
         signature.toBytesCompressed(),
-        domain
-      );
-      expect(result).to.be.false;
-    });
-
-    it("should fail verify signature of different domain", () => {
-      const keypair = Keypair.generate();
-      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
-      const domain = padLeft(Buffer.from("01", "hex"), 8);
-      const domain2 = padLeft(Buffer.from("02", "hex"), 8);
-      const signature = keypair.privateKey.signMessage(
-        messageHash,
-        domain
-      );
-      const result = verify(
-        keypair.publicKey.toBytesCompressed(),
-        messageHash,
-        signature.toBytesCompressed(),
-        domain2
       );
       expect(result).to.be.false;
     });
@@ -112,16 +83,13 @@ describe("test bls", function () {
       const keypair = Keypair.generate();
       const keypair2 = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
-      const domain = Buffer.from("01", "hex");
       const signature = keypair.privateKey.signMessage(
         messageHash,
-        domain
       );
       const result = verify(
         keypair2.publicKey.toBytesCompressed(),
         messageHash,
         signature.toBytesCompressed(),
-        domain
       );
       expect(result).to.be.false;
     });
@@ -133,7 +101,6 @@ describe("test bls", function () {
       this.timeout(5000);
 
 
-      const domain = Buffer.alloc(8, 0);
 
       const keypair1 = Keypair.generate();
       const keypair2 = Keypair.generate();
@@ -143,10 +110,10 @@ describe("test bls", function () {
       const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
       const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
-      const signature1 = keypair1.privateKey.signMessage(message1, domain);
-      const signature2 = keypair2.privateKey.signMessage(message1, domain);
-      const signature3 = keypair3.privateKey.signMessage(message2, domain);
-      const signature4 = keypair4.privateKey.signMessage(message2, domain);
+      const signature1 = keypair1.privateKey.signMessage(message1);
+      const signature2 = keypair2.privateKey.signMessage(message1);
+      const signature3 = keypair3.privateKey.signMessage(message2);
+      const signature4 = keypair4.privateKey.signMessage(message2);
 
       const aggregatePubKey12 = aggregatePubkeys([
         keypair1.publicKey.toBytesCompressed(),
@@ -169,7 +136,6 @@ describe("test bls", function () {
         [aggregatePubKey12, aggregatePubKey34],
         [message1, message2],
         aggregateSignature,
-        domain
       );
 
       expect(result).to.be.true;
@@ -179,7 +145,6 @@ describe("test bls", function () {
       this.timeout(5000);
 
 
-      const domain = Buffer.alloc(8, 0);
 
       const keypair1 = Keypair.generate();
       const keypair2 = Keypair.generate();
@@ -188,10 +153,10 @@ describe("test bls", function () {
 
       const message = Buffer.from(SHA256.digest(Buffer.from("Test1")));
 
-      const signature1 = keypair1.privateKey.signMessage(message, domain);
-      const signature2 = keypair2.privateKey.signMessage(message, domain);
-      const signature3 = keypair3.privateKey.signMessage(message, domain);
-      const signature4 = keypair4.privateKey.signMessage(message, domain);
+      const signature1 = keypair1.privateKey.signMessage(message);
+      const signature2 = keypair2.privateKey.signMessage(message);
+      const signature3 = keypair3.privateKey.signMessage(message);
+      const signature4 = keypair4.privateKey.signMessage(message);
 
       const aggregateSignature = aggregateSignatures([
         signature1.toBytesCompressed(),
@@ -209,7 +174,7 @@ describe("test bls", function () {
         ],
         [message, message, message, message],
         aggregateSignature,
-        domain
+        true,
       );
 
       expect(result).to.be.true;
@@ -218,7 +183,6 @@ describe("test bls", function () {
     it("should fail to verify aggregated signatures - swapped messages", function () {
       this.timeout(5000);
 
-      const domain = Buffer.alloc(8, 0);
 
       const keypair1 = Keypair.generate();
       const keypair2 = Keypair.generate();
@@ -228,10 +192,10 @@ describe("test bls", function () {
       const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
       const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
-      const signature1 = keypair1.privateKey.signMessage(message1, domain);
-      const signature2 = keypair2.privateKey.signMessage(message1, domain);
-      const signature3 = keypair3.privateKey.signMessage(message2, domain);
-      const signature4 = keypair4.privateKey.signMessage(message2, domain);
+      const signature1 = keypair1.privateKey.signMessage(message1);
+      const signature2 = keypair2.privateKey.signMessage(message1);
+      const signature3 = keypair3.privateKey.signMessage(message2);
+      const signature4 = keypair4.privateKey.signMessage(message2);
 
       const aggregatePubKey12 = bls.aggregatePubkeys([
         keypair1.publicKey.toBytesCompressed(),
@@ -254,7 +218,6 @@ describe("test bls", function () {
         [aggregatePubKey12, aggregatePubKey34],
         [message2, message1],
         aggregateSignature,
-        domain
       );
 
       expect(result).to.be.false;
@@ -262,7 +225,6 @@ describe("test bls", function () {
 
     it("should fail to verify aggregated signatures - different pubkeys and messsages", () => {
 
-      const domain = Buffer.alloc(8, 0);
 
       const keypair1 = Keypair.generate();
       const keypair2 = Keypair.generate();
@@ -272,10 +234,10 @@ describe("test bls", function () {
       const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
       const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
-      const signature1 = keypair1.privateKey.signMessage(message1, domain);
-      const signature2 = keypair2.privateKey.signMessage(message1, domain);
-      const signature3 = keypair3.privateKey.signMessage(message2, domain);
-      const signature4 = keypair4.privateKey.signMessage(message2, domain);
+      const signature1 = keypair1.privateKey.signMessage(message1);
+      const signature2 = keypair2.privateKey.signMessage(message1);
+      const signature3 = keypair3.privateKey.signMessage(message2);
+      const signature4 = keypair4.privateKey.signMessage(message2);
 
       const aggregatePubKey12 = bls.aggregatePubkeys([
         keypair1.publicKey.toBytesCompressed(),
@@ -294,57 +256,13 @@ describe("test bls", function () {
         [aggregatePubKey12],
         [message2, message1],
         aggregateSignature,
-        domain
       );
 
       expect(result).to.be.false;
     });
-
-    it("should fail to verify aggregated signatures - different domain", () => {
-
-      const domain = Buffer.alloc(8, 0);
-      const domain2 = Buffer.alloc(8, 1);
-
-      const keypair1 = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const keypair3 = Keypair.generate();
-      const keypair4 = Keypair.generate();
-
-      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
-
-      const signature1 = keypair1.privateKey.signMessage(message1, domain);
-      const signature2 = keypair2.privateKey.signMessage(message1, domain);
-      const signature3 = keypair3.privateKey.signMessage(message2, domain2);
-      const signature4 = keypair4.privateKey.signMessage(message2, domain2);
-
-      const aggregatePubKey12 = bls.aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
-
-
-      const aggregateSignature = bls.aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
-      ]);
-
-      const result = bls.verifyMultiple(
-        [aggregatePubKey12],
-        [message2, message1],
-        aggregateSignature,
-        domain
-      );
-
-      expect(result).to.be.false;
-    });
-
 
     it("should fail to verify aggregated signatures - no public keys", () => {
 
-      const domain = Buffer.alloc(8, 0);
 
       const signature = Buffer.alloc(96);
 
@@ -355,7 +273,6 @@ describe("test bls", function () {
         [],
         [message2, message1],
         signature,
-        domain
       );
 
       expect(result).to.be.false;

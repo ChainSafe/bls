@@ -34,17 +34,12 @@ export function generatePublicKey(secretKey: Uint8Array): Buffer {
  * Signs given message using secret key.
  * @param secretKey
  * @param messageHash
- * @param domain
  */
-export function sign(secretKey: Uint8Array, messageHash: Uint8Array, domain: Uint8Array): Buffer {
+export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
   assert(secretKey, "secretKey is null or undefined");
   assert(messageHash, "messageHash is null or undefined");
-  assert(domain, "domain is null or undefined");
   const privateKey = PrivateKey.fromBytes(toBuffer(secretKey));
-  return privateKey.signMessage(
-    toBuffer(messageHash),
-    toBuffer(domain),
-  ).toBytesCompressed();
+  return privateKey.signMessage(toBuffer(messageHash)).toBytesCompressed();
 }
 
 /**
@@ -53,11 +48,11 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array, domain: Uin
  */
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
   assert(signatures, "signatures is null or undefined");
-  return signatures.map((signature): Signature => {
-    return Signature.fromCompressedBytes(toBuffer(signature));
-  }).reduce((previousValue, currentValue): Signature => {
-    return previousValue.add(currentValue);
-  }).toBytesCompressed();
+  return Signature.aggregate(
+    signatures.map((signature): Signature => {
+      return Signature.fromCompressedBytes(signature);
+    })
+  ).toBytesCompressed();
 }
 
 /**
@@ -80,26 +75,34 @@ export function aggregatePubkeys(publicKeys: Uint8Array[]): Buffer {
  * @param publicKey
  * @param messageHash
  * @param signature
- * @param domain
  */
-export function verify(
-  publicKey: Uint8Array,
-  messageHash: Uint8Array,
-  signature: Uint8Array,
-  domain: Uint8Array
-): boolean {
+export function verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean {
   assert(publicKey, "publicKey is null or undefined");
   assert(messageHash, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
-  assert(domain, "domain is null or undefined");
   try {
     return PublicKey
-      .fromBytes(toBuffer(publicKey))
-      .verifyMessage(
-        Signature.fromCompressedBytes(toBuffer(signature)),
-        toBuffer(messageHash),
-        toBuffer(domain)
-      );
+      .fromBytes(publicKey)
+      .verifyMessage(Signature.fromCompressedBytes(toBuffer(signature)), toBuffer(messageHash));
+  } catch (e) {
+    return false;
+  }
+}
+
+/**
+ * Verifies if aggregated signature is same message signed with given public keys.
+ * @param publicKeys
+ * @param messageHash
+ * @param signature
+ */
+export function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean {
+  assert(publicKeys, "publicKey is null or undefined");
+  assert(messageHash, "messageHash is null or undefined");
+  assert(signature, "signature is null or undefined");
+  try {
+    return Signature
+      .fromCompressedBytes(signature)
+      .verifyAggregate(publicKeys, messageHash);
   } catch (e) {
     return false;
   }
@@ -110,18 +113,17 @@ export function verify(
  * @param publicKeys
  * @param messageHashes
  * @param signature
- * @param domain
+ * @param fast Check if all messages are different
  */
 export function verifyMultiple(
   publicKeys: Uint8Array[],
   messageHashes: Uint8Array[],
   signature: Uint8Array,
-  domain: Uint8Array
+  fast = false
 ): boolean {
   assert(publicKeys, "publicKey is null or undefined");
   assert(messageHashes, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
-  assert(domain, "domain is null or undefined");
 
   if(publicKeys.length === 0 || publicKeys.length != messageHashes.length) {
     return false;
@@ -132,7 +134,7 @@ export function verifyMultiple(
       .verifyMultiple(
         publicKeys.map((key) => PublicKey.fromBytes(toBuffer(key))),
         messageHashes.map((m) => toBuffer(m)),
-        toBuffer(domain),
+        fast
       );
   } catch (e) {
     return false;
@@ -146,5 +148,6 @@ export default {
   aggregateSignatures,
   aggregatePubkeys,
   verify,
+  verifyAggregate,
   verifyMultiple
 };

@@ -3,7 +3,7 @@ import {FP_POINT_LENGTH} from "./constants";
 import {SignatureType} from "@chainsafe/eth2-bls-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
-import {EMPTY_SIGNATURE, padLeft} from "./helpers/utils";
+import {EMPTY_SIGNATURE} from "./helpers/utils";
 
 export class Signature {
 
@@ -11,6 +11,7 @@ export class Signature {
 
   protected constructor(value: SignatureType) {
     this.value = value;
+    assert(this.value.isValidOrder());
   }
 
   public static fromCompressedBytes(value: Uint8Array): Signature {
@@ -30,6 +31,15 @@ export class Signature {
     return new Signature(signature);
   }
 
+  public static aggregate(signatures: Signature[]): Signature {
+    const context = getContext();
+    const signature = new context.Signature();
+    signature.aggregate(signatures.map((sig) => sig.getValue()));
+    return new Signature(
+      signature
+    );
+  }
+
   public add(other: Signature): Signature {
     const agg = this.value.clone();
     agg.add(other.value);
@@ -42,16 +52,21 @@ export class Signature {
     return this.value;
   }
 
-  public verify(publicKey: PublicKey, message: Uint8Array, domain: Uint8Array): boolean {
-    domain = padLeft(domain, 8);
-    return publicKey.verifyMessage(this, message, domain);
+  public verifyAggregate(publicKey: Uint8Array[], message: Uint8Array): boolean {
+    return this.value.fastAggregateVerify(
+      publicKey.map((bytes) => PublicKey.fromBytes(bytes).getValue()),
+      message
+    );
   }
 
-  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], domain: Uint8Array): boolean {
-    domain = padLeft(domain, 8);
-    return this.value.verifyAggregatedHashWithDomain(
+  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean {
+    const msgs = Buffer.concat(messages);
+    if(!fast && !getContext().areAllMsgDifferent(msgs)) {
+      return false;
+    }
+    return this.value.aggregateVerifyNoCheck(
       publicKeys.map((key) => key.getValue()),
-      messages.map((message) => Buffer.concat([message, domain]))
+      msgs
     );
   }
 
