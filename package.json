@@ -33,7 +33,8 @@
     "test:web:unit": "karma start",
     "test:node:unit": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha --colors -r ts-node/register 'test/unit/**/*.test.ts' && nyc report",
     "test:unit": "yarn run test:node:unit && yarn run test:web:unit",
-    "test": "yarn test:unit",
+    "test:spec": "mocha --colors -r ts-node/register 'test/spec/**/*.test.ts'",
+    "test": "yarn run test:unit && yarn run test:spec",
     "coverage": "codecov -F bls",
     "benchmark": "node -r ./.babel-register test/benchmarks"
   },
@@ -51,7 +52,8 @@
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.8.3",
-    "@chainsafe/as-sha256": "^0.2.0",
+    "@chainsafe/as-sha256": "0.2.0",
+    "@chainsafe/lodestar-spec-test-util": "^0.5.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^7.0.1",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
@@ -66,12 +68,15 @@
     "karma-mocha": "^1.3.0",
     "karma-spec-reporter": "^0.0.32",
     "karma-webpack": "^4.0.2",
-    "mocha": "^7.0.1",
+    "mocha": "^6.2.0",
     "nyc": "^15.0.0",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5",
     "webpack": "^4.30.0",
     "webpack-cli": "^3.3.2"
+  },
+  "optionalDependencies": {
+    "@chainsafe/eth2-spec-tests": "^0.10.1-fix"
   }
 }
