@@ -827,10 +827,10 @@
   dependencies:
     buffer "^5.4.3"
 
-"@chainsafe/eth2-spec-tests@^0.10.1-fix":
-  version "0.10.1-fix"
-  resolved "https://registry.yarnpkg.com/@chainsafe/eth2-spec-tests/-/eth2-spec-tests-0.10.1-fix.tgz#c0fb839b5b93fae0a7cd247fd686d2a9ea926240"
-  integrity sha512-mnfIDUFZ/IsAHmJQ7hkZ3t3s7rxrr5olLz3pH1RS2kWsuQonAKzVOZTQNkHYowpeI4ebYo8H+NPRtD5mkbTTzg==
+"@chainsafe/eth2-spec-tests@^0.11.1-fix":
+  version "0.11.1-fixed"
+  resolved "https://registry.yarnpkg.com/@chainsafe/eth2-spec-tests/-/eth2-spec-tests-0.11.1-fixed.tgz#4c873a627740aa43c9dd85fbfcb90a528a7e6467"
+  integrity sha512-kjxeVrg5DJJXhrbydD+FSNdNj6Z2JIOitRUY7gnXVI9DRDEjAa59tZ9ZqFjx7M0UAOCJ9DLR6JdHAU/0nLLIZQ==
 
 "@chainsafe/lodestar-params@^0.5.0":
   version "0.5.0"
