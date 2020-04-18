@@ -1,4 +1,4 @@
-# bls-js
+# bls
 
 [![Build Status](https://travis-ci.org/ChainSafe/lodestar.svg?branch=master)](https://travis-ci.org/ChainSafe/lodestar)
 [![codecov](https://codecov.io/gh/ChainSafe/lodestar/branch/master/graph/badge.svg)](https://codecov.io/gh/ChainSafe/lodestar)
@@ -14,8 +14,6 @@ This is a Javascript library that implements BLS (Boneh-Lynn-Shacham) signatures
 ## Usage
 - `yarn add @chainsafe/bls`
 
-## Development
-- `git clone --recursive git@github.com:ChainSafe/lodestar.git`
-- `cd lodestar`
-- `lerna bootstrap`
-- `cd packages/bls`
+## License
+
+Apache-2.0
