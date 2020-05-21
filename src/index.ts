@@ -47,7 +47,7 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
  * @param signatures
  */
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
-  assert(signatures, "signatures is null or undefined");
+  assert(signatures && signatures.length > 0, "signatures is null or undefined or empty array");
   return Signature.aggregate(
     signatures.map((signature): Signature => {
       return Signature.fromCompressedBytes(signature);
