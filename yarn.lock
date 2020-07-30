@@ -799,24 +799,24 @@
     "@assemblyscript/loader" "^0.9.2"
     buffer "^5.4.3"
 
-"@chainsafe/bls-hd-key@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@chainsafe/bls-hd-key/-/bls-hd-key-0.0.1.tgz#143ff16d2dcc2ec7a0b51e211d6cadabdd65f2df"
-  integrity sha512-XuGNWhyeX/6lsWdZo0+dzCAsO7anilBb+384KUkH1LNeFjRxtve88wp+l3KiE7UBXBJg8tsgQyeR1weG5/gSaA==
+"@chainsafe/bls-hd-key@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/bls-hd-key/-/bls-hd-key-0.1.0.tgz#5e51de16801f4b4b421e418f0d1ef0692df0c585"
+  integrity sha512-VZj+Ml4YTPz+d/K2n9q/9bLlIJnTr/xdAC5w1eCvIFtcQrZCY1Zw+bCcXKX1q6sbZpO9xhyuoepJzJX9VkMPqw==
   dependencies:
     assert "^2.0.0"
-    bcrypto "^4.2.6"
-    bn.js "^5.0.0"
+    bcrypto "^5.0.4"
+    bn.js "^5.1.1"
     buffer "^5.4.3"
 
-"@chainsafe/bls-keygen@^0.0.2":
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/@chainsafe/bls-keygen/-/bls-keygen-0.0.2.tgz#f0ce10f34b0e63c996631c607681aaf1b64283c6"
-  integrity sha512-4Hs2YUafoO5ENQN7bQBKbrp8mwGBGYRgau7gkFzUhTLptY9lbEGENN2sc5GvpKjANfhXTbF/vOy9lghaHsFuNg==
+"@chainsafe/bls-keygen@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/bls-keygen/-/bls-keygen-0.2.0.tgz#2089da875caff4334723c5ee45495e366dc57a2e"
+  integrity sha512-IcgOJ1UTiHX3T1FnSqTdf4gtavjpINPtmAwLZFQUxSuLPOfmxPPVN/yhAIYw5xCh9/mWkaFQ/dFUk6ys+BkfGQ==
   dependencies:
-    "@chainsafe/bls-hd-key" "^0.0.1"
+    "@chainsafe/bls-hd-key" "^0.1.0"
     assert "^2.0.0"
-    bcrypto "^4.2.6"
+    bcrypto "^5.0.4"
     bip39 "^3.0.2"
     buffer "^5.4.3"
 
@@ -1449,6 +1449,14 @@ bcrypto@^4.1.0, bcrypto@^4.2.6, bcrypto@^4.2.8:
     loady "~0.0.1"
     nan "^2.14.0"
 
+bcrypto@^5.0.4:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/bcrypto/-/bcrypto-5.2.0.tgz#7cc944d2cc2b7beeff04c74f8611a001612a981d"
+  integrity sha512-yy+kDrUG6aXP7NIYq7kKIwlrXtx/51488IGfuqhyM6FYF8zNI1mPRwvAPvQ1RfE5e7WW7fVdZt4yHlmN4HJ4Hg==
+  dependencies:
+    bufio "~1.0.7"
+    loady "~0.0.1"
+
 better-assert@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/better-assert/-/better-assert-1.0.2.tgz#40866b9e1b9e0b55b481894311e68faffaebc522"
@@ -1510,10 +1518,10 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
-bn.js@^5.0.0:
-  version "5.1.1"
-  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.1.tgz#48efc4031a9c4041b9c99c6941d903463ab62eb5"
-  integrity sha512-IUTD/REb78Z2eodka1QZyyEk66pciRcP6Sroka0aI3tG/iwIdYLrBD62RsubR7vqdt3WyX8p4jxeatzmRSphtA==
+bn.js@^5.1.1:
+  version "5.1.2"
+  resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.2.tgz#c9686902d3c9a27729f43ab10f9d79c2004da7b0"
+  integrity sha512-40rZaf3bUNKTVYu9sIeeEGOg7g14Yvnj9kH7b50EiwX0Q7A6umbvfI5tvHaOERH0XigqKkfLkFQxzb4e6CIXnA==
 
 body-parser@^1.16.1:
   version "1.19.0"
@@ -1694,6 +1702,11 @@ bufio@~1.0.6:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/bufio/-/bufio-1.0.6.tgz#e0eb6d70b2efcc997b6f8872173540967f90fa4d"
   integrity sha512-mjYZFRHmI9bk3Oeexu0rWjHFY+w6hGLabdmwSFzq+EFr4MHHsNOYduDVdYl71NG5pTPL7GGzUCMk9cYuV34/Qw==
+
+bufio@~1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/bufio/-/bufio-1.0.7.tgz#b7f63a1369a0829ed64cc14edf0573b3e382a33e"
+  integrity sha512-bd1dDQhiC+bEbEfg56IdBv7faWa6OipMs/AFFFvtFnB3wAYjlwQpQRZ0pm6ZkgtfL0pILRXhKxOiQj6UzoMR7A==
 
 builtin-status-codes@^3.0.0:
   version "3.0.0"
