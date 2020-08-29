@@ -102,7 +102,7 @@ export function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Arra
   try {
     return Signature
       .fromCompressedBytes(signature)
-      .verifyAggregate(publicKeys, messageHash);
+      .verifyAggregate(publicKeys.map(pubkey => PublicKey.fromBytes(pubkey)), messageHash);
   } catch (e) {
     return false;
   }
