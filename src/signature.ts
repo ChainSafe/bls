@@ -52,9 +52,9 @@ export class Signature {
     return this.value;
   }
 
-  public verifyAggregate(publicKey: Uint8Array[], message: Uint8Array): boolean {
+  public verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
     return this.value.fastAggregateVerify(
-      publicKey.map((bytes) => PublicKey.fromBytes(bytes).getValue()),
+      publicKeys.map((key) => key.getValue()),
       message
     );
   }
