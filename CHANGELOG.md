@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [4.0.0] - 2020-08-31
+
 ### BREAKING CHANGES
 * Signature.verifyAggregate now takes decompressed pubkeys instead of raw bytes of compressed key
 
