@@ -23,7 +23,7 @@
     "build": "yarn build-lib && yarn build-types",
     "build:release": "yarn clean && yarn build && yarn build-web",
     "build-lib": "babel src -x .ts -d lib",
-    "build-types": "tsc --declaration --incremental --outDir lib --emitDeclarationOnly",
+    "build-types": "tsc --declaration --incremental --outDir lib --project tsconfig.build.json --emitDeclarationOnly",
     "build-web": "webpack --mode production --entry ./lib/web.js --output ./dist/bls.min.js",
     "check-types": "tsc --noEmit",
     "lint": "eslint --color --ext .ts src/ test/",
