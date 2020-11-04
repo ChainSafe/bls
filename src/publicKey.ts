@@ -1,13 +1,12 @@
-import {PrivateKey} from "./privateKey";
-import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
-import {getContext} from "./context";
-import {PUBLIC_KEY_LENGTH} from "./constants";
+import { PrivateKey } from "./privateKey";
+import { PublicKeyType } from "@chainsafe/eth2-bls-wasm";
+import { getContext } from "./context";
+import { PUBLIC_KEY_LENGTH } from "./constants";
 import assert from "assert";
-import {Signature} from "./signature";
-import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
+import { Signature } from "./signature";
+import { EMPTY_PUBLIC_KEY } from "./helpers/utils";
 
 export class PublicKey {
-
   private value: PublicKeyType;
 
   protected constructor(value: PublicKeyType) {
@@ -21,21 +20,17 @@ export class PublicKey {
   public static fromBytes(bytes: Uint8Array): PublicKey {
     const context = getContext();
     const publicKey = new context.PublicKey();
-    if(!EMPTY_PUBLIC_KEY.equals(bytes)) {
+    if (!EMPTY_PUBLIC_KEY.equals(bytes)) {
       publicKey.deserialize(bytes);
     }
-    return new PublicKey(
-      publicKey
-    );
+    return new PublicKey(publicKey);
   }
 
   public static fromHex(value: string): PublicKey {
     value = value.replace("0x", "");
     assert(value.length === PUBLIC_KEY_LENGTH * 2);
     const context = getContext();
-    return new PublicKey(
-      context.deserializeHexStrToPublicKey(value)
-    );
+    return new PublicKey(context.deserializeHexStrToPublicKey(value));
   }
 
   public static fromPublicKeyType(value: PublicKeyType): PublicKey {

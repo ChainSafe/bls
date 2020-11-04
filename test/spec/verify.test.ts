@@ -1,6 +1,9 @@
 import path from "path";
-import bls, {initBLS} from "../../src";
-import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import bls, { initBLS } from "../../src";
+import {
+  describeDirectorySpecTest,
+  InputType,
+} from "@chainsafe/lodestar-spec-test-util";
 
 interface IVerifyTestCase {
   data: {
@@ -23,17 +26,17 @@ describeDirectorySpecTest<IVerifyTestCase, boolean>(
     __dirname,
     "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/verify/small"
   ),
-  (testCase => {
+  (testCase) => {
     return bls.verify(
       Buffer.from(testCase.data.input.pubkey.replace("0x", ""), "hex"),
       Buffer.from(testCase.data.input.message.replace("0x", ""), "hex"),
       Buffer.from(testCase.data.input.signature.replace("0x", ""), "hex")
     );
-  }),
+  },
   {
     inputTypes: {
       data: InputType.YAML,
     },
-    getExpected: (testCase => testCase.data.output)
+    getExpected: (testCase) => testCase.data.output,
   }
 );

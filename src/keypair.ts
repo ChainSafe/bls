@@ -1,16 +1,14 @@
-import {PublicKey} from "./publicKey";
-import {PrivateKey} from "./privateKey";
-
+import { PublicKey } from "./publicKey";
+import { PrivateKey } from "./privateKey";
 
 export class Keypair {
-
   private readonly _publicKey: PublicKey;
 
   private readonly _privateKey: PrivateKey;
 
   public constructor(privateKey: PrivateKey, publicKey?: PublicKey) {
     this._privateKey = privateKey;
-    if(!publicKey) {
+    if (!publicKey) {
       this._publicKey = PublicKey.fromPrivateKey(this._privateKey);
     } else {
       this._publicKey = publicKey;

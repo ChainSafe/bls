@@ -1,6 +1,9 @@
 import path from "path";
-import bls, {initBLS} from "../../src";
-import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import bls, { initBLS } from "../../src";
+import {
+  describeDirectorySpecTest,
+  InputType,
+} from "@chainsafe/lodestar-spec-test-util";
 
 interface ISignMessageTestCase {
   data: {
@@ -22,17 +25,17 @@ describeDirectorySpecTest<ISignMessageTestCase, string>(
     __dirname,
     "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/sign/small"
   ),
-  (testCase => {
-    const signature =  bls.sign(
+  (testCase) => {
+    const signature = bls.sign(
       Buffer.from(testCase.data.input.privkey.replace("0x", ""), "hex"),
       Buffer.from(testCase.data.input.message.replace("0x", ""), "hex")
     );
     return `0x${signature.toString("hex")}`;
-  }),
+  },
   {
     inputTypes: {
       data: InputType.YAML,
     },
-    getExpected: (testCase => testCase.data.output)
+    getExpected: (testCase) => testCase.data.output,
   }
 );
