@@ -8,17 +8,18 @@
 
 This is a Javascript library that implements BLS (Boneh-Lynn-Shacham) signatures and supports signature aggregation.
 
-| Version   |      Bls spec version     |
-|----------|:-------------:|
-| 0.3.x |  initial version |
-| 1.x.x |    draft #6   |
-| 2.x.x | draft #7 |
+| Version | Bls spec version |
+| ------- | :--------------: |
+| 0.3.x   | initial version  |
+| 1.x.x   |     draft #6     |
+| 2.x.x   |     draft #7     |
 
->[spec](https://github.com/ethereum/eth2.0-specs/blob/v0.11.1/specs/phase0/beacon-chain.md#bls-signatures)
+> [spec](https://github.com/ethereum/eth2.0-specs/blob/v0.11.1/specs/phase0/beacon-chain.md#bls-signatures)
 
->[test vectors](https://github.com/ethereum/eth2.0-spec-tests/tree/master/tests/bls)
+> [test vectors](https://github.com/ethereum/eth2.0-spec-tests/tree/master/tests/bls)
 
 ## Usage
+
 - `yarn add @chainsafe/bls`
 
 ## License

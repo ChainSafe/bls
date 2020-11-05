@@ -1,9 +1,8 @@
-import {PrivateKey,PublicKey,Keypair} from "../../src";
+import {PrivateKey, PublicKey, Keypair} from "../../src";
 import {expect} from "chai";
 import {destroy, init} from "../../src/context";
 
-describe("keypair", function() {
-
+describe("keypair", function () {
   before(async function () {
     await init();
   });
@@ -26,7 +25,8 @@ describe("keypair", function() {
     const secret = PrivateKey.random();
     const publicKey = PublicKey.fromPrivateKey(secret);
     const keypair = new Keypair(secret);
-    expect(keypair.publicKey.toBytesCompressed().toString("hex"))
-      .to.be.equal(publicKey.toBytesCompressed().toString("hex"));
+    expect(keypair.publicKey.toBytesCompressed().toString("hex")).to.be.equal(
+      publicKey.toBytesCompressed().toString("hex")
+    );
   });
 });

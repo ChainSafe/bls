@@ -6,7 +6,6 @@ import {PublicKey} from "./publicKey";
 import {EMPTY_SIGNATURE} from "./helpers/utils";
 
 export class Signature {
-
   private value: SignatureType;
 
   protected constructor(value: SignatureType) {
@@ -15,13 +14,10 @@ export class Signature {
   }
 
   public static fromCompressedBytes(value: Uint8Array): Signature {
-    assert(
-      value.length === 2 * FP_POINT_LENGTH,
-      `Signature must have ${2 * FP_POINT_LENGTH} bytes`
-    );
+    assert(value.length === 2 * FP_POINT_LENGTH, `Signature must have ${2 * FP_POINT_LENGTH} bytes`);
     const context = getContext();
     const signature = new context.Signature();
-    if(!EMPTY_SIGNATURE.equals(value)) {
+    if (!EMPTY_SIGNATURE.equals(value)) {
       signature.deserialize(value);
     }
     return new Signature(signature);
@@ -35,17 +31,13 @@ export class Signature {
     const context = getContext();
     const signature = new context.Signature();
     signature.aggregate(signatures.map((sig) => sig.getValue()));
-    return new Signature(
-      signature
-    );
+    return new Signature(signature);
   }
 
   public add(other: Signature): Signature {
     const agg = this.value.clone();
     agg.add(other.value);
-    return new Signature(
-      agg
-    );
+    return new Signature(agg);
   }
 
   public getValue(): SignatureType {
@@ -61,7 +53,7 @@ export class Signature {
 
   public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean {
     const msgs = Buffer.concat(messages);
-    if(!fast && !getContext().areAllMsgDifferent(msgs)) {
+    if (!fast && !getContext().areAllMsgDifferent(msgs)) {
       return false;
     }
     return this.value.aggregateVerifyNoCheck(

@@ -15,27 +15,26 @@ before(async function f() {
 
 describeDirectorySpecTest<IAggregateSigsTestCase, string>(
   "BLS - aggregate sigs",
-  path.join(
-    __dirname,
-    "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/aggregate/small"
-  ),
-  (testCase => {
+  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/aggregate/small"),
+  (testCase) => {
     try {
-      const result =  bls.aggregateSignatures(testCase.data.input.map(pubKey => {
-        return Buffer.from(pubKey.replace("0x", ""), "hex");
-      }));
+      const result = bls.aggregateSignatures(
+        testCase.data.input.map((pubKey) => {
+          return Buffer.from(pubKey.replace("0x", ""), "hex");
+        })
+      );
       return `0x${result.toString("hex")}`;
     } catch (e) {
-      if(e.message === "signatures is null or undefined or empty array") {
+      if (e.message === "signatures is null or undefined or empty array") {
         return null;
       }
       throw e;
     }
-  }),
+  },
   {
     inputTypes: {
       data: InputType.YAML,
     },
-    getExpected: (testCase => testCase.data.output)
+    getExpected: (testCase) => testCase.data.output,
   }
 );

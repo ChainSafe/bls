@@ -7,7 +7,6 @@ import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 
 export class PrivateKey {
-
   private value: SecretKeyType;
 
   protected constructor(value: SecretKeyType) {

@@ -23,10 +23,10 @@
     "build": "yarn build-lib && yarn build-types",
     "build:release": "yarn clean && yarn build && yarn build-web",
     "build-lib": "babel src -x .ts -d lib",
-    "build-types": "tsc --declaration --incremental --outDir lib --emitDeclarationOnly",
+    "build-types": "tsc --declaration --incremental --outDir lib --project tsconfig.build.json --emitDeclarationOnly",
     "build-web": "webpack --mode production --entry ./lib/web.js --output ./dist/bls.min.js",
     "check-types": "tsc --noEmit",
-    "lint": "eslint --color --ext .ts src/",
+    "lint": "eslint --color --ext .ts src/ test/",
     "lint:fix": "yarn run lint --fix",
     "pretest": "yarn check-types",
     "prepublishOnly": "yarn build",
@@ -53,6 +53,7 @@
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.8.3",
     "@chainsafe/as-sha256": "0.2.0",
+    "@chainsafe/eth2-spec-tests": "0.12.0",
     "@chainsafe/lodestar-spec-test-util": "^0.5.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^7.0.1",
@@ -61,6 +62,7 @@
     "chai": "^4.2.0",
     "eslint": "^6.8.0",
     "eslint-plugin-import": "^2.20.1",
+    "eslint-plugin-prettier": "^3.1.4",
     "karma": "^4.4.1",
     "karma-chai": "^0.1.0",
     "karma-chrome-launcher": "^3.1.0",
@@ -70,11 +72,11 @@
     "karma-webpack": "^4.0.2",
     "mocha": "^6.2.0",
     "nyc": "^15.0.0",
+    "prettier": "^2.1.2",
     "ts-loader": "^6.2.1",
     "ts-node": "^8.6.2",
     "typescript": "^3.7.5",
     "webpack": "^4.30.0",
-    "webpack-cli": "^3.3.2",
-    "@chainsafe/eth2-spec-tests": "0.12.0"
+    "webpack-cli": "^3.3.2"
   }
 }

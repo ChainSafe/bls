@@ -49,9 +49,11 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
   assert(signatures && signatures.length > 0, "signatures is null or undefined or empty array");
   return Signature.aggregate(
-    signatures.map((signature): Signature => {
-      return Signature.fromCompressedBytes(signature);
-    })
+    signatures.map(
+      (signature): Signature => {
+        return Signature.fromCompressedBytes(signature);
+      }
+    )
   ).toBytesCompressed();
 }
 
@@ -61,7 +63,7 @@ export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
  */
 export function aggregatePubkeys(publicKeys: Uint8Array[]): Buffer {
   assert(publicKeys, "publicKeys is null or undefined");
-  if(publicKeys.length === 0) {
+  if (publicKeys.length === 0) {
     return Buffer.alloc(PUBLIC_KEY_LENGTH);
   }
   return publicKeys
@@ -81,9 +83,10 @@ export function verify(publicKey: Uint8Array, messageHash: Uint8Array, signature
   assert(messageHash, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
   try {
-    return PublicKey
-      .fromBytes(publicKey)
-      .verifyMessage(Signature.fromCompressedBytes(toBuffer(signature)), toBuffer(messageHash));
+    return PublicKey.fromBytes(publicKey).verifyMessage(
+      Signature.fromCompressedBytes(toBuffer(signature)),
+      toBuffer(messageHash)
+    );
   } catch (e) {
     return false;
   }
@@ -100,9 +103,10 @@ export function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Arra
   assert(messageHash, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
   try {
-    return Signature
-      .fromCompressedBytes(signature)
-      .verifyAggregate(publicKeys.map(pubkey => PublicKey.fromBytes(pubkey)), messageHash);
+    return Signature.fromCompressedBytes(signature).verifyAggregate(
+      publicKeys.map((pubkey) => PublicKey.fromBytes(pubkey)),
+      messageHash
+    );
   } catch (e) {
     return false;
   }
@@ -125,17 +129,15 @@ export function verifyMultiple(
   assert(messageHashes, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
 
-  if(publicKeys.length === 0 || publicKeys.length != messageHashes.length) {
+  if (publicKeys.length === 0 || publicKeys.length != messageHashes.length) {
     return false;
   }
   try {
-    return Signature
-      .fromCompressedBytes(toBuffer(signature))
-      .verifyMultiple(
-        publicKeys.map((key) => PublicKey.fromBytes(toBuffer(key))),
-        messageHashes.map((m) => toBuffer(m)),
-        fast
-      );
+    return Signature.fromCompressedBytes(toBuffer(signature)).verifyMultiple(
+      publicKeys.map((key) => PublicKey.fromBytes(toBuffer(key))),
+      messageHashes.map((m) => toBuffer(m)),
+      fast
+    );
   } catch (e) {
     return false;
   }
@@ -149,5 +151,5 @@ export default {
   aggregatePubkeys,
   verify,
   verifyAggregate,
-  verifyMultiple
+  verifyMultiple,
 };

@@ -3,8 +3,7 @@ import {expect} from "chai";
 import {SECRET_KEY_LENGTH} from "../../src/constants";
 import {destroy, init} from "../../src/context";
 
-describe("privateKey", function() {
-
+describe("privateKey", function () {
   before(async function () {
     await init();
   });
@@ -32,9 +31,8 @@ describe("privateKey", function() {
   it("should export private key to bytes", function () {
     expect(PrivateKey.random().toBytes().length).to.be.equal(SECRET_KEY_LENGTH);
   });
-  
+
   it("should not accept too short private key", function () {
     expect(() => PrivateKey.fromHexString("0x2123")).to.throw();
   });
-
 });
