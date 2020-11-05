@@ -1,9 +1,6 @@
 import path from "path";
-import bls, { initBLS } from "../../src";
-import {
-  describeDirectorySpecTest,
-  InputType,
-} from "@chainsafe/lodestar-spec-test-util";
+import bls, {initBLS} from "../../src";
+import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
 
 interface AggregateSigsVerifyTestCase {
   data: {
@@ -32,9 +29,7 @@ describeDirectorySpecTest<AggregateSigsVerifyTestCase, boolean>(
   ),
   (testCase) => {
     return bls.verifyAggregate(
-      testCase.data.input.pubkeys.map((key) =>
-        Buffer.from(key.replace("0x", ""), "hex")
-      ),
+      testCase.data.input.pubkeys.map((key) => Buffer.from(key.replace("0x", ""), "hex")),
       Buffer.from(testCase.data.input.message.replace("0x", ""), "hex"),
       Buffer.from(testCase.data.input.signature.replace("0x", ""), "hex")
     );

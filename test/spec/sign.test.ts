@@ -1,9 +1,6 @@
 import path from "path";
-import bls, { initBLS } from "../../src";
-import {
-  describeDirectorySpecTest,
-  InputType,
-} from "@chainsafe/lodestar-spec-test-util";
+import bls, {initBLS} from "../../src";
+import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
 
 interface ISignMessageTestCase {
   data: {
@@ -21,10 +18,7 @@ before(async function f() {
 
 describeDirectorySpecTest<ISignMessageTestCase, string>(
   "BLS - sign",
-  path.join(
-    __dirname,
-    "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/sign/small"
-  ),
+  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/sign/small"),
   (testCase) => {
     const signature = bls.sign(
       Buffer.from(testCase.data.input.privkey.replace("0x", ""), "hex"),

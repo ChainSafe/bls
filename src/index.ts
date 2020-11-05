@@ -1,13 +1,13 @@
-import { Keypair } from "./keypair";
-import { PrivateKey } from "./privateKey";
-import { PublicKey } from "./publicKey";
-import { Signature } from "./signature";
-import { PUBLIC_KEY_LENGTH } from "./constants";
+import {Keypair} from "./keypair";
+import {PrivateKey} from "./privateKey";
+import {PublicKey} from "./publicKey";
+import {Signature} from "./signature";
+import {PUBLIC_KEY_LENGTH} from "./constants";
 import assert from "assert";
 
-export { Keypair, PrivateKey, PublicKey, Signature };
+export {Keypair, PrivateKey, PublicKey, Signature};
 
-export { init as initBLS } from "./context";
+export {init as initBLS} from "./context";
 
 function toBuffer(input: Uint8Array): Buffer {
   return Buffer.from(input.buffer, input.byteOffset, input.length);
@@ -47,10 +47,7 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
  * @param signatures
  */
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
-  assert(
-    signatures && signatures.length > 0,
-    "signatures is null or undefined or empty array"
-  );
+  assert(signatures && signatures.length > 0, "signatures is null or undefined or empty array");
   return Signature.aggregate(
     signatures.map(
       (signature): Signature => {
@@ -81,11 +78,7 @@ export function aggregatePubkeys(publicKeys: Uint8Array[]): Buffer {
  * @param messageHash
  * @param signature
  */
-export function verify(
-  publicKey: Uint8Array,
-  messageHash: Uint8Array,
-  signature: Uint8Array
-): boolean {
+export function verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean {
   assert(publicKey, "publicKey is null or undefined");
   assert(messageHash, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");
@@ -105,11 +98,7 @@ export function verify(
  * @param messageHash
  * @param signature
  */
-export function verifyAggregate(
-  publicKeys: Uint8Array[],
-  messageHash: Uint8Array,
-  signature: Uint8Array
-): boolean {
+export function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean {
   assert(publicKeys, "publicKey is null or undefined");
   assert(messageHash, "messageHash is null or undefined");
   assert(signature, "signature is null or undefined");

@@ -1,10 +1,10 @@
-import { PrivateKey } from "./privateKey";
-import { PublicKeyType } from "@chainsafe/eth2-bls-wasm";
-import { getContext } from "./context";
-import { PUBLIC_KEY_LENGTH } from "./constants";
+import {PrivateKey} from "./privateKey";
+import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
+import {getContext} from "./context";
+import {PUBLIC_KEY_LENGTH} from "./constants";
 import assert from "assert";
-import { Signature } from "./signature";
-import { EMPTY_PUBLIC_KEY } from "./helpers/utils";
+import {Signature} from "./signature";
+import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
 
 export class PublicKey {
   private value: PublicKeyType;

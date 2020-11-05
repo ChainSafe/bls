@@ -1,9 +1,6 @@
 import path from "path";
-import bls, { initBLS } from "../../src";
-import {
-  describeDirectorySpecTest,
-  InputType,
-} from "@chainsafe/lodestar-spec-test-util";
+import bls, {initBLS} from "../../src";
+import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
 
 interface IAggregateSigsTestCase {
   data: {
@@ -18,10 +15,7 @@ before(async function f() {
 
 describeDirectorySpecTest<IAggregateSigsTestCase, string>(
   "BLS - aggregate sigs",
-  path.join(
-    __dirname,
-    "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/aggregate/small"
-  ),
+  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/aggregate/small"),
   (testCase) => {
     try {
       const result = bls.aggregateSignatures(

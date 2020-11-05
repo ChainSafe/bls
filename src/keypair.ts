@@ -1,5 +1,5 @@
-import { PublicKey } from "./publicKey";
-import { PrivateKey } from "./privateKey";
+import {PublicKey} from "./publicKey";
+import {PrivateKey} from "./privateKey";
 
 export class Keypair {
   private readonly _publicKey: PublicKey;

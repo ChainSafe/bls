@@ -1,9 +1,6 @@
 import path from "path";
-import bls, { initBLS } from "../../src";
-import {
-  describeDirectorySpecTest,
-  InputType,
-} from "@chainsafe/lodestar-spec-test-util";
+import bls, {initBLS} from "../../src";
+import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
 
 interface IVerifyTestCase {
   data: {
@@ -22,10 +19,7 @@ before(async function f() {
 
 describeDirectorySpecTest<IVerifyTestCase, boolean>(
   "BLS - verify",
-  path.join(
-    __dirname,
-    "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/verify/small"
-  ),
+  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/verify/small"),
   (testCase) => {
     return bls.verify(
       Buffer.from(testCase.data.input.pubkey.replace("0x", ""), "hex"),

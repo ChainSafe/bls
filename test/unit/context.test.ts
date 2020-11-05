@@ -1,5 +1,5 @@
-import { init, getContext, destroy } from "../../src/context";
-import { expect } from "chai";
+import {init, getContext, destroy} from "../../src/context";
+import {expect} from "chai";
 
 describe("bls wasm constext", function () {
   afterEach(() => {

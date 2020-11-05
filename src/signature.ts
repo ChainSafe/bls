@@ -1,9 +1,9 @@
 import assert from "assert";
-import { FP_POINT_LENGTH } from "./constants";
-import { SignatureType } from "@chainsafe/eth2-bls-wasm";
-import { getContext } from "./context";
-import { PublicKey } from "./publicKey";
-import { EMPTY_SIGNATURE } from "./helpers/utils";
+import {FP_POINT_LENGTH} from "./constants";
+import {SignatureType} from "@chainsafe/eth2-bls-wasm";
+import {getContext} from "./context";
+import {PublicKey} from "./publicKey";
+import {EMPTY_SIGNATURE} from "./helpers/utils";
 
 export class Signature {
   private value: SignatureType;
@@ -14,10 +14,7 @@ export class Signature {
   }
 
   public static fromCompressedBytes(value: Uint8Array): Signature {
-    assert(
-      value.length === 2 * FP_POINT_LENGTH,
-      `Signature must have ${2 * FP_POINT_LENGTH} bytes`
-    );
+    assert(value.length === 2 * FP_POINT_LENGTH, `Signature must have ${2 * FP_POINT_LENGTH} bytes`);
     const context = getContext();
     const signature = new context.Signature();
     if (!EMPTY_SIGNATURE.equals(value)) {
@@ -47,21 +44,14 @@ export class Signature {
     return this.value;
   }
 
-  public verifyAggregate(
-    publicKeys: PublicKey[],
-    message: Uint8Array
-  ): boolean {
+  public verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
     return this.value.fastAggregateVerify(
       publicKeys.map((key) => key.getValue()),
       message
     );
   }
 
-  public verifyMultiple(
-    publicKeys: PublicKey[],
-    messages: Uint8Array[],
-    fast = false
-  ): boolean {
+  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean {
     const msgs = Buffer.concat(messages);
     if (!fast && !getContext().areAllMsgDifferent(msgs)) {
       return false;
