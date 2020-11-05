@@ -2,7 +2,6 @@ import bls, {aggregatePubkeys, aggregateSignatures, initBLS, Keypair, verify, ve
 import SHA256 from "@chainsafe/as-sha256";
 import {expect} from "chai";
 import {destroy} from "../../src/context";
-import {padLeft} from "../../src/helpers/utils";
 
 describe("test bls", function () {
   before(async function () {
