@@ -40,6 +40,7 @@
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.2.0",
+    "@chainsafe/blst-ts": "file:../blst-ts",
     "@chainsafe/eth2-bls-wasm": "^0.5.0",
     "assert": "^1.4.1"
   },

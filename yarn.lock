@@ -820,6 +820,9 @@
     bip39 "^3.0.2"
     buffer "^5.4.3"
 
+"@chainsafe/blst-ts@file:../blst-ts":
+  version "1.0.0"
+
 "@chainsafe/eth2-bls-wasm@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@chainsafe/eth2-bls-wasm/-/eth2-bls-wasm-0.5.0.tgz#45d0cb8807b569537d1e0099922a9617e0410b3a"
