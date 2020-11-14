@@ -1,5 +1,6 @@
 import crypto from "crypto";
 import * as blst from "@chainsafe/blst-ts";
+import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
 import * as herumi from "../../src";
 import {runBenchmark} from "./runner";
 
@@ -113,6 +114,25 @@ import {runBenchmark} from "./runner";
     },
     testRunner: (pks) => {
       blst.AggregatePublicKey.fromPublicKeys(pks);
+    },
+  });
+
+  runBenchmark<blst.AggregatePublicKey[], void>({
+    id: `BLST aggregatePubkeys as jacobian (${aggCount})`,
+
+    prepareTest: () => {
+      return {
+        input: range(aggCount).map(() => {
+          const pk = blst.SecretKey.fromKeygen(crypto.randomBytes(32)).toPublicKey();
+          return blst.AggregatePublicKey.fromPublicKey(pk);
+        }),
+      };
+    },
+    testRunner: (pks) => {
+      const p1Arr = pks.map((pk) => pk.value);
+      p1Arr.reduce((agg, pk) => {
+        return blstBindings.P1.add(agg, pk);
+      });
     },
   });
 
