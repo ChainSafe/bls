@@ -14,5 +14,11 @@ export function padLeft(source: Uint8Array, length: number): Buffer {
   return result;
 }
 
+export function validateBytes(bytesObj: {[argName: string]: Uint8Array | Uint8Array[]}): void {
+  for (const [argName, bytes] of Object.entries(bytesObj)) {
+    assert(bytes, `${argName} is null or undefined`);
+  }
+}
+
 export const EMPTY_PUBLIC_KEY = Buffer.alloc(PUBLIC_KEY_LENGTH);
 export const EMPTY_SIGNATURE = Buffer.alloc(SIGNATURE_LENGTH);
