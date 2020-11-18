@@ -1,7 +1,6 @@
-import {SECRET_KEY_LENGTH} from "./constants";
-import assert from "assert";
 import {SecretKeyType} from "@chainsafe/eth2-bls-wasm";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
+import {SECRET_KEY_LENGTH} from "./constants";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
@@ -14,7 +13,10 @@ export class PrivateKey {
   }
 
   public static fromBytes(bytes: Uint8Array): PrivateKey {
-    assert(bytes.length === SECRET_KEY_LENGTH, "Private key should have 32 bytes");
+    if (bytes.length !== SECRET_KEY_LENGTH) {
+      throw Error(`Private key should have ${SECRET_KEY_LENGTH} bytes`);
+    }
+
     const context = getContext();
     const secretKey = new context.SecretKey();
     secretKey.deserialize(Buffer.from(bytes));
@@ -23,7 +25,11 @@ export class PrivateKey {
 
   public static fromHexString(value: string): PrivateKey {
     value = value.replace("0x", "");
-    assert(value.length === SECRET_KEY_LENGTH * 2, "secret key must have 32 bytes");
+
+    if (value.length !== SECRET_KEY_LENGTH * 2) {
+      throw Error(`Private key must have ${SECRET_KEY_LENGTH} bytes`);
+    }
+
     const context = getContext();
     return new PrivateKey(context.deserializeHexStrToSecretKey(value));
   }

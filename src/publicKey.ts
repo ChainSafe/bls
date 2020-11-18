@@ -1,10 +1,8 @@
-import {PrivateKey} from "./privateKey";
 import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
+import {PrivateKey} from "./privateKey";
 import {getContext} from "./context";
-import {PUBLIC_KEY_LENGTH} from "./constants";
-import assert from "assert";
+import {PUBLIC_KEY_LENGTH, EMPTY_PUBLIC_KEY} from "./constants";
 import {Signature} from "./signature";
-import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
 
 export class PublicKey {
   private value: PublicKeyType;
@@ -28,7 +26,11 @@ export class PublicKey {
 
   public static fromHex(value: string): PublicKey {
     value = value.replace("0x", "");
-    assert(value.length === PUBLIC_KEY_LENGTH * 2);
+
+    if (value.length !== PUBLIC_KEY_LENGTH * 2) {
+      throw Error(`Public key must have ${PUBLIC_KEY_LENGTH} bytes`);
+    }
+
     const context = getContext();
     return new PublicKey(context.deserializeHexStrToPublicKey(value));
   }
