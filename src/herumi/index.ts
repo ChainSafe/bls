@@ -43,7 +43,7 @@ export function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
  * @param signatures
  */
 export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
-  assert(signatures && signatures.length > 0, "EMPTY_AGGREGATE_ARRAY");
+  assert(signatures, "signatures is null or undefined");
   const agg = Signature.aggregate(signatures.map((signature): Signature => Signature.fromBytes(signature)));
   return agg.toBytes();
 }
@@ -54,13 +54,8 @@ export function aggregateSignatures(signatures: Uint8Array[]): Buffer {
  */
 export function aggregatePubkeys(publicKeys: Uint8Array[]): Buffer {
   assert(publicKeys, "publicKeys is null or undefined");
-  if (publicKeys.length === 0) {
-    return Buffer.alloc(PUBLIC_KEY_LENGTH);
-  }
-  return publicKeys
-    .map((p) => PublicKey.fromBytes(toBuffer(p)))
-    .reduce((agg, pubKey) => agg.add(pubKey))
-    .toBytes();
+  const agg = PublicKey.aggregate(publicKeys.map((pk) => PublicKey.fromBytes(pk)));
+  return agg.toBytes();
 }
 
 /**

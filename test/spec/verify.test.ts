@@ -15,9 +15,9 @@ interface IVerifyTestCase {
   };
 }
 
-forEachImplementation((bls, implementation) => {
+forEachImplementation((bls) => {
   describeDirectorySpecTest<IVerifyTestCase, boolean>(
-    `${implementation} - bls/verify/small`,
+    "bls/verify/small",
     path.join(SPEC_TESTS_DIR, "general/phase0/bls/verify/small"),
     (testCase) => {
       const {pubkey, message, signature} = testCase.data.input;

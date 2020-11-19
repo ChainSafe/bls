@@ -15,9 +15,9 @@ interface IAggregateSigsVerifyTestCase {
   };
 }
 
-forEachImplementation((bls, implementation) => {
+forEachImplementation((bls) => {
   describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
-    `${implementation} - bls/fast_aggregate_verify/small`,
+    "bls/fast_aggregate_verify/small",
     path.join(SPEC_TESTS_DIR, "general/phase0/bls/fast_aggregate_verify/small"),
     (testCase) => {
       const {pubkeys, message, signature} = testCase.data.input;

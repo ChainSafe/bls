@@ -24,6 +24,18 @@ export class PublicKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
+  static aggregate(pubkeys: PublicKey[]): PublicKey {
+    if (pubkeys.length === 0) {
+      throw Error("EMPTY_AGGREGATE_ARRAY");
+    }
+
+    const agg = new PublicKey(pubkeys[0].value.clone());
+    for (const pk of pubkeys.slice(1)) {
+      agg.value.add(pk.value);
+    }
+    return agg;
+  }
+
   add(other: PublicKey): PublicKey {
     const agg = new PublicKey(this.value.clone());
     agg.value.add(other.value);

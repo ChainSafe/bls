@@ -27,7 +27,8 @@ export class PrivateKey {
   }
 
   static fromKeygen(entropy?: Uint8Array): PrivateKey {
-    return this.fromBytes(generateRandomSecretKey(Buffer.from(entropy)));
+    const sk = generateRandomSecretKey(entropy && Buffer.from(entropy));
+    return this.fromBytes(sk);
   }
 
   getValue(): SecretKeyType {

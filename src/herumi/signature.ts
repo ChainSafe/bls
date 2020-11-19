@@ -28,6 +28,10 @@ export class Signature {
   }
 
   static aggregate(signatures: Signature[]): Signature {
+    if (signatures.length === 0) {
+      throw Error("EMPTY_AGGREGATE_ARRAY");
+    }
+
     const context = getContext();
     const signature = new context.Signature();
     signature.aggregate(signatures.map((sig) => sig.value));

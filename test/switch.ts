@@ -17,14 +17,16 @@ export function forEachImplementation(
   callback: (bls: ReturnType<typeof getBls>, implementation: Implementation) => void
 ): void {
   for (const implementation of implementations) {
-    const bls = getBls(implementation);
+    describe(implementation, () => {
+      const bls = getBls(implementation);
 
-    if (implementation === "herumi") {
-      before(async () => {
-        await bls.initBLS();
-      });
-    }
+      if (implementation === "herumi") {
+        before(async () => {
+          await bls.initBLS();
+        });
+      }
 
-    callback(bls, implementation);
+      callback(bls, implementation);
+    });
   }
 }

@@ -11,9 +11,9 @@ interface IAggregateSigsTestCase {
   };
 }
 
-forEachImplementation((bls, implementation) => {
+forEachImplementation((bls) => {
   describeDirectorySpecTest<IAggregateSigsTestCase, string>(
-    `${implementation} - bls/aggregate/small`,
+    "bls/aggregate/small",
     path.join(SPEC_TESTS_DIR, "general/phase0/bls/aggregate/small"),
     (testCase) => {
       try {
