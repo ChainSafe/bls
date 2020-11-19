@@ -1,66 +1,46 @@
-import {SECRET_KEY_LENGTH} from "./constants";
-import assert from "assert";
-import {SecretKeyType} from "@chainsafe/eth2-bls-wasm";
-import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
-import {getContext} from "./context";
+import * as blst from "@chainsafe/blst-ts";
+import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
+import {bytesToHex, getRandomBytes, hexToBytes} from "./helpers/utils";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 
 export class PrivateKey {
-  private value: SecretKeyType;
+  readonly value: blst.SecretKey;
 
-  protected constructor(value: SecretKeyType) {
+  constructor(value: blst.SecretKey) {
     this.value = value;
   }
 
-  public static fromBytes(bytes: Uint8Array): PrivateKey {
-    assert(bytes.length === SECRET_KEY_LENGTH, "Private key should have 32 bytes");
-    const context = getContext();
-    const secretKey = new context.SecretKey();
-    secretKey.deserialize(Buffer.from(bytes));
-    return new PrivateKey(secretKey);
+  static fromBytes(bytes: Uint8Array): PrivateKey {
+    const sk = blst.SecretKey.fromBytes(bytes);
+    return new PrivateKey(sk);
   }
 
-  public static fromHexString(value: string): PrivateKey {
-    value = value.replace("0x", "");
-    assert(value.length === SECRET_KEY_LENGTH * 2, "secret key must have 32 bytes");
-    const context = getContext();
-    return new PrivateKey(context.deserializeHexStrToSecretKey(value));
+  static fromHex(hex: string): PrivateKey {
+    return this.fromBytes(hexToBytes(hex));
   }
 
-  public static fromInt(num: number): PrivateKey {
-    const context = getContext();
-    const secretKey = new context.SecretKey();
-    secretKey.setInt(num);
-    return new PrivateKey(secretKey);
+  static fromKeygen(entropy?: Uint8Array): PrivateKey {
+    const sk = blst.SecretKey.fromKeygen(entropy || getRandomBytes(32));
+    return new PrivateKey(sk);
   }
 
-  public static random(): PrivateKey {
-    const randomKey: Buffer = generateRandomSecretKey();
-    return this.fromBytes(randomKey);
-  }
-
-  public getValue(): SecretKeyType {
-    return this.value;
-  }
-
-  // public sign(message: Uint8Array): Signature {
-  //   return Signature.fromValue(this.value.sign(message));
-  // }
-
-  public signMessage(message: Uint8Array): Signature {
+  signMessage(message: Uint8Array): Signature {
     return Signature.fromValue(this.value.sign(message));
   }
 
-  public toPublicKey(): PublicKey {
-    return PublicKey.fromPublicKeyType(this.value.getPublicKey());
+  toPublicKey(): PublicKey {
+    const p1 = new blstBindings.P1(this.value.value);
+    const jacobian = new blst.AggregatePublicKey(p1);
+    const affine = jacobian.toPublicKey();
+    return new PublicKey(affine, jacobian);
   }
 
-  public toBytes(): Buffer {
-    return Buffer.from(this.value.serialize());
+  toBytes(): Buffer {
+    return Buffer.from(this.value.toBytes());
   }
 
-  public toHexString(): string {
-    return `0x${this.value.serializeToHexStr()}`;
+  toHex(): string {
+    return bytesToHex(this.toBytes());
   }
 }

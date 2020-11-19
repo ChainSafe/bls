@@ -1,72 +1,53 @@
-import assert from "assert";
-import {FP_POINT_LENGTH} from "./constants";
-import {SignatureType} from "@chainsafe/eth2-bls-wasm";
-import {getContext} from "./context";
+import * as blst from "@chainsafe/blst-ts";
+import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
+import {bytesToHex, hexToBytes} from "./helpers/utils";
 import {PublicKey} from "./publicKey";
-import {EMPTY_SIGNATURE} from "./helpers/utils";
 
 export class Signature {
-  private value: SignatureType;
+  readonly value: blst.Signature;
 
-  protected constructor(value: SignatureType) {
+  constructor(value: blst.Signature) {
     this.value = value;
-    assert(this.value.isValidOrder());
   }
 
-  public static fromCompressedBytes(value: Uint8Array): Signature {
-    assert(value.length === 2 * FP_POINT_LENGTH, `Signature must have ${2 * FP_POINT_LENGTH} bytes`);
-    const context = getContext();
-    const signature = new context.Signature();
-    if (!EMPTY_SIGNATURE.equals(value)) {
-      signature.deserialize(value);
-    }
+  static fromBytes(bytes: Uint8Array): Signature {
+    return new Signature(blst.Signature.fromBytes(bytes));
+  }
+
+  static fromHex(hex: string): Signature {
+    return this.fromBytes(hexToBytes(hex));
+  }
+
+  static fromValue(signature: blst.Signature): Signature {
     return new Signature(signature);
   }
 
-  public static fromValue(signature: SignatureType): Signature {
-    return new Signature(signature);
+  static aggregate(signatures: Signature[]): Signature {
+    const agg = blst.AggregateSignature.fromSignatures(signatures.map((sig) => sig.value));
+    return new Signature(agg.toSignature());
   }
 
-  public static aggregate(signatures: Signature[]): Signature {
-    const context = getContext();
-    const signature = new context.Signature();
-    signature.aggregate(signatures.map((sig) => sig.getValue()));
-    return new Signature(signature);
-  }
-
-  public add(other: Signature): Signature {
-    const agg = this.value.clone();
-    agg.add(other.value);
-    return new Signature(agg);
-  }
-
-  public getValue(): SignatureType {
-    return this.value;
-  }
-
-  public verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
-    return this.value.fastAggregateVerify(
-      publicKeys.map((key) => key.getValue()),
-      message
+  verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
+    return blst.fastAggregateVerify(
+      message,
+      publicKeys.map((pk) => pk.affine),
+      this.value
     );
   }
 
-  public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean {
-    const msgs = Buffer.concat(messages);
-    if (!fast && !getContext().areAllMsgDifferent(msgs)) {
-      return false;
-    }
-    return this.value.aggregateVerifyNoCheck(
-      publicKeys.map((key) => key.getValue()),
-      msgs
+  verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
+    return blst.aggregateVerify(
+      messages,
+      publicKeys.map((pk) => pk.affine),
+      this.value
     );
   }
 
-  public toBytesCompressed(): Buffer {
-    return Buffer.from(this.value.serialize());
+  toBytes(): Buffer {
+    return Buffer.from(this.value.toBytes());
   }
 
-  public toHex(): string {
-    return "0x" + this.value.serializeToHexStr();
+  toHex(): string {
+    return bytesToHex(this.toBytes());
   }
 }

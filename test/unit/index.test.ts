@@ -23,7 +23,7 @@ describe("test bls", function () {
       const keypair = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
       const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash, signature.toBytesCompressed());
+      const result = verify(keypair.publicKey.toBytes(), messageHash, signature.toBytes());
       expect(result).to.be.true;
     });
 
@@ -31,16 +31,16 @@ describe("test bls", function () {
       const keypair = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
       const signature = keypair.privateKey.signMessage(messageHash);
-      const pubKey = keypair.publicKey.toBytesCompressed();
-      verify(pubKey, messageHash, signature.toBytesCompressed());
-      expect("0x" + pubKey.toString("hex")).to.be.equal(keypair.publicKey.toHexString());
+      const pubKey = keypair.publicKey.toBytes();
+      verify(pubKey, messageHash, signature.toBytes());
+      expect("0x" + pubKey.toString("hex")).to.be.equal(keypair.publicKey.toHex());
     });
 
     it("should fail verify empty signature", () => {
       const keypair = Keypair.generate();
       const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
       const signature = Buffer.alloc(96);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash2, signature);
+      const result = verify(keypair.publicKey.toBytes(), messageHash2, signature);
       expect(result).to.be.false;
     });
 
@@ -49,7 +49,7 @@ describe("test bls", function () {
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
       const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
       const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash2, signature.toBytesCompressed());
+      const result = verify(keypair.publicKey.toBytes(), messageHash2, signature.toBytes());
       expect(result).to.be.false;
     });
 
@@ -58,7 +58,7 @@ describe("test bls", function () {
       const keypair2 = Keypair.generate();
       const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
       const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair2.publicKey.toBytesCompressed(), messageHash, signature.toBytesCompressed());
+      const result = verify(keypair2.publicKey.toBytes(), messageHash, signature.toBytes());
       expect(result).to.be.false;
     });
   });
@@ -80,21 +80,15 @@ describe("test bls", function () {
       const signature3 = keypair3.privateKey.signMessage(message2);
       const signature4 = keypair4.privateKey.signMessage(message2);
 
-      const aggregatePubKey12 = aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
+      const aggregatePubKey12 = aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
 
-      const aggregatePubKey34 = aggregatePubkeys([
-        keypair3.publicKey.toBytesCompressed(),
-        keypair4.publicKey.toBytesCompressed(),
-      ]);
+      const aggregatePubKey34 = aggregatePubkeys([keypair3.publicKey.toBytes(), keypair4.publicKey.toBytes()]);
 
       const aggregateSignature = aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
+        signature1.toBytes(),
+        signature2.toBytes(),
+        signature3.toBytes(),
+        signature4.toBytes(),
       ]);
 
       const result = verifyMultiple([aggregatePubKey12, aggregatePubKey34], [message1, message2], aggregateSignature);
@@ -118,22 +112,21 @@ describe("test bls", function () {
       const signature4 = keypair4.privateKey.signMessage(message);
 
       const aggregateSignature = aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
+        signature1.toBytes(),
+        signature2.toBytes(),
+        signature3.toBytes(),
+        signature4.toBytes(),
       ]);
 
       const result = verifyMultiple(
         [
-          keypair1.publicKey.toBytesCompressed(),
-          keypair2.publicKey.toBytesCompressed(),
-          keypair3.publicKey.toBytesCompressed(),
-          keypair4.publicKey.toBytesCompressed(),
+          keypair1.publicKey.toBytes(),
+          keypair2.publicKey.toBytes(),
+          keypair3.publicKey.toBytes(),
+          keypair4.publicKey.toBytes(),
         ],
         [message, message, message, message],
-        aggregateSignature,
-        true
+        aggregateSignature
       );
 
       expect(result).to.be.true;
@@ -155,21 +148,15 @@ describe("test bls", function () {
       const signature3 = keypair3.privateKey.signMessage(message2);
       const signature4 = keypair4.privateKey.signMessage(message2);
 
-      const aggregatePubKey12 = bls.aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
+      const aggregatePubKey12 = bls.aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
 
-      const aggregatePubKey34 = bls.aggregatePubkeys([
-        keypair3.publicKey.toBytesCompressed(),
-        keypair4.publicKey.toBytesCompressed(),
-      ]);
+      const aggregatePubKey34 = bls.aggregatePubkeys([keypair3.publicKey.toBytes(), keypair4.publicKey.toBytes()]);
 
       const aggregateSignature = bls.aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
+        signature1.toBytes(),
+        signature2.toBytes(),
+        signature3.toBytes(),
+        signature4.toBytes(),
       ]);
 
       const result = bls.verifyMultiple(
@@ -195,16 +182,13 @@ describe("test bls", function () {
       const signature3 = keypair3.privateKey.signMessage(message2);
       const signature4 = keypair4.privateKey.signMessage(message2);
 
-      const aggregatePubKey12 = bls.aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
+      const aggregatePubKey12 = bls.aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
 
       const aggregateSignature = bls.aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
+        signature1.toBytes(),
+        signature2.toBytes(),
+        signature3.toBytes(),
+        signature4.toBytes(),
       ]);
 
       const result = bls.verifyMultiple([aggregatePubKey12], [message2, message1], aggregateSignature);

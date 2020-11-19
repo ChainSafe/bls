@@ -9,7 +9,7 @@ export class Keypair {
   public constructor(privateKey: PrivateKey, publicKey?: PublicKey) {
     this._privateKey = privateKey;
     if (!publicKey) {
-      this._publicKey = PublicKey.fromPrivateKey(this._privateKey);
+      this._publicKey = privateKey.toPublicKey();
     } else {
       this._publicKey = publicKey;
     }
@@ -24,6 +24,6 @@ export class Keypair {
   }
 
   public static generate(): Keypair {
-    return new Keypair(PrivateKey.random());
+    return new Keypair(PrivateKey.fromKeygen());
   }
 }

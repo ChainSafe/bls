@@ -145,7 +145,7 @@ import {runBenchmark} from "./runner";
       };
     },
     testRunner: (pks) => {
-      pks.reduce((agg, pk) => agg.add(pk));
+      herumi.PublicKey.aggregate(pks);
     },
   });
 })();

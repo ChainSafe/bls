@@ -12,9 +12,9 @@ describe("keypair", function () {
   });
 
   it("should create from private and public key", () => {
-    const secret = PrivateKey.random();
-    const secret2 = PrivateKey.random();
-    const publicKey = PublicKey.fromBytes(PublicKey.fromPrivateKey(secret2).toBytesCompressed());
+    const secret = PrivateKey.fromKeygen();
+    const secret2 = PrivateKey.fromKeygen();
+    const publicKey = PublicKey.fromBytes(secret2.toPublicKey().toBytes());
     const keypair = new Keypair(secret, publicKey);
     expect(keypair.publicKey).to.be.equal(publicKey);
     expect(keypair.privateKey).to.be.equal(secret);
@@ -22,11 +22,9 @@ describe("keypair", function () {
   });
 
   it("should create from private", () => {
-    const secret = PrivateKey.random();
-    const publicKey = PublicKey.fromPrivateKey(secret);
+    const secret = PrivateKey.fromKeygen();
+    const publicKey = secret.toPublicKey();
     const keypair = new Keypair(secret);
-    expect(keypair.publicKey.toBytesCompressed().toString("hex")).to.be.equal(
-      publicKey.toBytesCompressed().toString("hex")
-    );
+    expect(keypair.publicKey.toBytes().toString("hex")).to.be.equal(publicKey.toBytes().toString("hex"));
   });
 });

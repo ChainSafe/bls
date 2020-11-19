@@ -1,61 +1,47 @@
-import {PrivateKey} from "./privateKey";
-import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
-import {getContext} from "./context";
-import {PUBLIC_KEY_LENGTH} from "./constants";
-import assert from "assert";
+import * as blst from "@chainsafe/blst-ts";
+import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
 import {Signature} from "./signature";
-import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
+import {bytesToHex, hexToBytes} from "./helpers/utils";
 
 export class PublicKey {
-  private value: PublicKeyType;
+  readonly affine: blst.PublicKey;
+  readonly jacobian: blst.AggregatePublicKey;
 
-  protected constructor(value: PublicKeyType) {
-    this.value = value;
+  constructor(affine: blst.PublicKey, jacobian: blst.AggregatePublicKey) {
+    this.affine = affine;
+    this.jacobian = jacobian;
   }
 
-  public static fromPrivateKey(privateKey: PrivateKey): PublicKey {
-    return privateKey.toPublicKey();
+  static fromBytes(bytes: Uint8Array): PublicKey {
+    const affine = blst.PublicKey.fromBytes(bytes);
+    const jacobian = blst.AggregatePublicKey.fromPublicKey(affine);
+    return new PublicKey(affine, jacobian);
   }
 
-  public static fromBytes(bytes: Uint8Array): PublicKey {
-    const context = getContext();
-    const publicKey = new context.PublicKey();
-    if (!EMPTY_PUBLIC_KEY.equals(bytes)) {
-      publicKey.deserialize(bytes);
-    }
-    return new PublicKey(publicKey);
+  static fromHex(hex: string): PublicKey {
+    return this.fromBytes(hexToBytes(hex));
   }
 
-  public static fromHex(value: string): PublicKey {
-    value = value.replace("0x", "");
-    assert(value.length === PUBLIC_KEY_LENGTH * 2);
-    const context = getContext();
-    return new PublicKey(context.deserializeHexStrToPublicKey(value));
+  static aggregate(pubkeys: PublicKey[]): PublicKey {
+    const p1Arr = pubkeys.map((pk) => pk.jacobian.value);
+    const aggP1 = p1Arr.reduce((_agg, pk) => {
+      return blstBindings.P1.add(_agg, pk);
+    });
+
+    const jacobian = new blst.AggregatePublicKey(aggP1);
+    const affine = jacobian.toPublicKey();
+    return new PublicKey(affine, jacobian);
   }
 
-  public static fromPublicKeyType(value: PublicKeyType): PublicKey {
-    return new PublicKey(value);
+  verifyMessage(signature: Signature, message: Uint8Array): boolean {
+    return blst.verify(message, this.affine, signature.value);
   }
 
-  public add(other: PublicKey): PublicKey {
-    const agg = new PublicKey(this.value.clone());
-    agg.value.add(other.value);
-    return agg;
+  toBytes(): Buffer {
+    return Buffer.from(this.affine.toBytes());
   }
 
-  public verifyMessage(signature: Signature, messageHash: Uint8Array): boolean {
-    return this.value.verify(signature.getValue(), messageHash);
-  }
-
-  public toBytesCompressed(): Buffer {
-    return Buffer.from(this.value.serialize());
-  }
-
-  public toHexString(): string {
-    return `0x${this.toBytesCompressed().toString("hex")}`;
-  }
-
-  public getValue(): PublicKeyType {
-    return this.value;
+  toHex(): string {
+    return bytesToHex(this.toBytes());
   }
 }
