@@ -31,10 +31,6 @@ export class PrivateKey {
     return this.fromBytes(sk);
   }
 
-  getValue(): SecretKeyType {
-    return this.value;
-  }
-
   signMessage(message: Uint8Array): Signature {
     return new Signature(this.value.sign(message));
   }
