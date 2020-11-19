@@ -807,10 +807,12 @@
     bip39 "^3.0.2"
     buffer "^5.4.3"
 
-"@chainsafe/blst@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/blst/-/blst-0.1.0.tgz#6aa0ea5e91a0f7ae2d4358fb432eb9a558a4de31"
-  integrity sha512-sJXrADkWNA06xM5udoPr7cdNgzSBAjHaN1XbwLkbJ637eVSsEzip+P7Uz0ajfUu2pVsqReoEOBnpFJpUOHAEtg==
+"@chainsafe/blst@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@chainsafe/blst/-/blst-0.1.1.tgz#547eb9a492aa9a7efc89df7393f4a804624155af"
+  integrity sha512-B+uNrxkBFYwx0oxlXTrxZECQ+Xa40WNU03syIMfiCASvq0EZE++e9egf5dzH0TcOKujZnkwDVo4lTB86G7BiKA==
+  dependencies:
+    node-fetch "^2.6.1"
 
 "@chainsafe/eth2-bls-wasm@^0.5.0":
   version "0.5.0"
@@ -4403,6 +4405,11 @@ node-environment-flags@1.0.5:
   dependencies:
     object.getownpropertydescriptors "^2.0.3"
     semver "^5.7.0"
+
+node-fetch@^2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.6.1.tgz#045bd323631f76ed2e2b55573394416b639a0052"
+  integrity sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==
 
 node-libs-browser@^2.2.1:
   version "2.2.1"
