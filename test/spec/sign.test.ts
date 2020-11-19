@@ -1,6 +1,8 @@
 import path from "path";
-import bls, {initBLS} from "../../src";
 import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import {bytesToHex, hexToBytes} from "../../src/helpers/utils";
+import {SPEC_TESTS_DIR} from "../params";
+import {forEachImplementation} from "../switch";
 
 interface ISignMessageTestCase {
   data: {
@@ -12,24 +14,18 @@ interface ISignMessageTestCase {
   };
 }
 
-before(async function f() {
-  await initBLS();
-});
-
-describeDirectorySpecTest<ISignMessageTestCase, string>(
-  "BLS - sign",
-  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/sign/small"),
-  (testCase) => {
-    const signature = bls.sign(
-      Buffer.from(testCase.data.input.privkey.replace("0x", ""), "hex"),
-      Buffer.from(testCase.data.input.message.replace("0x", ""), "hex")
-    );
-    return `0x${signature.toString("hex")}`;
-  },
-  {
-    inputTypes: {
-      data: InputType.YAML,
+forEachImplementation((bls, implementation) => {
+  describeDirectorySpecTest<ISignMessageTestCase, string>(
+    `${implementation} - bls/sign/small`,
+    path.join(SPEC_TESTS_DIR, "general/phase0/bls/sign/small"),
+    (testCase) => {
+      const {privkey, message} = testCase.data.input;
+      const signature = bls.sign(hexToBytes(privkey), hexToBytes(message));
+      return bytesToHex(signature);
     },
-    getExpected: (testCase) => testCase.data.output,
-  }
-);
+    {
+      inputTypes: {data: InputType.YAML},
+      getExpected: (testCase) => testCase.data.output,
+    }
+  );
+});

@@ -1,0 +1,29 @@
+import {PublicKey} from "./publicKey";
+import {PrivateKey} from "./privateKey";
+
+export class Keypair {
+  private readonly _publicKey: PublicKey;
+
+  private readonly _privateKey: PrivateKey;
+
+  public constructor(privateKey: PrivateKey, publicKey?: PublicKey) {
+    this._privateKey = privateKey;
+    if (!publicKey) {
+      this._publicKey = privateKey.toPublicKey();
+    } else {
+      this._publicKey = publicKey;
+    }
+  }
+
+  public get publicKey(): PublicKey {
+    return this._publicKey;
+  }
+
+  public get privateKey(): PrivateKey {
+    return this._privateKey;
+  }
+
+  public static generate(): Keypair {
+    return new Keypair(PrivateKey.fromKeygen());
+  }
+}

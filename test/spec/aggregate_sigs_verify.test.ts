@@ -1,6 +1,8 @@
 import path from "path";
-import bls, {initBLS} from "../../src";
 import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import {hexToBytes} from "../../src/helpers/utils";
+import {SPEC_TESTS_DIR} from "../params";
+import {forEachImplementation} from "../switch";
 
 interface IAggregateSigsVerifyTestCase {
   data: {
@@ -13,30 +15,17 @@ interface IAggregateSigsVerifyTestCase {
   };
 }
 
-before(async function f() {
-  try {
-    await initBLS();
-  } catch (e) {
-    console.log(e);
-  }
-});
-
-describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
-  "BLS - aggregate sigs verify",
-  path.join(__dirname, "../../node_modules/@chainsafe/eth2-spec-tests/tests/general/phase0/bls/aggregate_verify/small"),
-  (testCase) => {
-    const pubkeys = testCase.data.input.pubkeys.map((pubkey) => {
-      return Buffer.from(pubkey.replace("0x", ""), "hex");
-    });
-    const messages = testCase.data.input.messages.map((msg) => {
-      return Buffer.from(msg.replace("0x", ""), "hex");
-    });
-    return bls.verifyMultiple(pubkeys, messages, Buffer.from(testCase.data.input.signature.replace("0x", ""), "hex"));
-  },
-  {
-    inputTypes: {
-      data: InputType.YAML,
+forEachImplementation((bls, implementation) => {
+  describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
+    `${implementation} - bls/aggregate_verify/small`,
+    path.join(SPEC_TESTS_DIR, "general/phase0/bls/aggregate_verify/small"),
+    (testCase) => {
+      const {pubkeys, messages, signature} = testCase.data.input;
+      return bls.verifyMultiple(pubkeys.map(hexToBytes), messages.map(hexToBytes), hexToBytes(signature));
     },
-    getExpected: (testCase) => testCase.data.output,
-  }
-);
+    {
+      inputTypes: {data: InputType.YAML},
+      getExpected: (testCase) => testCase.data.output,
+    }
+  );
+});

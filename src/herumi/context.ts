@@ -14,7 +14,7 @@ export async function setupBls(): Promise<Bls> {
 }
 
 // Cache a promise for Bls instead of Bls to make sure it is initialized only once
-export async function init(): Promise<Bls> {
+export async function initBLS(): Promise<Bls> {
   if (!blsGlobalPromise) {
     blsGlobalPromise = setupBls();
   }

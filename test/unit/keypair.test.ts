@@ -1,10 +1,9 @@
-import {PrivateKey, PublicKey, Keypair} from "../../src";
+import {PrivateKey, PublicKey, Keypair, destroy, initBLS} from "../../src";
 import {expect} from "chai";
-import {destroy, init} from "../../src/context";
 
 describe("keypair", function () {
   before(async function () {
-    await init();
+    await initBLS();
   });
 
   after(function () {

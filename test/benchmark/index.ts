@@ -1,6 +1,5 @@
 import crypto from "crypto";
-import * as blst from "@chainsafe/blst-ts";
-import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
+import * as blst from "@chainsafe/blst";
 import * as herumi from "../../src";
 import {runBenchmark} from "./runner";
 
@@ -49,7 +48,7 @@ import {runBenchmark} from "./runner";
 
   // Fast aggregate
 
-  runBenchmark<{pks: blst.PublicKey[]; msg: Uint8Array; sig: blst.Signature}, boolean>({
+  runBenchmark<{pks: blst.AggregatePublicKey[]; msg: Uint8Array; sig: blst.Signature}, boolean>({
     id: "BLST fastAggregateVerify",
 
     prepareTest: () => {
@@ -57,7 +56,7 @@ import {runBenchmark} from "./runner";
 
       const dataArr = range(aggCount).map(() => {
         const sk = blst.SecretKey.fromKeygen(crypto.randomBytes(32));
-        const pk = sk.toPublicKey();
+        const pk = sk.toAggregatePublicKey();
         const sig = sk.sign(msg);
         return {pk, sig};
       });
@@ -129,10 +128,7 @@ import {runBenchmark} from "./runner";
       };
     },
     testRunner: (pks) => {
-      const p1Arr = pks.map((pk) => pk.value);
-      p1Arr.reduce((agg, pk) => {
-        return blstBindings.P1.add(agg, pk);
-      });
+      blst.aggregatePubkeys(pks);
     },
   });
 

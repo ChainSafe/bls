@@ -1,6 +1,5 @@
-import * as blst from "@chainsafe/blst-ts";
-import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
-import {bytesToHex, getRandomBytes, hexToBytes} from "./helpers/utils";
+import * as blst from "@chainsafe/blst";
+import {bytesToHex, getRandomBytes, hexToBytes} from "../helpers/utils";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 
@@ -30,8 +29,7 @@ export class PrivateKey {
   }
 
   toPublicKey(): PublicKey {
-    const p1 = new blstBindings.P1(this.value.value);
-    const jacobian = new blst.AggregatePublicKey(p1);
+    const jacobian = this.value.toAggregatePublicKey();
     const affine = jacobian.toPublicKey();
     return new PublicKey(affine, jacobian);
   }

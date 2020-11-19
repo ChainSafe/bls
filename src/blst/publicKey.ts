@@ -1,7 +1,6 @@
-import * as blst from "@chainsafe/blst-ts";
-import {blst as blstBindings} from "@chainsafe/blst-ts/dist/bindings";
+import * as blst from "@chainsafe/blst";
+import {bytesToHex, hexToBytes} from "../helpers/utils";
 import {Signature} from "./signature";
-import {bytesToHex, hexToBytes} from "./helpers/utils";
 
 export class PublicKey {
   readonly affine: blst.PublicKey;
@@ -23,18 +22,13 @@ export class PublicKey {
   }
 
   static aggregate(pubkeys: PublicKey[]): PublicKey {
-    const p1Arr = pubkeys.map((pk) => pk.jacobian.value);
-    const aggP1 = p1Arr.reduce((_agg, pk) => {
-      return blstBindings.P1.add(_agg, pk);
-    });
-
-    const jacobian = new blst.AggregatePublicKey(aggP1);
+    const jacobian = blst.aggregatePubkeys(pubkeys.map((pk) => pk.jacobian));
     const affine = jacobian.toPublicKey();
     return new PublicKey(affine, jacobian);
   }
 
   verifyMessage(signature: Signature, message: Uint8Array): boolean {
-    return blst.verify(message, this.affine, signature.value);
+    return signature.verify(this, message);
   }
 
   toBytes(): Buffer {

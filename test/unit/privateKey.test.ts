@@ -1,11 +1,9 @@
-import {PrivateKey} from "../../src";
+import {PrivateKey, initBLS, destroy, SECRET_KEY_LENGTH} from "../../src";
 import {expect} from "chai";
-import {SECRET_KEY_LENGTH} from "../../src/constants";
-import {destroy, init} from "../../src/context";
 
 describe("privateKey", function () {
   before(async function () {
-    await init();
+    await initBLS();
   });
 
   after(function () {

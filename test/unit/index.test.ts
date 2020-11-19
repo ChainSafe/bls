@@ -1,21 +1,10 @@
-import bls, {aggregatePubkeys, aggregateSignatures, initBLS, Keypair, verify, verifyMultiple} from "../../src";
+import {aggregatePubkeys, aggregateSignatures, initBLS, Keypair, verify, verifyMultiple} from "../../src";
 import SHA256 from "@chainsafe/as-sha256";
 import {expect} from "chai";
-import {destroy} from "../../src/context";
 
 describe("test bls", function () {
   before(async function () {
     await initBLS();
-  });
-
-  after(function () {
-    destroy();
-  });
-
-  describe("aggregate pubkey", function () {
-    it("should aggregate empty array", function () {
-      expect(bls.aggregatePubkeys([])).to.not.throw;
-    });
   });
 
   describe("verify", function () {
@@ -148,22 +137,18 @@ describe("test bls", function () {
       const signature3 = keypair3.privateKey.signMessage(message2);
       const signature4 = keypair4.privateKey.signMessage(message2);
 
-      const aggregatePubKey12 = bls.aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
+      const aggregatePubKey12 = aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
 
-      const aggregatePubKey34 = bls.aggregatePubkeys([keypair3.publicKey.toBytes(), keypair4.publicKey.toBytes()]);
+      const aggregatePubKey34 = aggregatePubkeys([keypair3.publicKey.toBytes(), keypair4.publicKey.toBytes()]);
 
-      const aggregateSignature = bls.aggregateSignatures([
+      const aggregateSignature = aggregateSignatures([
         signature1.toBytes(),
         signature2.toBytes(),
         signature3.toBytes(),
         signature4.toBytes(),
       ]);
 
-      const result = bls.verifyMultiple(
-        [aggregatePubKey12, aggregatePubKey34],
-        [message2, message1],
-        aggregateSignature
-      );
+      const result = verifyMultiple([aggregatePubKey12, aggregatePubKey34], [message2, message1], aggregateSignature);
 
       expect(result).to.be.false;
     });
@@ -182,16 +167,16 @@ describe("test bls", function () {
       const signature3 = keypair3.privateKey.signMessage(message2);
       const signature4 = keypair4.privateKey.signMessage(message2);
 
-      const aggregatePubKey12 = bls.aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
+      const aggregatePubKey12 = aggregatePubkeys([keypair1.publicKey.toBytes(), keypair2.publicKey.toBytes()]);
 
-      const aggregateSignature = bls.aggregateSignatures([
+      const aggregateSignature = aggregateSignatures([
         signature1.toBytes(),
         signature2.toBytes(),
         signature3.toBytes(),
         signature4.toBytes(),
       ]);
 
-      const result = bls.verifyMultiple([aggregatePubKey12], [message2, message1], aggregateSignature);
+      const result = verifyMultiple([aggregatePubKey12], [message2, message1], aggregateSignature);
 
       expect(result).to.be.false;
     });
@@ -202,7 +187,7 @@ describe("test bls", function () {
       const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
       const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
 
-      const result = bls.verifyMultiple([], [message2, message1], signature);
+      const result = verifyMultiple([], [message2, message1], signature);
 
       expect(result).to.be.false;
     });

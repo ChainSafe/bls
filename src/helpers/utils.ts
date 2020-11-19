@@ -1,6 +1,5 @@
 import assert from "assert";
 import crypto from "crypto";
-import {PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH} from "../constants";
 
 /**
  * Pads byte array with zeroes on left side up to desired length.
@@ -27,5 +26,6 @@ export function getRandomBytes(size: number): Uint8Array {
   return Uint8Array.from(crypto.randomBytes(size));
 }
 
-export const EMPTY_PUBLIC_KEY = Buffer.alloc(PUBLIC_KEY_LENGTH);
-export const EMPTY_SIGNATURE = Buffer.alloc(SIGNATURE_LENGTH);
+export function toBuffer(input: Uint8Array): Buffer {
+  return Buffer.from(input.buffer, input.byteOffset, input.length);
+}
