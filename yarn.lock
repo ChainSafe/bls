@@ -807,10 +807,10 @@
     bip39 "^3.0.2"
     buffer "^5.4.3"
 
-"@chainsafe/blst@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@chainsafe/blst/-/blst-0.1.1.tgz#547eb9a492aa9a7efc89df7393f4a804624155af"
-  integrity sha512-B+uNrxkBFYwx0oxlXTrxZECQ+Xa40WNU03syIMfiCASvq0EZE++e9egf5dzH0TcOKujZnkwDVo4lTB86G7BiKA==
+"@chainsafe/blst@^0.1.2":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@chainsafe/blst/-/blst-0.1.2.tgz#5d2ee91609c0f799be4b4de2ea8ed67209bf4201"
+  integrity sha512-doQ4sFGthNR9WzLlFUvtOx1ReqIMNNjS0JC3NNg7NSkRMvzpIinFcHlcABmCJODofreU11GYext77WFCzoSKNA==
   dependencies:
     node-fetch "^2.6.1"
 
