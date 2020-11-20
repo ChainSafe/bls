@@ -3,7 +3,7 @@ import {SIGNATURE_LENGTH, EMPTY_SIGNATURE} from "../constants";
 import {SignatureType} from "@chainsafe/eth2-bls-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
-import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers/utils";
 
 export class Signature {
   readonly value: SignatureType;
@@ -17,7 +17,7 @@ export class Signature {
     assert(bytes.length === SIGNATURE_LENGTH, `Signature must have ${SIGNATURE_LENGTH} bytes`);
     const context = getContext();
     const signature = new context.Signature();
-    if (!EMPTY_SIGNATURE.equals(bytes)) {
+    if (!isEqualBytes(EMPTY_SIGNATURE, bytes)) {
       signature.deserialize(bytes);
     }
     return new Signature(signature);

@@ -2,7 +2,7 @@ import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
 import {getContext} from "./context";
 import {EMPTY_PUBLIC_KEY} from "../constants";
 import {Signature} from "./signature";
-import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers/utils";
 
 export class PublicKey {
   readonly value: PublicKeyType;
@@ -14,7 +14,7 @@ export class PublicKey {
   static fromBytes(bytes: Uint8Array): PublicKey {
     const context = getContext();
     const publicKey = new context.PublicKey();
-    if (!EMPTY_PUBLIC_KEY.equals(bytes)) {
+    if (!isEqualBytes(EMPTY_PUBLIC_KEY, bytes)) {
       publicKey.deserialize(bytes);
     }
     return new PublicKey(publicKey);
