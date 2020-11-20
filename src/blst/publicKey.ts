@@ -1,8 +1,9 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {IPublicKey} from "../interface";
 import {Signature} from "./signature";
 
-export class PublicKey {
+export class PublicKey implements IPublicKey {
   readonly affine: blst.PublicKey;
   readonly jacobian: blst.AggregatePublicKey;
 

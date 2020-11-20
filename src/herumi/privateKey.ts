@@ -6,8 +6,9 @@ import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {IPrivateKey} from "../interface";
 
-export class PrivateKey {
+export class PrivateKey implements IPrivateKey {
   readonly value: SecretKeyType;
 
   constructor(value: SecretKeyType) {

@@ -1,8 +1,8 @@
 import {expect} from "chai";
-import {forEachImplementation} from "../switch";
+import {IBls} from "../../src/interface";
 import {getN, randomMessage} from "../util";
 
-forEachImplementation((bls) => {
+export function runIndexTests(bls: IBls) {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
     const sk = bls.PrivateKey.fromKeygen();
@@ -95,4 +95,4 @@ forEachImplementation((bls) => {
       expect(isValid).to.be.false;
     });
   });
-});
+}

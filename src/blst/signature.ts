@@ -1,8 +1,9 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {ISignature} from "../interface";
 import {PublicKey} from "./publicKey";
 
-export class Signature {
+export class Signature implements ISignature {
   readonly affine: blst.Signature;
 
   constructor(value: blst.Signature) {
@@ -15,10 +16,6 @@ export class Signature {
 
   static fromHex(hex: string): Signature {
     return this.fromBytes(hexToBytes(hex));
-  }
-
-  static fromValue(signature: blst.Signature): Signature {
-    return new Signature(signature);
   }
 
   static aggregate(signatures: Signature[]): Signature {

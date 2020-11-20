@@ -1,7 +1,7 @@
 import {expect} from "chai";
-import {forEachImplementation} from "../switch";
+import {IBls} from "../../src/interface";
 
-forEachImplementation((bls) => {
+export function runPrivateKeyTests(bls: IBls) {
   describe("PrivateKey", () => {
     it("should generate fromKeygen private key", () => {
       const privateKey1 = bls.PrivateKey.fromKeygen();
@@ -23,4 +23,4 @@ forEachImplementation((bls) => {
       expect(() => bls.PrivateKey.fromHex("0x2123")).to.throw();
     });
   });
-});
+}

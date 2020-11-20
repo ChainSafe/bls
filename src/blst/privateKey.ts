@@ -1,9 +1,10 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, getRandomBytes, hexToBytes} from "../helpers/utils";
+import {IPrivateKey} from "../interface";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 
-export class PrivateKey {
+export class PrivateKey implements IPrivateKey {
   readonly value: blst.SecretKey;
 
   constructor(value: blst.SecretKey) {
@@ -25,7 +26,7 @@ export class PrivateKey {
   }
 
   signMessage(message: Uint8Array): Signature {
-    return Signature.fromValue(this.value.sign(message));
+    return new Signature(this.value.sign(message));
   }
 
   toPublicKey(): PublicKey {

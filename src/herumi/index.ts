@@ -5,25 +5,9 @@ import {Signature} from "./signature";
 import {initBLS, destroy} from "./context";
 import assert from "assert";
 import {toBuffer} from "../helpers/utils";
+import {IBls} from "../interface";
 
 export {Keypair, PrivateKey, PublicKey, Signature, initBLS, destroy};
-
-/**
- * Generates new secret and public key
- */
-export function generateKeyPair(): Keypair {
-  return Keypair.generate();
-}
-
-/**
- * Generates public key from given secret.
- * @param {BLSSecretKey} secretKey
- */
-export function generatePublicKey(secretKey: Uint8Array): Buffer {
-  assert(secretKey, "secretKey is null or undefined");
-  const keypair = new Keypair(PrivateKey.fromBytes(toBuffer(secretKey)));
-  return keypair.publicKey.toBytes();
-}
 
 /**
  * Signs given message using secret key.
@@ -121,9 +105,7 @@ export function verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Arr
   }
 }
 
-export default {
-  generateKeyPair,
-  generatePublicKey,
+const bls: IBls = {
   sign,
   aggregateSignatures,
   aggregatePubkeys,
@@ -131,10 +113,12 @@ export default {
   verifyAggregate,
   verifyMultiple,
 
-  Keypair,
+  // Keypair,
   PrivateKey,
   PublicKey,
   Signature,
   initBLS,
   destroy,
 };
+
+export default bls;

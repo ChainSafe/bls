@@ -3,8 +3,9 @@ import {getContext} from "./context";
 import {EMPTY_PUBLIC_KEY} from "../constants";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers/utils";
+import {IPublicKey} from "../interface";
 
-export class PublicKey {
+export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;
 
   constructor(value: PublicKeyType) {

@@ -1,7 +1,8 @@
 import {PublicKey} from "./publicKey";
 import {PrivateKey} from "./privateKey";
+import {IKeypair} from "../interface";
 
-export class Keypair {
+export class Keypair implements IKeypair {
   private readonly _publicKey: PublicKey;
 
   private readonly _privateKey: PrivateKey;

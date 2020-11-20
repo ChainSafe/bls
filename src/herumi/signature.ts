@@ -4,8 +4,9 @@ import {SignatureType} from "@chainsafe/eth2-bls-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers/utils";
+import {ISignature} from "../interface";
 
-export class Signature {
+export class Signature implements ISignature {
   readonly value: SignatureType;
 
   constructor(value: SignatureType) {
