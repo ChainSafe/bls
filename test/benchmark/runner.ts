@@ -8,7 +8,7 @@ export function runBenchmark<T, R>({
   testRunner: (input: T) => R;
   runs?: number;
   id: string;
-}) {
+}): void {
   const diffsNanoSec: bigint[] = [];
 
   for (let i = 0; i < runs; i++) {

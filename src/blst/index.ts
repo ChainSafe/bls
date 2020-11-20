@@ -8,10 +8,10 @@ export * from "../constants";
 
 export {Keypair, PrivateKey, PublicKey, Signature};
 
-export async function initBLS() {
+export async function initBLS(): Promise<void> {
   // Native bindings require no init() call
 }
-export function destroy() {
+export function destroy(): void {
   // Native bindings require no destroy() call
 }
 

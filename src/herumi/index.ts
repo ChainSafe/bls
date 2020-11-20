@@ -3,7 +3,6 @@ import {PrivateKey} from "./privateKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {initBLS, destroy} from "./context";
-import {PUBLIC_KEY_LENGTH} from "../constants";
 import assert from "assert";
 import {toBuffer} from "../helpers/utils";
 

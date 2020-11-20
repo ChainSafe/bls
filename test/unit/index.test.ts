@@ -1,16 +1,9 @@
 import {expect} from "chai";
 import {forEachImplementation} from "../switch";
-import {getRandomBytes} from "../../src/helpers/utils";
-
-function randomMessage(): Uint8Array {
-  return getRandomBytes(32);
-}
-
-function getN<T>(n: number, getter: () => T): T[] {
-  return Array.from({length: n}, () => getter());
-}
+import {getN, randomMessage} from "../util";
 
 forEachImplementation((bls) => {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
     const sk = bls.PrivateKey.fromKeygen();
     const pk = sk.toPublicKey();
@@ -53,7 +46,7 @@ forEachImplementation((bls) => {
   });
 
   describe("verify multiple", () => {
-    it(`should verify aggregated signatures`, () => {
+    it("should verify aggregated signatures", () => {
       const sks = getN(4, () => bls.PrivateKey.fromKeygen());
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());

@@ -42,6 +42,14 @@ export class Signature {
     );
   }
 
+  toBytes(): Buffer {
+    return Buffer.from(this.affine.toBytes());
+  }
+
+  toHex(): string {
+    return bytesToHex(this.toBytes());
+  }
+
   private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {
     // If this set is simply an infinity signature and infinity pubkey then skip verification.
     // This has the effect of always declaring that this sig/pubkey combination is valid.
@@ -51,13 +59,5 @@ export class Signature {
     }
 
     return blst.aggregateVerify(msgs, pks, this.affine);
-  }
-
-  toBytes(): Buffer {
-    return Buffer.from(this.affine.toBytes());
-  }
-
-  toHex(): string {
-    return bytesToHex(this.toBytes());
   }
 }
