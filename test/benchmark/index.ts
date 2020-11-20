@@ -1,95 +1,49 @@
 import crypto from "crypto";
-import * as blst from "@chainsafe/blst";
-import * as herumi from "../../src";
 import {runBenchmark} from "./runner";
+import {runForAllImplementations} from "../switch";
+import {IPublicKey, ISignature} from "../../src/interface";
 
-(async function () {
-  await herumi.initBLS();
+runForAllImplementations(async (bls, implementation) => {
+  await bls.initBLS();
 
   const aggCount = 30;
 
   // verify
 
-  runBenchmark<{pk: blst.PublicKey; msg: Uint8Array; sig: blst.Signature}, boolean>({
-    id: "BLST verify",
+  runBenchmark<{pk: IPublicKey; msg: Uint8Array; sig: ISignature}, boolean>({
+    id: `${implementation} verify`,
 
     prepareTest: () => {
       const msg = randomMsg();
-      const sk = blst.SecretKey.fromKeygen(crypto.randomBytes(32));
+      const sk = bls.PrivateKey.fromKeygen();
       const pk = sk.toPublicKey();
-      const sig = sk.sign(msg);
+      const sig = sk.signMessage(msg);
       return {
         input: {pk, msg, sig},
         resultCheck: (valid) => valid === true,
       };
     },
     testRunner: ({pk, msg, sig}) => {
-      return blst.verify(msg, pk, sig);
-    },
-  });
-
-  runBenchmark<{pk: herumi.PublicKey; msg: Uint8Array; sig: herumi.Signature}, boolean>({
-    id: "HERUMI verify",
-
-    prepareTest: () => {
-      const msg = randomMsg();
-      const keypair = herumi.generateKeyPair();
-      const pk = keypair.publicKey;
-      const sig = keypair.privateKey.signMessage(msg);
-      return {
-        input: {pk, msg, sig},
-        resultCheck: (valid) => valid === true,
-      };
-    },
-    testRunner: ({pk, msg, sig}) => {
-      return pk.verifyMessage(sig, msg);
+      return sig.verify(pk, msg);
     },
   });
 
   // Fast aggregate
 
-  runBenchmark<{pks: blst.AggregatePublicKey[]; msg: Uint8Array; sig: blst.Signature}, boolean>({
-    id: "BLST fastAggregateVerify",
+  runBenchmark<{pks: IPublicKey[]; msg: Uint8Array; sig: ISignature}, boolean>({
+    id: `${implementation} verifyAggregate`,
 
     prepareTest: () => {
       const msg = randomMsg();
-
       const dataArr = range(aggCount).map(() => {
-        const sk = blst.SecretKey.fromKeygen(crypto.randomBytes(32));
-        const pk = sk.toAggregatePublicKey();
-        const sig = sk.sign(msg);
+        const sk = bls.PrivateKey.fromKeygen();
+        const pk = sk.toPublicKey();
+        const sig = sk.signMessage(msg);
         return {pk, sig};
       });
 
       const pks = dataArr.map((data) => data.pk);
-      const aggSig = blst.AggregateSignature.fromSignatures(dataArr.map((data) => data.sig));
-      const sig = aggSig.toSignature();
-
-      return {
-        input: {pks, msg, sig},
-        resultCheck: (valid) => valid === true,
-      };
-    },
-    testRunner: ({pks, msg, sig}) => {
-      return blst.fastAggregateVerify(msg, pks, sig);
-    },
-  });
-
-  runBenchmark<{pks: herumi.PublicKey[]; msg: Uint8Array; sig: herumi.Signature}, boolean>({
-    id: "HERUMI fastAggregateVerify",
-
-    prepareTest: () => {
-      const msg = randomMsg();
-
-      const dataArr = range(aggCount).map(() => {
-        const keypair = herumi.generateKeyPair();
-        const pk = keypair.publicKey;
-        const sig = keypair.privateKey.signMessage(msg);
-        return {pk, sig};
-      });
-
-      const pks = dataArr.map((data) => data.pk);
-      const sig = herumi.Signature.aggregate(dataArr.map((data) => data.sig));
+      const sig = bls.Signature.aggregate(dataArr.map((data) => data.sig));
 
       return {
         input: {pks, msg, sig},
@@ -101,50 +55,41 @@ import {runBenchmark} from "./runner";
     },
   });
 
+  // Aggregate pubkeys
+
+  runBenchmark<IPublicKey[], void>({
+    id: `${implementation} aggregate pubkeys (${aggCount})`,
+
+    prepareTest: () => {
+      return {
+        input: range(aggCount).map(() => bls.PrivateKey.fromKeygen().toPublicKey()),
+      };
+    },
+    testRunner: (pks) => {
+      bls.PublicKey.aggregate(pks);
+    },
+  });
+
   // Aggregate sigs
 
-  runBenchmark<blst.PublicKey[], void>({
-    id: `BLST aggregatePubkeys (${aggCount})`,
+  runBenchmark<ISignature[], void>({
+    id: `${implementation} aggregate signatures (${aggCount})`,
 
     prepareTest: () => {
+      const msg = randomMsg();
+      const sigs = range(aggCount).map(() => {
+        const sk = bls.PrivateKey.fromKeygen();
+        return sk.signMessage(msg);
+      });
       return {
-        input: range(aggCount).map(() => blst.SecretKey.fromKeygen(crypto.randomBytes(32)).toPublicKey()),
+        input: sigs,
       };
     },
-    testRunner: (pks) => {
-      blst.AggregatePublicKey.fromPublicKeys(pks);
+    testRunner: (sigs) => {
+      bls.Signature.aggregate(sigs);
     },
   });
-
-  runBenchmark<blst.AggregatePublicKey[], void>({
-    id: `BLST aggregatePubkeys as jacobian (${aggCount})`,
-
-    prepareTest: () => {
-      return {
-        input: range(aggCount).map(() => {
-          const pk = blst.SecretKey.fromKeygen(crypto.randomBytes(32)).toPublicKey();
-          return blst.AggregatePublicKey.fromPublicKey(pk);
-        }),
-      };
-    },
-    testRunner: (pks) => {
-      blst.aggregatePubkeys(pks);
-    },
-  });
-
-  runBenchmark<herumi.PublicKey[], void>({
-    id: `HERUMI aggregatePubkeys (${aggCount})`,
-
-    prepareTest: () => {
-      return {
-        input: range(aggCount).map(() => herumi.generateKeyPair().publicKey),
-      };
-    },
-    testRunner: (pks) => {
-      herumi.PublicKey.aggregate(pks);
-    },
-  });
-})();
+});
 
 function range(n: number): number[] {
   const nums: number[] = [];

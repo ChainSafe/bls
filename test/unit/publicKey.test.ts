@@ -1,7 +1,7 @@
 import {expect} from "chai";
 import {IBls} from "../../src/interface";
 
-export function runPublicKeyTests(bls: IBls) {
+export function runPublicKeyTests(bls: IBls): void {
   describe("PublicKey", () => {
     const publicKey =
       "0xb6f21199594b56d77670564bf422cb331d5281ca2c1f9a45588a56881d8287ef8619efa6456d6cd2ef61306aa5b21311";

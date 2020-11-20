@@ -2,7 +2,7 @@ import {expect} from "chai";
 import {IBls} from "../../src/interface";
 import {getN, randomMessage} from "../util";
 
-export function runIndexTests(bls: IBls) {
+export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
     const sk = bls.PrivateKey.fromKeygen();

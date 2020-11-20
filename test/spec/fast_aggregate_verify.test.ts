@@ -2,7 +2,7 @@ import path from "path";
 import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
 import {hexToBytes} from "../../src/helpers/utils";
 import {SPEC_TESTS_DIR} from "../params";
-import {forEachImplementation} from "../switch";
+import {describeForAllImplementations} from "../switch";
 
 interface IAggregateSigsVerifyTestCase {
   data: {
@@ -15,7 +15,7 @@ interface IAggregateSigsVerifyTestCase {
   };
 }
 
-forEachImplementation((bls) => {
+describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
     "bls/fast_aggregate_verify/small",
     path.join(SPEC_TESTS_DIR, "general/phase0/bls/fast_aggregate_verify/small"),

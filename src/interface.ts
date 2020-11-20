@@ -22,8 +22,8 @@ export interface IBls {
   verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean;
   verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array): boolean;
 
-  initBLS: () => Promise<void>;
-  destroy: () => void;
+  initBLS(): Promise<void>;
+  destroy(): void;
 }
 
 export interface IKeypair {
@@ -45,7 +45,6 @@ export interface ISignature {
 }
 
 export interface IPrivateKey {
-  value: any;
   toPublicKey(): IPublicKey;
   signMessage(message: Uint8Array): ISignature;
   toBytes(): Buffer;

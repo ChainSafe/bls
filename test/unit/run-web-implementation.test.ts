@@ -9,6 +9,8 @@ import {runIndexTests} from "./index.test";
 // Error: BLST bindings loader should only run in a NodeJS context: process.platform
 describe("herumi", () => {
   before(async () => {
+    // For consistency with describeForAllImplementations
+    // eslint-disable-next-line import/no-named-as-default-member
     await herumi.initBLS();
   });
 

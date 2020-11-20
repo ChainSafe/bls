@@ -1,7 +1,7 @@
 import {expect} from "chai";
 import {IBls} from "../../src/interface";
 
-export function runPrivateKeyTests(bls: IBls) {
+export function runPrivateKeyTests(bls: IBls): void {
   describe("PrivateKey", () => {
     it("should generate fromKeygen private key", () => {
       const privateKey1 = bls.PrivateKey.fromKeygen();

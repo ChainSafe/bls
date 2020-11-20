@@ -14,19 +14,23 @@ export function getBls(implementation: Implementation): IBls {
   }
 }
 
-export function forEachImplementation(
-  implementations: Implementation[],
-  callback: (bls: ReturnType<typeof getBls>, implementation: Implementation) => void
-): void {
-  for (const implementation of implementations) {
-    describe(implementation, () => {
-      const bls = getBls(implementation);
+export async function runForAllImplementations(
+  callback: (bls: IBls, implementation: Implementation) => Promise<void> | void
+): Promise<void> {
+  for (const implementation of ["blst", "herumi"] as Implementation[]) {
+    const bls = getBls(implementation);
+    await callback(bls, implementation);
+  }
+}
 
+export function describeForAllImplementations(callback: (bls: IBls) => void): void {
+  runForAllImplementations((bls, implementation) => {
+    describe(implementation, () => {
       before(async () => {
         await bls.initBLS();
       });
 
-      callback(bls, implementation);
+      callback(bls);
     });
-  }
+  });
 }
