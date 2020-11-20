@@ -20,3 +20,5 @@ jobs:
         run: yarn lint
       - name: Tests
         run: yarn test
+      - name: Benchmark
+        run: yarn benchmark

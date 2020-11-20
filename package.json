@@ -36,7 +36,7 @@
     "test:spec": "mocha --colors -r ts-node/register 'test/spec/**/*.test.ts'",
     "test": "yarn run test:unit && yarn run test:spec",
     "coverage": "codecov -F bls",
-    "benchmark": "node -r ./.babel-register test/benchmarks"
+    "benchmark": "ts-node test/benchmark"
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.2.0",
