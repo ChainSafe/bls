@@ -4,6 +4,7 @@ import {runPublicKeyTests} from "./publicKey.test";
 import {runIndexTests} from "./index.test";
 import {forEachImplementation} from "../switch";
 
+// Import test's bls lib lazily to prevent breaking test with Karma
 forEachImplementation(["blst", "herumi"], (bls) => {
   runPrivateKeyTests(bls);
   runPublicKeyTests(bls);

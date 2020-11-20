@@ -1,12 +1,19 @@
+import herumi from "../../src/herumi";
 import {runPrivateKeyTests} from "./privateKey.test";
 import {runPublicKeyTests} from "./publicKey.test";
 // import {runKeypairTests} from "./keypair.test";
 import {runIndexTests} from "./index.test";
-import {forEachImplementation} from "../switch";
 
-forEachImplementation(["herumi"], (bls) => {
-  runPrivateKeyTests(bls);
-  runPublicKeyTests(bls);
+// This file is intended to be compiled and run by Karma
+// Do not import the node.bindings or it will break with:
+// Error: BLST bindings loader should only run in a NodeJS context: process.platform
+describe("herumi", () => {
+  before(async () => {
+    await herumi.initBLS();
+  });
+
+  runPrivateKeyTests(herumi);
+  runPublicKeyTests(herumi);
   // runKeypairTests(bls);
-  runIndexTests(bls);
+  runIndexTests(herumi);
 });
