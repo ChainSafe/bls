@@ -37,12 +37,6 @@ declare module "bls-eth-wasm" {
         getPublicKey(): PublicKeyType;
     
         sign(m: string | Uint8Array): SignatureType;
-    
-        /**
-         *
-         * @param m must have 40 bytes
-         */
-        signHashWithDomain(m: Uint8Array): SignatureType;
     }
     
     export class PublicKeyType extends Common {
@@ -55,12 +49,6 @@ declare module "bls-eth-wasm" {
         serializeUncompressed (): Uint8Array;
         deserializeUncompressedHexStr (s:string): void;
         serializeUncompressedToHexStr(): string;
-        /**
-         *
-         * @param signature
-         * @param m must have 40 bytes
-         */
-        verifyHashWithDomain(signature: SignatureType, m: Uint8Array): boolean;
     }
     
     export class SignatureType extends Common {
@@ -74,12 +62,6 @@ declare module "bls-eth-wasm" {
         aggregate(others: SignatureType[]): boolean;
         aggregateVerifyNoCheck(publicKeys: PublicKeyType[], messages: Uint8Array): boolean;
         fastAggregateVerify(publicKeys: PublicKeyType[], message: Uint8Array): boolean;
-        /**
-         *
-         * @param publicKeys
-         * @param messages each message must have 40bytes
-         */
-        verifyAggregatedHashWithDomain(publicKeys: PublicKeyType[], messages: Uint8Array[]): boolean
     
     }
     
@@ -105,7 +87,7 @@ declare module "bls-eth-wasm" {
     export function deserializeHexStrToPublicKey(s: string): PublicKeyType;
     export function deserializeHexStrToSignature(s: string): SignatureType;
     
-    export const SecretKey: typeof SecretKeyType;
-    export const PublicKey: typeof PublicKeyType;
-    export const Signature: typeof SignatureType;
+    export const SecretKey: InstanceType<typeof SecretKeyType>;
+    export const PublicKey: InstanceType<typeof PublicKeyType>;
+    export const Signature: InstanceType<typeof SignatureType>;
 }

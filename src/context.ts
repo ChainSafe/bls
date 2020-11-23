@@ -1,34 +1,38 @@
-/* eslint-disable require-atomic-updates */
-import bls from "bls-eth-wasm";
+import herumi from "bls-eth-wasm";
+import { herumiToIBls } from "./herumi";
+import { IBls } from "./interface";
 
-type Bls = typeof bls;
-let blsGlobal: Bls | null = null;
-let blsGlobalPromise: Promise<Bls> | null = null;
+export type Backing = "herumi" | "blst-native" | "blst-wasm";
 
-export async function setupBls(): Promise<Bls> {
-  if (!blsGlobal) {
-    await bls.init();
-    blsGlobal = bls;
+let backing: Backing|undefined = undefined;
+let context: IBls|undefined = undefined;
+
+//to maintain api compatible, add all backing context to return type
+export async function init(backing: Backing = "herumi"): Promise<IBls> {
+  if (!context) {
+    switch(backing) {
+        case "herumi": {
+            context = await herumiToIBls();
+            backing = backing;
+        } break;
+        default: throw new Error(`Unsupported backing - ${backing}`)
+    }
   }
-  return blsGlobal;
-}
-
-// Cache a promise for Bls instead of Bls to make sure it is initialized only once
-export async function init(): Promise<Bls> {
-  if (!blsGlobalPromise) {
-    blsGlobalPromise = setupBls();
-  }
-  return blsGlobalPromise;
+  await context.init();
+  return context;
 }
 
 export function destroy(): void {
-  blsGlobal = null;
-  blsGlobalPromise = null;
+    if(context) {
+        context.destroy();
+    }
+  context = undefined;
+  backing = undefined;
 }
 
-export function getContext(): Bls {
-  if (!blsGlobal) {
+export function getContext(): IBls {
+  if (!context) {
     throw new Error("BLS not initialized");
   }
-  return blsGlobal;
+  return context;
 }

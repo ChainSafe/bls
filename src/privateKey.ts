@@ -1,15 +1,14 @@
 import {SECRET_KEY_LENGTH} from "./constants";
 import assert from "assert";
-import {SecretKeyType} from "bls-eth-wasm";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
-import {getContext} from "./context";
-import {PublicKey} from "./publicKey";
-import {Signature} from "./signature";
+import { IPrivateKeyValue } from "./interface";
+import { getContext } from "./context";
+import { PublicKey, Signature } from ".";
 
 export class PrivateKey {
-  private value: SecretKeyType;
+  private value: IPrivateKeyValue;
 
-  protected constructor(value: SecretKeyType) {
+  protected constructor(value: IPrivateKeyValue) {
     this.value = value;
   }
 
@@ -25,7 +24,9 @@ export class PrivateKey {
     value = value.replace("0x", "");
     assert(value.length === SECRET_KEY_LENGTH * 2, "secret key must have 32 bytes");
     const context = getContext();
-    return new PrivateKey(context.deserializeHexStrToSecretKey(value));
+    const secretKeyValue = new context.SecretKey();
+    secretKeyValue.deserializeHexStr(value);
+    return new PrivateKey(secretKeyValue);
   }
 
   public static fromInt(num: number): PrivateKey {
@@ -40,7 +41,7 @@ export class PrivateKey {
     return this.fromBytes(randomKey);
   }
 
-  public getValue(): SecretKeyType {
+  public getValue(): IPrivateKeyValue {
     return this.value;
   }
 

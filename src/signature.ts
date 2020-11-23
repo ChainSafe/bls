@@ -1,14 +1,14 @@
 import assert from "assert";
-import {FP_POINT_LENGTH} from "./constants";
-import {SignatureType} from "bls-eth-wasm";
-import {getContext} from "./context";
-import {PublicKey} from "./publicKey";
-import {EMPTY_SIGNATURE} from "./helpers/utils";
+import { FP_POINT_LENGTH } from "./constants";
+import { getContext } from "./context";
+import { EMPTY_SIGNATURE } from "./helpers/utils";
+import { ISignatureValue } from './interface';
+import { PublicKey } from "./publicKey";
 
 export class Signature {
-  private value: SignatureType;
+  private value: ISignatureValue;
 
-  protected constructor(value: SignatureType) {
+  protected constructor(value: ISignatureValue) {
     this.value = value;
     assert(this.value.isValidOrder());
   }
@@ -23,7 +23,7 @@ export class Signature {
     return new Signature(signature);
   }
 
-  public static fromValue(signature: SignatureType): Signature {
+  public static fromValue(signature: ISignatureValue): Signature {
     return new Signature(signature);
   }
 
@@ -40,7 +40,7 @@ export class Signature {
     return new Signature(agg);
   }
 
-  public getValue(): SignatureType {
+  public getValue(): ISignatureValue {
     return this.value;
   }
 

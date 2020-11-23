@@ -1,15 +1,15 @@
 import {PrivateKey} from "./privateKey";
-import {PublicKeyType} from "bls-eth-wasm";
-import {getContext} from "./context";
 import {PUBLIC_KEY_LENGTH} from "./constants";
 import assert from "assert";
 import {Signature} from "./signature";
 import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
+import { IPublicKeyValue } from './interface';
+import { getContext } from "./context";
 
 export class PublicKey {
-  private value: PublicKeyType;
+  private value: IPublicKeyValue;
 
-  protected constructor(value: PublicKeyType) {
+  protected constructor(value: IPublicKeyValue) {
     this.value = value;
   }
 
@@ -30,10 +30,12 @@ export class PublicKey {
     value = value.replace("0x", "");
     assert(value.length === PUBLIC_KEY_LENGTH * 2);
     const context = getContext();
-    return new PublicKey(context.deserializeHexStrToPublicKey(value));
+    const pubkeyValue = new context.PublicKey();
+    pubkeyValue.deserializeHexStr(value)
+    return new PublicKey(pubkeyValue);
   }
 
-  public static fromPublicKeyType(value: PublicKeyType): PublicKey {
+  public static fromPublicKeyType(value: IPublicKeyValue): PublicKey {
     return new PublicKey(value);
   }
 
@@ -55,7 +57,7 @@ export class PublicKey {
     return `0x${this.toBytesCompressed().toString("hex")}`;
   }
 
-  public getValue(): PublicKeyType {
+  public getValue(): IPublicKeyValue {
     return this.value;
   }
 }
