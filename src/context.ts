@@ -4,7 +4,7 @@ import { IBls } from "./interface";
 
 export type Backing = "herumi" | "blst-native" | "blst-wasm";
 
-let backing: Backing|undefined = undefined;
+let contextBacking: Backing|undefined = undefined;
 let context: IBls|undefined = undefined;
 
 //to maintain api compatible, add all backing context to return type
@@ -13,7 +13,7 @@ export async function init(backing: Backing = "herumi"): Promise<IBls> {
     switch(backing) {
         case "herumi": {
             context = await herumiToIBls();
-            backing = backing;
+            contextBacking = backing;
         } break;
         default: throw new Error(`Unsupported backing - ${backing}`)
     }
@@ -27,7 +27,7 @@ export function destroy(): void {
         context.destroy();
     }
   context = undefined;
-  backing = undefined;
+  contextBacking = undefined;
 }
 
 export function getContext(): IBls {
@@ -35,4 +35,12 @@ export function getContext(): IBls {
     throw new Error("BLS not initialized");
   }
   return context;
+}
+
+
+export function getContextBacking(): Backing {
+  if (!context) {
+    throw new Error("BLS not initialized");
+  }
+  return contextBacking;
 }
