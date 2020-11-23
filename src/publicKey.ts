@@ -3,8 +3,8 @@ import {PUBLIC_KEY_LENGTH} from "./constants";
 import assert from "assert";
 import {Signature} from "./signature";
 import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
-import { IPublicKeyValue } from './interface';
-import { getContext } from "./context";
+import {IPublicKeyValue} from "./interface";
+import {getContext} from "./context";
 
 export class PublicKey {
   private value: IPublicKeyValue;
@@ -31,7 +31,7 @@ export class PublicKey {
     assert(value.length === PUBLIC_KEY_LENGTH * 2);
     const context = getContext();
     const pubkeyValue = new context.PublicKey();
-    pubkeyValue.deserializeHexStr(value)
+    pubkeyValue.deserializeHexStr(value);
     return new PublicKey(pubkeyValue);
   }
 

@@ -1,9 +1,9 @@
 import {PUBLIC_KEY_LENGTH} from "./constants";
 import assert from "assert";
-import { Keypair } from "./keypair";
-import { PrivateKey } from "./privateKey";
-import { PublicKey } from "./publicKey";
-import { Signature } from "./signature";
+import {Keypair} from "./keypair";
+import {PrivateKey} from "./privateKey";
+import {PublicKey} from "./publicKey";
+import {Signature} from "./signature";
 
 export {Keypair, PrivateKey, PublicKey, Signature};
 

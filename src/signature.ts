@@ -1,9 +1,9 @@
 import assert from "assert";
-import { FP_POINT_LENGTH } from "./constants";
-import { getContext } from "./context";
-import { EMPTY_SIGNATURE } from "./helpers/utils";
-import { ISignatureValue } from './interface';
-import { PublicKey } from "./publicKey";
+import {FP_POINT_LENGTH} from "./constants";
+import {getContext} from "./context";
+import {EMPTY_SIGNATURE} from "./helpers/utils";
+import {ISignatureValue} from "./interface";
+import {PublicKey} from "./publicKey";
 
 export class Signature {
   private value: ISignatureValue;

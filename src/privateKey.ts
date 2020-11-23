@@ -1,9 +1,9 @@
 import {SECRET_KEY_LENGTH} from "./constants";
 import assert from "assert";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
-import { IPrivateKeyValue } from "./interface";
-import { getContext } from "./context";
-import { PublicKey, Signature } from ".";
+import {IPrivateKeyValue} from "./interface";
+import {getContext} from "./context";
+import {PublicKey, Signature} from ".";
 
 export class PrivateKey {
   private value: IPrivateKeyValue;
