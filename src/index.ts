@@ -3,7 +3,7 @@ import {PrivateKey} from "./privateKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {PUBLIC_KEY_LENGTH} from "./constants";
-import assert from "assert";
+import {assert} from "./helpers";
 
 export {Keypair, PrivateKey, PublicKey, Signature};
 
