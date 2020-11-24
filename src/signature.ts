@@ -1,4 +1,4 @@
-import assert from "assert";
+import {assert} from "./helpers";
 import {FP_POINT_LENGTH} from "./constants";
 import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
