@@ -1,5 +1,5 @@
 import {SECRET_KEY_LENGTH} from "./constants";
-import assert from "assert";
+import {assert} from "./helpers";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import {IPrivateKeyValue} from "./interface";
 import {getContext} from "./context";

@@ -1,6 +1,6 @@
 import {PrivateKey} from "./privateKey";
 import {PUBLIC_KEY_LENGTH} from "./constants";
-import assert from "assert";
+import {assert} from "./helpers";
 import {Signature} from "./signature";
 import {EMPTY_PUBLIC_KEY} from "./helpers/utils";
 import {IPublicKeyValue} from "./interface";

@@ -1,4 +1,4 @@
-import assert from "assert";
+import {assert} from "./helpers";
 import {FP_POINT_LENGTH} from "./constants";
 import {getContext} from "./context";
 import {EMPTY_SIGNATURE} from "./helpers/utils";
