@@ -1,6 +1,6 @@
 import {SECRET_KEY_LENGTH} from "./constants";
 import {assert} from "./helpers";
-import {SecretKeyType} from "@chainsafe/eth2-bls-wasm";
+import {SecretKeyType} from "bls-eth-wasm";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";

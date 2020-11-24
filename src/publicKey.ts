@@ -1,5 +1,5 @@
 import {PrivateKey} from "./privateKey";
-import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
+import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PUBLIC_KEY_LENGTH} from "./constants";
 import {assert} from "./helpers";
