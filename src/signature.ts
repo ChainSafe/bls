@@ -1,6 +1,6 @@
 import assert from "assert";
 import {FP_POINT_LENGTH} from "./constants";
-import {SignatureType} from "@chainsafe/eth2-bls-wasm";
+import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {EMPTY_SIGNATURE} from "./helpers/utils";
@@ -53,7 +53,7 @@ export class Signature {
 
   public verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean {
     const msgs = Buffer.concat(messages);
-    if (!fast && !getContext().areAllMsgDifferent(msgs)) {
+    if (!fast && !getContext().areAllMsgDifferent(msgs, messages[0].length)) {
       return false;
     }
     return this.value.aggregateVerifyNoCheck(
