@@ -1,62 +1,46 @@
-interface IBls {
-  Keypair: {
-    generate(): Keypair;
-  };
+export interface IBls {
   PrivateKey: {
-    fromBytes(bytes: Uint8Array): PrivateKey;
-    fromHexString(value: string): PrivateKey;
-    fromInt(num: number): PrivateKey;
-    random(): PrivateKey;
+    fromKeygen(ikm?: Uint8Array): IPrivateKey;
+    fromBytes(bytes: Uint8Array): IPrivateKey;
+    fromHex(hex: string): IPrivateKey;
   };
   PublicKey: {
-    fromPrivateKey(privateKey: PrivateKey): PublicKey;
-    fromBytes(bytes: Uint8Array): PublicKey;
-    fromHex(value: string): PublicKey;
-    fromPublicKeyType(value: IPublicKeyValue): PublicKey;
+    aggregate(pubkeys: IPublicKey[]): IPublicKey;
+    fromBytes(bytes: Uint8Array): IPublicKey;
+    fromHex(hex: string): IPublicKey;
   };
   Signature: {
-    fromCompressedBytes(value: Uint8Array): Signature;
-    fromValue(signature: ISignatureValue): Signature;
-    aggregate(signatures: Signature[]): Signature;
+    aggregate(signatures: ISignature[]): ISignature;
+    fromBytes(bytes: Uint8Array): ISignature;
+    fromHex(hex: string): ISignature;
   };
 
-  initBLS(): Promise<void>;
-  generateKeyPair(): Keypair;
-  generatePublicKey(secretKey: Uint8Array): Buffer;
-  sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer;
-  aggregateSignatures(signatures: Uint8Array[]): Buffer;
-  aggregatePubkeys(publicKeys: Uint8Array[]): Buffer;
+  sign(secretKey: Uint8Array, messageHash: Uint8Array): Uint8Array;
+  aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array;
+  aggregateSignatures(signatures: Uint8Array[]): Uint8Array;
   verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean;
   verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean;
-  verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array, fast = false): boolean;
+  verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array): boolean;
+
+  init(): Promise<void>;
+  destroy(): void;
 }
 
-interface Keypair {
-  publicKey: PublicKey;
-  privateKey: PrivateKey;
+export interface IPublicKey {
+  toBytes(): Uint8Array;
+  toHex(): string;
+}
+export interface IPrivateKey {
+  toPublicKey(): IPublicKey;
+  signMessage(message: Uint8Array): ISignature;
+  toBytes(): Uint8Array;
+  toHex(): string;
 }
 
-interface PrivateKey {
-  getValue(): IPrivateKeyValue;
-  signMessage(message: Uint8Array): Signature;
-  toPublicKey(): PublicKey;
-  toBytes(): Buffer;
-  toHexString(): string;
-}
-
-interface PublicKey {
-  add(other: PublicKey): PublicKey;
-  verifyMessage(signature: Signature, messageHash: Uint8Array): boolean;
-  toBytesCompressed(): Buffer;
-  toHexString(): string;
-  getValue(): IPublicKeyValue;
-}
-
-interface Signature {
-  add(other: Signature): Signature;
-  getValue(): ISignatureValue;
-  verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean;
-  verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[], fast = false): boolean;
-  toBytesCompressed(): Buffer;
+export interface ISignature {
+  verify(publicKey: IPublicKey, message: Uint8Array): boolean;
+  verifyAggregate(publicKeys: IPublicKey[], message: Uint8Array): boolean;
+  verifyMultiple(publicKeys: IPublicKey[], messages: Uint8Array[]): boolean;
+  toBytes(): Uint8Array;
   toHex(): string;
 }
