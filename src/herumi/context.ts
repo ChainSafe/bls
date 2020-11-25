@@ -1,5 +1,5 @@
 /* eslint-disable require-atomic-updates */
-import bls from "@chainsafe/eth2-bls-wasm";
+import bls from "bls-eth-wasm";
 
 type Bls = typeof bls;
 let blsGlobal: Bls | null = null;
