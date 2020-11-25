@@ -7,7 +7,7 @@ let blsGlobalPromise: Promise<void> | null = null;
 
 export async function setupBls(): Promise<void> {
   if (!blsGlobal) {
-    await bls.init();
+    await bls.init(bls.BLS12_381);
     blsGlobal = bls;
   }
 }
