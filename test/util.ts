@@ -1,4 +1,4 @@
-import {getRandomBytes} from "../src/helpers/utils";
+import crypto from "crypto";
 
 export function fromHexString(hex: string): Buffer {
   return Buffer.from(hex.replace("0x", ""), "hex");
@@ -9,7 +9,7 @@ export function toHexString(bytes: Buffer | Uint8Array): string {
 }
 
 export function randomMessage(): Uint8Array {
-  return getRandomBytes(32);
+  return crypto.randomBytes(32);
 }
 
 export function getN<T>(n: number, getter: () => T): T[] {
