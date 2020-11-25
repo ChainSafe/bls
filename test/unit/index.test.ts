@@ -8,7 +8,7 @@ export function runIndexTests(bls: IBls): void {
     const sk = bls.PrivateKey.fromKeygen();
     const pk = sk.toPublicKey();
     const msg = randomMessage();
-    const sig = sk.signMessage(msg);
+    const sig = sk.sign(msg);
     return {sk, pk, msg, sig};
   }
 
@@ -51,12 +51,7 @@ export function runIndexTests(bls: IBls): void {
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
 
-      const sigs = [
-        sks[0].signMessage(msgs[0]),
-        sks[1].signMessage(msgs[0]),
-        sks[2].signMessage(msgs[1]),
-        sks[3].signMessage(msgs[1]),
-      ];
+      const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[0]), sks[2].sign(msgs[1]), sks[3].sign(msgs[1])];
 
       const aggPubkeys = [
         bls.aggregatePubkeys([pks[0], pks[1]].map((pk) => pk.toBytes())),
@@ -74,7 +69,7 @@ export function runIndexTests(bls: IBls): void {
       const msg = randomMessage();
       const sks = getN(n, () => bls.PrivateKey.fromKeygen());
       const pks = sks.map((sk) => sk.toPublicKey());
-      const sigs = sks.map((sk) => sk.signMessage(msg));
+      const sigs = sks.map((sk) => sk.sign(msg));
 
       const aggregateSignature = bls.aggregateSignatures(sigs.map((sig) => sig.toBytes()));
 

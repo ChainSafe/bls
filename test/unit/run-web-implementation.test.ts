@@ -11,7 +11,7 @@ describe("herumi", () => {
   before(async () => {
     // For consistency with describeForAllImplementations
     // eslint-disable-next-line import/no-named-as-default-member
-    await herumi.initBLS();
+    await herumi.init();
   });
 
   runPrivateKeyTests(herumi);

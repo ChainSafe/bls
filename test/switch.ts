@@ -27,7 +27,7 @@ export function describeForAllImplementations(callback: (bls: IBls) => void): vo
   runForAllImplementations((bls, implementation) => {
     describe(implementation, () => {
       before(async () => {
-        await bls.initBLS();
+        await bls.init();
       });
 
       callback(bls);

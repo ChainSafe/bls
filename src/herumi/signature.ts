@@ -64,8 +64,8 @@ export class Signature implements ISignature {
     );
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.value.serialize());
+  toBytes(): Uint8Array {
+    return this.value.serialize();
   }
 
   toHex(): string {

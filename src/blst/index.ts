@@ -7,7 +7,7 @@ import {functionalInterfaceFactory} from "../functional";
 
 export {PrivateKey, PublicKey, Signature};
 
-export async function initBLS(): Promise<void> {
+export async function init(): Promise<void> {
   // Native bindings require no init() call
 }
 export function destroy(): void {
@@ -20,7 +20,7 @@ export const bls: IBls = {
   Signature,
 
   ...functionalInterfaceFactory({PrivateKey, PublicKey, Signature}),
-  initBLS,
+  init,
   destroy,
 };
 

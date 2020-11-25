@@ -39,8 +39,8 @@ export class Signature implements ISignature {
     );
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.affine.toBytes());
+  toBytes(): Uint8Array {
+    return this.affine.toBytes();
   }
 
   toHex(): string {

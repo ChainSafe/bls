@@ -11,14 +11,18 @@ Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggrega
 ## Usage
 
 ```ts
-import {PrivateKey} from "@chainsafe/bls";
+import bls, {init} from "@chainsafe/bls";
 
-const secretKey = PrivateKey.fromKeygen();
-const publicKey = secretKey.toPublicKey();
-const message = new Uint8Array(32);
+(async () => {
+  await init("herumi");
 
-const signature = secretKey.sign(message);
-console.log("Is valid: ", signature.verify(publicKey, message));
+  const secretKey = bls.PrivateKey.fromKeygen();
+  const publicKey = secretKey.toPublicKey();
+  const message = new Uint8Array(32);
+
+  const signature = secretKey.sign(message);
+  console.log("Is valid: ", signature.verify(publicKey, message));
+})();
 ```
 
 ### Browser

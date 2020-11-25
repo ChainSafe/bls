@@ -32,8 +32,8 @@ export class PublicKey implements IPublicKey {
     return signature.verify(this, message);
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.affine.toBytes());
+  toBytes(): Uint8Array {
+    return this.affine.toBytes();
   }
 
   toHex(): string {

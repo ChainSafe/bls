@@ -19,7 +19,7 @@ export class PrivateKey implements IPrivateKey {
     assert(bytes.length === SECRET_KEY_LENGTH, "Private key should have 32 bytes");
     const context = getContext();
     const secretKey = new context.SecretKey();
-    secretKey.deserialize(Buffer.from(bytes));
+    secretKey.deserialize(bytes);
     return new PrivateKey(secretKey);
   }
 
@@ -32,7 +32,7 @@ export class PrivateKey implements IPrivateKey {
     return this.fromBytes(sk);
   }
 
-  signMessage(message: Uint8Array): Signature {
+  sign(message: Uint8Array): Signature {
     return new Signature(this.value.sign(message));
   }
 
@@ -40,8 +40,8 @@ export class PrivateKey implements IPrivateKey {
     return new PublicKey(this.value.getPublicKey());
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.value.serialize());
+  toBytes(): Uint8Array {
+    return this.value.serialize();
   }
 
   toHex(): string {

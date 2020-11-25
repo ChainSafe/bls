@@ -13,18 +13,18 @@ export function functionalInterfaceFactory({
    * @param secretKey
    * @param messageHash
    */
-  function sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer {
+  function sign(secretKey: Uint8Array, messageHash: Uint8Array): Uint8Array {
     assert(secretKey, "secretKey is null or undefined");
     assert(messageHash, "messageHash is null or undefined");
     const privateKey = PrivateKey.fromBytes(secretKey);
-    return privateKey.signMessage(messageHash).toBytes();
+    return privateKey.sign(messageHash).toBytes();
   }
 
   /**
    * Compines all given signature into one.
    * @param signatures
    */
-  function aggregateSignatures(signatures: Uint8Array[]): Buffer {
+  function aggregateSignatures(signatures: Uint8Array[]): Uint8Array {
     const agg = Signature.aggregate(signatures.map((p) => Signature.fromBytes(p)));
     return agg.toBytes();
   }
@@ -33,7 +33,7 @@ export function functionalInterfaceFactory({
    * Combines all given public keys into single one
    * @param publicKeys
    */
-  function aggregatePubkeys(publicKeys: Uint8Array[]): Buffer {
+  function aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array {
     const agg = PublicKey.aggregate(publicKeys.map((p) => PublicKey.fromBytes(p)));
     return agg.toBytes();
   }

@@ -3,17 +3,13 @@ import blsHerumi from "./herumi";
 
 export type Implementation = "herumi" | "blst-native";
 
-// This proxy makes sure a nice error is printed if BLS is used before init()
-export let bls: IBls = new Proxy({} as IBls, {
-  get: function () {
-    throw Error("BLS not initialized, call init() before");
-  },
-});
+// TODO: Use a Proxy for example to throw an error if it's not initialized yet
+export let bls: IBls;
 
 async function getImplementation(impl: Implementation) {
   switch (impl) {
     case "herumi":
-      await blsHerumi.initBLS();
+      await blsHerumi.init();
       return blsHerumi;
 
     case "blst-native":

@@ -4,7 +4,7 @@ import {runForAllImplementations} from "../switch";
 import {IPublicKey, ISignature} from "../../src/interface";
 
 runForAllImplementations(async (bls, implementation) => {
-  await bls.initBLS();
+  await bls.init();
 
   const aggCount = 30;
 
@@ -17,7 +17,7 @@ runForAllImplementations(async (bls, implementation) => {
       const msg = randomMsg();
       const sk = bls.PrivateKey.fromKeygen();
       const pk = sk.toPublicKey();
-      const sig = sk.signMessage(msg);
+      const sig = sk.sign(msg);
       return {
         input: {pk, msg, sig},
         resultCheck: (valid) => valid === true,
@@ -38,7 +38,7 @@ runForAllImplementations(async (bls, implementation) => {
       const dataArr = range(aggCount).map(() => {
         const sk = bls.PrivateKey.fromKeygen();
         const pk = sk.toPublicKey();
-        const sig = sk.signMessage(msg);
+        const sig = sk.sign(msg);
         return {pk, sig};
       });
 
@@ -79,7 +79,7 @@ runForAllImplementations(async (bls, implementation) => {
       const msg = randomMsg();
       const sigs = range(aggCount).map(() => {
         const sk = bls.PrivateKey.fromKeygen();
-        return sk.signMessage(msg);
+        return sk.sign(msg);
       });
       return {
         input: sigs,

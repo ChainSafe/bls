@@ -26,7 +26,7 @@ export class PrivateKey implements IPrivateKey {
     return new PrivateKey(sk);
   }
 
-  signMessage(message: Uint8Array): Signature {
+  sign(message: Uint8Array): Signature {
     return new Signature(this.value.sign(message));
   }
 
@@ -36,8 +36,8 @@ export class PrivateKey implements IPrivateKey {
     return new PublicKey(affine, jacobian);
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.value.toBytes());
+  toBytes(): Uint8Array {
+    return this.value.toBytes();
   }
 
   toHex(): string {

@@ -15,14 +15,14 @@ export interface IBls {
     aggregate(signatures: ISignature[]): ISignature;
   };
 
-  sign(secretKey: Uint8Array, messageHash: Uint8Array): Buffer;
-  aggregatePubkeys(publicKeys: Uint8Array[]): Buffer;
-  aggregateSignatures(signatures: Uint8Array[]): Buffer;
+  sign(secretKey: Uint8Array, messageHash: Uint8Array): Uint8Array;
+  aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array;
+  aggregateSignatures(signatures: Uint8Array[]): Uint8Array;
   verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean;
   verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean;
   verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array): boolean;
 
-  initBLS(): Promise<void>;
+  init(): Promise<void>;
   destroy(): void;
 }
 
@@ -32,12 +32,12 @@ export interface IKeypair {
 }
 
 export interface IPublicKey {
-  toBytes(): Buffer;
+  toBytes(): Uint8Array;
   toHex(): string;
 }
 
 export interface ISignature {
-  toBytes(): Buffer;
+  toBytes(): Uint8Array;
   toHex(): string;
   verify(publicKey: IPublicKey, message: Uint8Array): boolean;
   verifyAggregate(publicKeys: IPublicKey[], message: Uint8Array): boolean;
@@ -46,7 +46,7 @@ export interface ISignature {
 
 export interface IPrivateKey {
   toPublicKey(): IPublicKey;
-  signMessage(message: Uint8Array): ISignature;
-  toBytes(): Buffer;
+  sign(message: Uint8Array): ISignature;
+  toBytes(): Uint8Array;
   toHex(): string;
 }

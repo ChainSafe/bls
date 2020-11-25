@@ -47,8 +47,8 @@ export class PublicKey implements IPublicKey {
     return this.value.verify(signature.value, messageHash);
   }
 
-  toBytes(): Buffer {
-    return Buffer.from(this.value.serialize());
+  toBytes(): Uint8Array {
+    return this.value.serialize();
   }
 
   toHex(): string {

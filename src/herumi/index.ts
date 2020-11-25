@@ -1,11 +1,11 @@
 import {PrivateKey} from "./privateKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
-import {initBLS, destroy} from "./context";
+import {init, destroy} from "./context";
 import {IBls} from "../interface";
 import {functionalInterfaceFactory} from "../functional";
 
-export {PrivateKey, PublicKey, Signature, initBLS, destroy};
+export {PrivateKey, PublicKey, Signature, init, destroy};
 
 const bls: IBls = {
   PrivateKey,
@@ -13,7 +13,7 @@ const bls: IBls = {
   Signature,
 
   ...functionalInterfaceFactory({PrivateKey, PublicKey, Signature}),
-  initBLS,
+  init,
   destroy,
 };
 
