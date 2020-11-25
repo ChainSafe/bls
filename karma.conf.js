@@ -1,25 +1,26 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const webpackConfig = require("./webpack.config");
 
-module.exports = function (config) {
-  config.set({
-    basePath: "",
-    frameworks: ["mocha", "chai"],
-    files: ["test/unit/*.ts"],
-    exclude: [],
-    preprocessors: {
-      "test/unit/run-web-implementation.test.ts": ["webpack"],
-    },
-    webpack: {
-      mode: "production",
-      node: webpackConfig.node,
-      module: webpackConfig.module,
-      resolve: webpackConfig.resolve,
-    },
-    reporters: ["spec"],
+module.exports = function(config) {
+    config.set({
 
-    browsers: ["ChromeHeadless"],
+        basePath: "",
+        frameworks: ["mocha", "chai"],
+        files: ["test/unit/run-web-implementation.test.ts"],
+        exclude: [],
+        preprocessors: {
+            "test/**/*.ts": ["webpack"]
+        },
+        webpack: {
+            mode: "production",
+            node: webpackConfig.node,
+            module: webpackConfig.module,
+            resolve: webpackConfig.resolve
+        },
+        reporters: ["spec"],
 
-    singleRun: true,
-  });
+        browsers: ["ChromeHeadless"],
+
+        singleRun: true
+    });
 };
