@@ -13,7 +13,7 @@ export function bytesToHex(bytes: Uint8Array): string {
 }
 
 export function isEqualBytes(a: Buffer | Uint8Array, b: Buffer | Uint8Array): boolean {
-  return Buffer.from(a).equals(Buffer.from(b));
+  return toBuffer(a).equals(toBuffer(b));
 }
 
 export function toBuffer(input: Uint8Array): Buffer {
