@@ -5,7 +5,7 @@ export function assert(condition: unknown, message = "Assertion failed"): assert
 }
 
 export function hexToBytes(hex: string): Uint8Array {
-  return Uint8Array.from(Buffer.from(hex.replace("0x", ""), "hex"));
+  return Buffer.from(hex.replace("0x", ""), "hex");
 }
 
 export function bytesToHex(bytes: Uint8Array): string {
