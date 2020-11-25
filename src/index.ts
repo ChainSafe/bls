@@ -6,7 +6,7 @@ export type Implementation = "herumi" | "blst-native";
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
 export let bls: IBls;
 
-async function getImplementation(impl: Implementation): Promise<IBls> {
+async function getImplementation(impl: Implementation = "herumi"): Promise<IBls> {
   switch (impl) {
     case "herumi":
       // eslint-disable-next-line @typescript-eslint/no-require-imports
