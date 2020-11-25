@@ -10,6 +10,12 @@ Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggrega
 
 ## Usage
 
+```bash
+yarn add @chainsafe/bls
+```
+
+You must initialize the library once in your application before using it. The result is cached and use across all your imports
+
 ```ts
 import bls, {init} from "@chainsafe/bls";
 
@@ -27,7 +33,7 @@ import bls, {init} from "@chainsafe/bls";
 
 ### Browser
 
-If you are in the browser, import from `/browser`
+If you are in the browser, import from `/browser` to import directly the WASM version
 
 ```ts
 import bls from "@chainsafe/bls/browser";
@@ -35,7 +41,11 @@ import bls from "@chainsafe/bls/browser";
 
 ### Native bindings only
 
-If you are in NodeJS, import from `/node` to skip browser specific code
+If you are in NodeJS, import from `/node` to skip browser specific code. Also install peer dependency `@chainsafe/blst` which has the native bindings
+
+```bash
+yarn add @chainsafe/bls @chainsafe/blst
+```
 
 ```ts
 import bls from "@chainsafe/bls/node";
@@ -43,7 +53,11 @@ import bls from "@chainsafe/bls/node";
 
 ### Native bindings + WASM fallback
 
-If you want to offer a fallback in NodeJS, first try to load native bindings and then fallback to WASM
+If you want to offer a fallback in NodeJS, first try to load native bindings and then fallback to WASM. Also install peer dependency `@chainsafe/blst` which has the native bindings
+
+```bash
+yarn add @chainsafe/bls @chainsafe/blst
+```
 
 ```ts
 import bls from "@chainsafe/bls";
