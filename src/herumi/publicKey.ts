@@ -1,4 +1,4 @@
-import {PublicKeyType} from "@chainsafe/eth2-bls-wasm";
+import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {EMPTY_PUBLIC_KEY} from "../constants";
 import {Signature} from "./signature";

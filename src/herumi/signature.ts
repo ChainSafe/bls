@@ -1,6 +1,6 @@
 import assert from "assert";
 import {SIGNATURE_LENGTH, EMPTY_SIGNATURE} from "../constants";
-import {SignatureType} from "@chainsafe/eth2-bls-wasm";
+import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers/utils";

@@ -30,9 +30,9 @@
     "lint:fix": "yarn run lint --fix",
     "pretest": "yarn check-types",
     "prepublishOnly": "yarn build",
-    "test:web:unit": "karma start",
-    "test:node:unit": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha --colors -r ts-node/register 'test/unit/**/*.test.ts' && nyc report",
-    "test:unit": "yarn run test:node:unit && yarn run test:web:unit",
+    "test:web": "karma start",
+    "test:unit": "mocha --colors -r ts-node/register 'test/unit/**/*.test.ts'",
+    "test:coverage": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha --colors -r ts-node/register 'test/unit/**/*.test.ts' && nyc report",
     "test:spec": "mocha --colors -r ts-node/register 'test/spec/**/*.test.ts'",
     "test": "yarn run test:unit && yarn run test:spec",
     "coverage": "codecov -F bls",
@@ -51,6 +51,7 @@
     "@babel/preset-env": "^7.8.4",
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.8.3",
+    "@chainsafe/blst": "^0.1.2",
     "@chainsafe/eth2-spec-tests": "0.12.0",
     "@chainsafe/lodestar-spec-test-util": "^0.11.0",
     "@types/chai": "^4.2.9",
@@ -80,5 +81,8 @@
   "resolutions": {
     "mocha": "^8.2.1",
     "v8-profiler-next": "1.3.0"
+  },
+  "peerDependencies": {
+    "@chainsafe/blst": "^0.1.2"
   }
 }
