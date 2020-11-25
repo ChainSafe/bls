@@ -55,7 +55,7 @@ module.exports = {
     "import/no-extraneous-dependencies": ["error", {
       "devDependencies": false,
       "optionalDependencies": false,
-      "peerDependencies": false
+      "peerDependencies": true
     }],
     "func-call-spacing": "off",
     "max-len": ["error", {
