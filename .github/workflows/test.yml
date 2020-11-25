@@ -18,7 +18,15 @@ jobs:
         run: yarn check-types
       - name: Lint
         run: yarn lint
-      - name: Tests
-        run: yarn test
+      - name: Test build
+        run: yarn build
+
+      - name: Unit tests
+        run: yarn test:unit
+      - name: Spec tests
+        run: yarn test:spec
+      - name: Web tests
+        run: yarn test:web
+
       - name: Benchmark
         run: yarn benchmark
