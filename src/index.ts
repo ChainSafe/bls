@@ -1,14 +1,15 @@
 import {IBls} from "./interface";
-import blsHerumi from "./herumi";
+import {bls as blsHerumi} from "./herumi";
 
 export type Implementation = "herumi" | "blst-native";
 
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
 export let bls: IBls;
 
-async function getImplementation(impl: Implementation) {
+async function getImplementation(impl: Implementation): Promise<IBls> {
   switch (impl) {
     case "herumi":
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       await blsHerumi.init();
       return blsHerumi;
 
@@ -16,6 +17,7 @@ async function getImplementation(impl: Implementation) {
       if (typeof require !== "function") {
         throw Error("blst-native is only supported in NodeJS");
       }
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       return require("./blst");
 
     default:
@@ -23,7 +25,7 @@ async function getImplementation(impl: Implementation) {
   }
 }
 
-export async function init(impl: Implementation) {
+export async function init(impl: Implementation): Promise<void> {
   bls = await getImplementation(impl);
 }
 

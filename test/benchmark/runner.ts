@@ -24,6 +24,7 @@ export function runBenchmark<T, R>({
 
   const average = averageBigint(diffsNanoSec);
   const opsPerSec = 1e9 / Number(average);
+  // eslint-disable-next-line no-console
   console.log(`${id}: ${opsPerSec.toPrecision(5)} ops/sec (${runs} runs)`); // ±1.74%
 }
 

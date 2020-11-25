@@ -7,7 +7,7 @@ import {functionalInterfaceFactory} from "../functional";
 
 export {PrivateKey, PublicKey, Signature, init, destroy};
 
-const bls: IBls = {
+export const bls: IBls = {
   PrivateKey,
   PublicKey,
   Signature,
