@@ -1,4 +1,4 @@
-import assert from "assert";
+import {assert} from "./helpers";
 import {IBls} from "./interface";
 
 // Returned type is enforced at each implementation's index
