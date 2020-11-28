@@ -98,5 +98,5 @@ function range(n: number): number[] {
 }
 
 function randomMsg(): Uint8Array {
-  return Uint8Array.from(randomBytes(32));
+  return randomBytes(32);
 }
