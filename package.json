@@ -46,7 +46,8 @@
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.3.0",
-    "bls-eth-wasm": "^0.4.4"
+    "bls-eth-wasm": "^0.4.4",
+    "randombytes": "^2.1.0"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
@@ -62,6 +63,7 @@
     "@chainsafe/lodestar-spec-test-util": "^0.11.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^8.0.4",
+    "@types/randombytes": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^2.20.0",
     "@typescript-eslint/parser": "^2.20.0",
     "chai": "^4.2.0",

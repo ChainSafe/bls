@@ -1,6 +1,6 @@
-import crypto from "crypto";
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {bytesToHex, hexToBytes, randomBytes} from "../helpers/utils";
+import {SECRET_KEY_LENGTH} from "../constants";
 import {IPrivateKey} from "../interface";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
@@ -22,7 +22,7 @@ export class PrivateKey implements IPrivateKey {
   }
 
   static fromKeygen(entropy?: Uint8Array): PrivateKey {
-    const sk = blst.SecretKey.fromKeygen(entropy || crypto.randomBytes(32));
+    const sk = blst.SecretKey.fromKeygen(entropy || randomBytes(SECRET_KEY_LENGTH));
     return new PrivateKey(sk);
   }
 

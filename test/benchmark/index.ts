@@ -1,7 +1,7 @@
-import crypto from "crypto";
 import {runBenchmark} from "./runner";
 import {runForAllImplementations} from "../switch";
 import {IPublicKey, ISignature} from "../../src/interface";
+import {randomBytes} from "../../src/helpers";
 
 runForAllImplementations(async (bls, implementation) => {
   await bls.init();
@@ -98,5 +98,5 @@ function range(n: number): number[] {
 }
 
 function randomMsg(): Uint8Array {
-  return Uint8Array.from(crypto.randomBytes(32));
+  return Uint8Array.from(randomBytes(32));
 }

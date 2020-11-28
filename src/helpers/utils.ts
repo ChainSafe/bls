@@ -1,3 +1,8 @@
+import randomBytes from "randombytes";
+
+// Single import to ease changing this lib if necessary
+export {randomBytes};
+
 export function assert(condition: unknown, message = "Assertion failed"): asserts condition {
   if (!condition) {
     throw new Error(message);
