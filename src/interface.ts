@@ -15,12 +15,12 @@ export interface IBls {
     aggregate(signatures: ISignature[]): ISignature;
   };
 
-  sign(secretKey: Uint8Array, messageHash: Uint8Array): Uint8Array;
+  sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
   aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array;
   aggregateSignatures(signatures: Uint8Array[]): Uint8Array;
-  verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean;
-  verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean;
-  verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array): boolean;
+  verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean;
+  verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
+  verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
 
   init(): Promise<void>;
   destroy(): void;

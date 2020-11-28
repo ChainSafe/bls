@@ -11,13 +11,13 @@ export function functionalInterfaceFactory({
   /**
    * Signs given message using secret key.
    * @param secretKey
-   * @param messageHash
+   * @param message
    */
-  function sign(secretKey: Uint8Array, messageHash: Uint8Array): Uint8Array {
+  function sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array {
     assert(secretKey, "secretKey is null or undefined");
-    assert(messageHash, "messageHash is null or undefined");
+    assert(message, "message is null or undefined");
     const privateKey = PrivateKey.fromBytes(secretKey);
-    return privateKey.sign(messageHash).toBytes();
+    return privateKey.sign(message).toBytes();
   }
 
   /**
@@ -41,15 +41,15 @@ export function functionalInterfaceFactory({
   /**
    * Verifies if signature is message signed with given public key.
    * @param publicKey
-   * @param messageHash
+   * @param message
    * @param signature
    */
-  function verify(publicKey: Uint8Array, messageHash: Uint8Array, signature: Uint8Array): boolean {
+  function verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
     assert(publicKey, "publicKey is null or undefined");
-    assert(messageHash, "messageHash is null or undefined");
+    assert(message, "message is null or undefined");
     assert(signature, "signature is null or undefined");
     try {
-      return Signature.fromBytes(signature).verify(PublicKey.fromBytes(publicKey), messageHash);
+      return Signature.fromBytes(signature).verify(PublicKey.fromBytes(publicKey), message);
     } catch (e) {
       return false;
     }
@@ -58,17 +58,17 @@ export function functionalInterfaceFactory({
   /**
    * Verifies if aggregated signature is same message signed with given public keys.
    * @param publicKeys
-   * @param messageHash
+   * @param message
    * @param signature
    */
-  function verifyAggregate(publicKeys: Uint8Array[], messageHash: Uint8Array, signature: Uint8Array): boolean {
+  function verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean {
     assert(publicKeys, "publicKey is null or undefined");
-    assert(messageHash, "messageHash is null or undefined");
+    assert(message, "message is null or undefined");
     assert(signature, "signature is null or undefined");
     try {
       return Signature.fromBytes(signature).verifyAggregate(
         publicKeys.map((pubkey) => PublicKey.fromBytes(pubkey)),
-        messageHash
+        message
       );
     } catch (e) {
       return false;
@@ -78,22 +78,22 @@ export function functionalInterfaceFactory({
   /**
    * Verifies if signature is list of message signed with corresponding public key.
    * @param publicKeys
-   * @param messageHashes
+   * @param messages
    * @param signature
    * @param fast Check if all messages are different
    */
-  function verifyMultiple(publicKeys: Uint8Array[], messageHashes: Uint8Array[], signature: Uint8Array): boolean {
+  function verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean {
     assert(publicKeys, "publicKey is null or undefined");
-    assert(messageHashes, "messageHash is null or undefined");
+    assert(messages, "message is null or undefined");
     assert(signature, "signature is null or undefined");
 
-    if (publicKeys.length === 0 || publicKeys.length != messageHashes.length) {
+    if (publicKeys.length === 0 || publicKeys.length != messages.length) {
       return false;
     }
     try {
       return Signature.fromBytes(signature).verifyMultiple(
         publicKeys.map((publicKey) => PublicKey.fromBytes(publicKey)),
-        messageHashes.map((msg) => msg)
+        messages.map((msg) => msg)
       );
     } catch (e) {
       return false;

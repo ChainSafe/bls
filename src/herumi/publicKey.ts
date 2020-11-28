@@ -43,8 +43,8 @@ export class PublicKey implements IPublicKey {
     return agg;
   }
 
-  verifyMessage(signature: Signature, messageHash: Uint8Array): boolean {
-    return this.value.verify(signature.value, messageHash);
+  verifyMessage(signature: Signature, message: Uint8Array): boolean {
+    return this.value.verify(signature.value, message);
   }
 
   toBytes(): Uint8Array {
