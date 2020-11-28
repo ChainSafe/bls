@@ -1488,10 +1488,10 @@ blob@0.0.5:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
   integrity sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==
 
-bls-eth-wasm@^0.4.1:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.1.tgz#7a1bac9d36f117ad4a8c7e741d667b51a6c31e68"
-  integrity sha512-BBM+t/RNZSOZKiLmz+wmz58kzK9CDjH6K2o2QuUKUkJNUaDo8g4vsqay0SvbmxinhpSxL/epkVel9+KNXcFnlw==
+bls-eth-wasm@^0.4.4:
+  version "0.4.4"
+  resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.4.tgz#3d4c99f8ddee6df23e188dc756125268a0f4d525"
+  integrity sha512-S6XwscKuxxYTANHZX8tZQxZKvj9IhG3aOCEuy1EnNdsAOfuH2pdRIgWrORwpKd4SLdvmPWap9I+TbJRnFx1Yng==
 
 bluebird@^3.3.0, bluebird@^3.5.5:
   version "3.7.2"
