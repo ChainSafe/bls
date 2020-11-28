@@ -11,7 +11,7 @@ export function runPublicKeyTests(bls: IBls): void {
     });
 
     it("should export public key to hex string from non-prefixed hex", () => {
-      expect(bls.PublicKey.fromHex(publicKey.replace("0x", "")).toHex()).to.be.equal(publicKey);
+      expect(bls.PublicKey.fromHex(publicKey).toHex()).to.be.equal(publicKey);
     });
 
     it("from private key", () => {

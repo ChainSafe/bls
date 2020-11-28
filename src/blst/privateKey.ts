@@ -1,5 +1,5 @@
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes, randomBytes} from "../helpers/utils";
+import {bytesToHex, hexToBytes, randomBytes} from "../helpers";
 import {SECRET_KEY_LENGTH} from "../constants";
 import {IPrivateKey} from "../interface";
 import {PublicKey} from "./publicKey";

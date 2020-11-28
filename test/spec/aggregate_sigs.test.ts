@@ -1,6 +1,6 @@
 import path from "path";
 import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
-import {bytesToHex, hexToBytes} from "../../src/helpers/utils";
+import {bytesToHex, hexToBytes} from "../../src/helpers";
 import {SPEC_TESTS_DIR} from "../params";
 import {describeForAllImplementations} from "../switch";
 

@@ -16,7 +16,7 @@ export function runPrivateKeyTests(bls: IBls): void {
     });
 
     it("should export private key to hex string from non-prefixed hex", () => {
-      expect(bls.PrivateKey.fromHex(privateKey.replace("0x", "")).toHex()).to.be.equal(privateKey);
+      expect(bls.PrivateKey.fromHex(privateKey).toHex()).to.be.equal(privateKey);
     });
 
     it("should not accept too short private key", () => {

@@ -5,7 +5,7 @@ import {SECRET_KEY_LENGTH} from "../constants";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
-import {bytesToHex, hexToBytes} from "../helpers/utils";
+import {bytesToHex, hexToBytes} from "../helpers";
 import {IPrivateKey} from "../interface";
 
 export class PrivateKey implements IPrivateKey {
