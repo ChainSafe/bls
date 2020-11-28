@@ -12,7 +12,11 @@
   "files": [
     "lib/**/*.js",
     "lib/**/*.js.map",
-    "lib/**/*.d.ts"
+    "lib/**/*.d.ts",
+    "blst-native.*",
+    "browser.*",
+    "herumi.*",
+    "node."
   ],
   "keywords": [
     "ethereum",
