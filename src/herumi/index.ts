@@ -4,6 +4,7 @@ import {Signature} from "./signature";
 import {init, destroy} from "./context";
 import {IBls} from "../interface";
 import {functionalInterfaceFactory} from "../functional";
+export * from "../constants";
 
 export {PrivateKey, PublicKey, Signature, init, destroy};
 

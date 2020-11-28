@@ -2,8 +2,8 @@ import {PrivateKey} from "./privateKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {IBls} from "../interface";
-export * from "../constants";
 import {functionalInterfaceFactory} from "../functional";
+export * from "../constants";
 
 export {PrivateKey, PublicKey, Signature};
 
