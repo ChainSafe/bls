@@ -3,6 +3,8 @@ import {bls as blsHerumi} from "./herumi";
 
 export type Implementation = "herumi" | "blst-native";
 
+export * from "./interface";
+
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
 export const bls: IBls = {} as IBls;
 
