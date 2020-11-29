@@ -1,5 +1,6 @@
-import {validateBytes} from "./helpers";
 import {IBls} from "./interface";
+import {validateBytes} from "./helpers";
+import {ExpectedError} from "./errors";
 
 // Returned type is enforced at each implementation's index
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -53,6 +54,7 @@ export function functionalInterfaceFactory({
     try {
       return Signature.fromBytes(signature).verify(PublicKey.fromBytes(publicKey), message);
     } catch (e) {
+      if (e instanceof ExpectedError) throw e;
       return false;
     }
   }
@@ -74,6 +76,7 @@ export function functionalInterfaceFactory({
         message
       );
     } catch (e) {
+      if (e instanceof ExpectedError) throw e;
       return false;
     }
   }
@@ -99,6 +102,7 @@ export function functionalInterfaceFactory({
         messages.map((msg) => msg)
       );
     } catch (e) {
+      if (e instanceof ExpectedError) throw e;
       return false;
     }
   }

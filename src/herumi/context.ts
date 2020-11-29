@@ -1,5 +1,6 @@
 /* eslint-disable require-atomic-updates */
 import bls from "bls-eth-wasm";
+import {ExpectedError} from "../errors";
 
 type Bls = typeof bls;
 let blsGlobal: Bls | null = null;
@@ -27,7 +28,7 @@ export function destroy(): void {
 
 export function getContext(): Bls {
   if (!blsGlobal) {
-    throw new Error("BLS not initialized");
+    throw new ExpectedError("BLS not initialized");
   }
   return blsGlobal;
 }
