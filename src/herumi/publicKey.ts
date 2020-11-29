@@ -1,7 +1,6 @@
 import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {EMPTY_PUBLIC_KEY, PUBLIC_KEY_LENGTH} from "../constants";
-import {Signature} from "./signature";
 import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers";
 import {IPublicKey} from "../interface";
 
@@ -39,16 +38,6 @@ export class PublicKey implements IPublicKey {
       agg.value.add(pk.value);
     }
     return agg;
-  }
-
-  add(other: PublicKey): PublicKey {
-    const agg = new PublicKey(this.value.clone());
-    agg.value.add(other.value);
-    return agg;
-  }
-
-  verifyMessage(signature: Signature, message: Uint8Array): boolean {
-    return this.value.verify(signature.value, message);
   }
 
   toBytes(): Uint8Array {
