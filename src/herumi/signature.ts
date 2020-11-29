@@ -1,8 +1,8 @@
-import {SIGNATURE_LENGTH, EMPTY_SIGNATURE} from "../constants";
+import {SIGNATURE_LENGTH} from "../constants";
 import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
-import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
 import {ISignature} from "../interface";
 
 export class Signature implements ISignature {
@@ -23,7 +23,7 @@ export class Signature implements ISignature {
 
     const context = getContext();
     const signature = new context.Signature();
-    if (!isEqualBytes(EMPTY_SIGNATURE, bytes)) {
+    if (!isZeroUint8Array(bytes)) {
       signature.deserialize(bytes);
     }
     return new Signature(signature);

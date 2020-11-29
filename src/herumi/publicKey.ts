@@ -1,7 +1,7 @@
 import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
-import {EMPTY_PUBLIC_KEY, PUBLIC_KEY_LENGTH} from "../constants";
-import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers";
+import {PUBLIC_KEY_LENGTH} from "../constants";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
 import {IPublicKey} from "../interface";
 import {ZeroPublicKeyError} from "../errors";
 
@@ -23,7 +23,7 @@ export class PublicKey implements IPublicKey {
 
     const context = getContext();
     const publicKey = new context.PublicKey();
-    if (!isEqualBytes(EMPTY_PUBLIC_KEY, bytes)) {
+    if (!isZeroUint8Array(bytes)) {
       publicKey.deserialize(bytes);
     }
     return new PublicKey(publicKey);
