@@ -9,7 +9,6 @@ export let bls: IBls;
 async function getImplementation(impl: Implementation = "herumi"): Promise<IBls> {
   switch (impl) {
     case "herumi":
-      // eslint-disable-next-line @typescript-eslint/no-require-imports
       await blsHerumi.init();
       return blsHerumi;
 
