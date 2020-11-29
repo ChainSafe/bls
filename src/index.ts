@@ -13,6 +13,7 @@ async function getImplementation(impl: Implementation = "herumi"): Promise<IBls>
       return blsHerumi;
 
     case "blst-native":
+      // Lazy import native bindings to prevent automatically importing binding.node files
       if (typeof require !== "function") {
         throw Error("blst-native is only supported in NodeJS");
       }
