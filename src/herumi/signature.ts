@@ -1,4 +1,3 @@
-import assert from "assert";
 import {SIGNATURE_LENGTH, EMPTY_SIGNATURE} from "../constants";
 import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
@@ -10,12 +9,18 @@ export class Signature implements ISignature {
   readonly value: SignatureType;
 
   constructor(value: SignatureType) {
+    if (!value.isValidOrder()) {
+      throw Error("Signature is not in valid order");
+    }
+
     this.value = value;
-    assert(this.value.isValidOrder());
   }
 
   static fromBytes(bytes: Uint8Array): Signature {
-    assert(bytes.length === SIGNATURE_LENGTH, `Signature must have ${SIGNATURE_LENGTH} bytes`);
+    if (bytes.length !== SIGNATURE_LENGTH) {
+      throw Error(`Signature must have ${SIGNATURE_LENGTH} bytes`);
+    }
+
     const context = getContext();
     const signature = new context.Signature();
     if (!isEqualBytes(EMPTY_SIGNATURE, bytes)) {

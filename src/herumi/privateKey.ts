@@ -1,4 +1,3 @@
-import assert from "assert";
 import {SecretKeyType} from "bls-eth-wasm";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import {SECRET_KEY_LENGTH} from "../constants";
@@ -16,7 +15,10 @@ export class PrivateKey implements IPrivateKey {
   }
 
   static fromBytes(bytes: Uint8Array): PrivateKey {
-    assert(bytes.length === SECRET_KEY_LENGTH, "Private key should have 32 bytes");
+    if (bytes.length !== SECRET_KEY_LENGTH) {
+      throw Error(`Private key should have ${SECRET_KEY_LENGTH} bytes`);
+    }
+
     const context = getContext();
     const secretKey = new context.SecretKey();
     secretKey.deserialize(bytes);
