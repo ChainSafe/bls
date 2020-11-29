@@ -3,11 +3,16 @@ import {getContext} from "./context";
 import {EMPTY_PUBLIC_KEY, PUBLIC_KEY_LENGTH} from "../constants";
 import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers";
 import {IPublicKey} from "../interface";
+import {ZeroPublicKeyError} from "../errors";
 
 export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;
 
   constructor(value: PublicKeyType) {
+    if (value.isZero()) {
+      throw new ZeroPublicKeyError();
+    }
+
     this.value = value;
   }
 

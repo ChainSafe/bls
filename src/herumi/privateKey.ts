@@ -6,11 +6,16 @@ import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {IPrivateKey} from "../interface";
+import {ZeroPrivateKeyError} from "../errors";
 
 export class PrivateKey implements IPrivateKey {
   readonly value: SecretKeyType;
 
   constructor(value: SecretKeyType) {
+    if (value.isZero()) {
+      throw new ZeroPrivateKeyError();
+    }
+
     this.value = value;
   }
 
