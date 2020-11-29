@@ -14,6 +14,12 @@ Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggrega
 yarn add @chainsafe/bls
 ```
 
+To use native bindings you must install peer dependency `@chainsafe/blst`
+
+```bash
+yarn add @chainsafe/bls @chainsafe/blst
+```
+
 You must initialize the library once in your application before using it. The result is cached and use across all your imports
 
 ```ts
