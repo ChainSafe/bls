@@ -17,7 +17,7 @@ async function getImplementation(impl: Implementation = "herumi"): Promise<IBls>
         throw Error("blst-native is only supported in NodeJS");
       }
       // eslint-disable-next-line @typescript-eslint/no-require-imports
-      return require("./blst");
+      return require("./blst").bls;
 
     default:
       throw new Error(`Unsupported implementation - ${impl}`);
