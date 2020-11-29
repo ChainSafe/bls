@@ -1,20 +1,19 @@
 /* eslint-disable require-atomic-updates */
-import bls from "@chainsafe/eth2-bls-wasm";
+import bls from "bls-eth-wasm";
 
 type Bls = typeof bls;
 let blsGlobal: Bls | null = null;
-let blsGlobalPromise: Promise<Bls> | null = null;
+let blsGlobalPromise: Promise<void> | null = null;
 
-export async function setupBls(): Promise<Bls> {
+export async function setupBls(): Promise<void> {
   if (!blsGlobal) {
-    await bls.init();
+    await bls.init(bls.BLS12_381);
     blsGlobal = bls;
   }
-  return blsGlobal;
 }
 
 // Cache a promise for Bls instead of Bls to make sure it is initialized only once
-export async function init(): Promise<Bls> {
+export async function init(): Promise<void> {
   if (!blsGlobalPromise) {
     blsGlobalPromise = setupBls();
   }

@@ -1,38 +1,26 @@
-import {PrivateKey} from "../../src";
 import {expect} from "chai";
-import {SECRET_KEY_LENGTH} from "../../src/constants";
-import {destroy, init} from "../../src/context";
+import {IBls} from "../../src/interface";
 
-describe("privateKey", function () {
-  before(async function () {
-    await init();
-  });
+export function runPrivateKeyTests(bls: IBls): void {
+  describe("PrivateKey", () => {
+    it("should generate fromKeygen private key", () => {
+      const privateKey1 = bls.PrivateKey.fromKeygen();
+      const privateKey2 = bls.PrivateKey.fromKeygen();
+      expect(privateKey1.toHex()).to.not.be.equal(privateKey2.toHex());
+    });
 
-  after(function () {
-    destroy();
-  });
-
-  it("should generate random private key", function () {
-    const privateKey1 = PrivateKey.random();
-    const privateKey2 = PrivateKey.random();
-    expect(privateKey1.toHexString()).to.not.be.equal(privateKey2.toHexString());
-  });
-
-  it("should export private key to hex string", function () {
     const privateKey = "0x07656fd676da43883d163f49566c72b9cbf0a5a294f26808c807700732456da7";
 
-    expect(PrivateKey.fromHexString(privateKey).toHexString()).to.be.equal(privateKey);
+    it("should export private key to hex string", () => {
+      expect(bls.PrivateKey.fromHex(privateKey).toHex()).to.be.equal(privateKey);
+    });
 
-    const privateKey2 = "07656fd676da43883d163f49566c72b9cbf0a5a294f26808c807700732456da7";
+    it("should export private key to hex string from non-prefixed hex", () => {
+      expect(bls.PrivateKey.fromHex(privateKey).toHex()).to.be.equal(privateKey);
+    });
 
-    expect(PrivateKey.fromHexString(privateKey2).toHexString()).to.be.equal(privateKey);
+    it("should not accept too short private key", () => {
+      expect(() => bls.PrivateKey.fromHex("0x2123")).to.throw();
+    });
   });
-
-  it("should export private key to bytes", function () {
-    expect(PrivateKey.random().toBytes().length).to.be.equal(SECRET_KEY_LENGTH);
-  });
-
-  it("should not accept too short private key", function () {
-    expect(() => PrivateKey.fromHexString("0x2123")).to.throw();
-  });
-});
+}

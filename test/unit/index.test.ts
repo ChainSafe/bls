@@ -1,226 +1,93 @@
-import bls, {aggregatePubkeys, aggregateSignatures, initBLS, Keypair, verify, verifyMultiple} from "../../src";
-import SHA256 from "@chainsafe/as-sha256";
 import {expect} from "chai";
-import {destroy} from "../../src/context";
+import {IBls} from "../../src/interface";
+import {getN, randomMessage} from "../util";
 
-describe("test bls", function () {
-  before(async function () {
-    await initBLS();
-  });
+export function runIndexTests(bls: IBls): void {
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+  function getRandomData() {
+    const sk = bls.PrivateKey.fromKeygen();
+    const pk = sk.toPublicKey();
+    const msg = randomMessage();
+    const sig = sk.sign(msg);
+    return {sk, pk, msg, sig};
+  }
 
-  after(function () {
-    destroy();
-  });
-
-  describe("aggregate pubkey", function () {
-    it("should aggregate empty array", function () {
-      expect(bls.aggregatePubkeys([])).to.not.throw;
-    });
-  });
-
-  describe("verify", function () {
+  describe("verify", () => {
     it("should verify signature", () => {
-      const keypair = Keypair.generate();
-      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
-      const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash, signature.toBytesCompressed());
-      expect(result).to.be.true;
-    });
+      const {pk, msg, sig} = getRandomData();
+      const pkHex = pk.toHex();
+      const isValid = bls.verify(pk.toBytes(), msg, sig.toBytes());
+      expect(isValid, "fail verify").to.be.true;
 
-    it("should not modify original pubkey when verifying", () => {
-      const keypair = Keypair.generate();
-      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test")));
-      const signature = keypair.privateKey.signMessage(messageHash);
-      const pubKey = keypair.publicKey.toBytesCompressed();
-      verify(pubKey, messageHash, signature.toBytesCompressed());
-      expect("0x" + pubKey.toString("hex")).to.be.equal(keypair.publicKey.toHexString());
+      // Make sure to not modify original pubkey when verifying
+      expect(pk.toHex()).to.be.equal(pkHex, "pubkey modified when verifying");
     });
 
     it("should fail verify empty signature", () => {
-      const keypair = Keypair.generate();
-      const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
-      const signature = Buffer.alloc(96);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash2, signature);
-      expect(result).to.be.false;
+      const {pk, msg} = getRandomData();
+      const emptySig = Buffer.alloc(96);
+      const isValid = bls.verify(pk.toBytes(), msg, emptySig);
+      expect(isValid).to.be.false;
     });
 
     it("should fail verify signature of different message", () => {
-      const keypair = Keypair.generate();
-      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
-      const messageHash2 = Buffer.from(SHA256.digest(Buffer.from("Test message2")));
-      const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair.publicKey.toBytesCompressed(), messageHash2, signature.toBytesCompressed());
-      expect(result).to.be.false;
+      const {pk, sig} = getRandomData();
+      const msg2 = randomMessage();
+      const isValid = bls.verify(pk.toBytes(), msg2, sig.toBytes());
+      expect(isValid).to.be.false;
     });
 
     it("should fail verify signature signed by different key", () => {
-      const keypair = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const messageHash = Buffer.from(SHA256.digest(Buffer.from("Test message")));
-      const signature = keypair.privateKey.signMessage(messageHash);
-      const result = verify(keypair2.publicKey.toBytesCompressed(), messageHash, signature.toBytesCompressed());
-      expect(result).to.be.false;
+      const {msg, sig} = getRandomData();
+      const {pk: pk2} = getRandomData();
+      const isValid = bls.verify(pk2.toBytes(), msg, sig.toBytes());
+      expect(isValid).to.be.false;
     });
   });
 
-  describe("verify multiple", function () {
-    it("should verify aggregated signatures", function () {
-      this.timeout(5000);
+  describe("verify multiple", () => {
+    it("should verify aggregated signatures", () => {
+      const sks = getN(4, () => bls.PrivateKey.fromKeygen());
+      const msgs = getN(2, () => randomMessage());
+      const pks = sks.map((sk) => sk.toPublicKey());
 
-      const keypair1 = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const keypair3 = Keypair.generate();
-      const keypair4 = Keypair.generate();
+      const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[0]), sks[2].sign(msgs[1]), sks[3].sign(msgs[1])];
 
-      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
+      const aggPubkeys = [
+        bls.aggregatePubkeys([pks[0], pks[1]].map((pk) => pk.toBytes())),
+        bls.aggregatePubkeys([pks[2], pks[3]].map((pk) => pk.toBytes())),
+      ];
 
-      const signature1 = keypair1.privateKey.signMessage(message1);
-      const signature2 = keypair2.privateKey.signMessage(message1);
-      const signature3 = keypair3.privateKey.signMessage(message2);
-      const signature4 = keypair4.privateKey.signMessage(message2);
+      const aggSig = bls.aggregateSignatures(sigs.map((sig) => sig.toBytes()));
 
-      const aggregatePubKey12 = aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
-
-      const aggregatePubKey34 = aggregatePubkeys([
-        keypair3.publicKey.toBytesCompressed(),
-        keypair4.publicKey.toBytesCompressed(),
-      ]);
-
-      const aggregateSignature = aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
-      ]);
-
-      const result = verifyMultiple([aggregatePubKey12, aggregatePubKey34], [message1, message2], aggregateSignature);
-
-      expect(result).to.be.true;
+      expect(bls.verifyMultiple(aggPubkeys, msgs, aggSig), "should be valid").to.be.true;
+      expect(bls.verifyMultiple(aggPubkeys.reverse(), msgs, aggSig), "should fail - swaped pubkeys").to.be.false;
     });
 
-    it("should verify aggregated signatures - same message", function () {
-      this.timeout(5000);
+    it("should verify aggregated signatures - same message", () => {
+      const n = 4;
+      const msg = randomMessage();
+      const sks = getN(n, () => bls.PrivateKey.fromKeygen());
+      const pks = sks.map((sk) => sk.toPublicKey());
+      const sigs = sks.map((sk) => sk.sign(msg));
 
-      const keypair1 = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const keypair3 = Keypair.generate();
-      const keypair4 = Keypair.generate();
+      const aggregateSignature = bls.aggregateSignatures(sigs.map((sig) => sig.toBytes()));
 
-      const message = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-
-      const signature1 = keypair1.privateKey.signMessage(message);
-      const signature2 = keypair2.privateKey.signMessage(message);
-      const signature3 = keypair3.privateKey.signMessage(message);
-      const signature4 = keypair4.privateKey.signMessage(message);
-
-      const aggregateSignature = aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
-      ]);
-
-      const result = verifyMultiple(
-        [
-          keypair1.publicKey.toBytesCompressed(),
-          keypair2.publicKey.toBytesCompressed(),
-          keypair3.publicKey.toBytesCompressed(),
-          keypair4.publicKey.toBytesCompressed(),
-        ],
-        [message, message, message, message],
-        aggregateSignature,
-        true
-      );
-
-      expect(result).to.be.true;
-    });
-
-    it("should fail to verify aggregated signatures - swapped messages", function () {
-      this.timeout(5000);
-
-      const keypair1 = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const keypair3 = Keypair.generate();
-      const keypair4 = Keypair.generate();
-
-      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
-
-      const signature1 = keypair1.privateKey.signMessage(message1);
-      const signature2 = keypair2.privateKey.signMessage(message1);
-      const signature3 = keypair3.privateKey.signMessage(message2);
-      const signature4 = keypair4.privateKey.signMessage(message2);
-
-      const aggregatePubKey12 = bls.aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
-
-      const aggregatePubKey34 = bls.aggregatePubkeys([
-        keypair3.publicKey.toBytesCompressed(),
-        keypair4.publicKey.toBytesCompressed(),
-      ]);
-
-      const aggregateSignature = bls.aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
-      ]);
-
-      const result = bls.verifyMultiple(
-        [aggregatePubKey12, aggregatePubKey34],
-        [message2, message1],
+      const isValid = bls.verifyMultiple(
+        pks.map((pk) => pk.toBytes()),
+        getN(4, () => msg), // Same message n times
         aggregateSignature
       );
-
-      expect(result).to.be.false;
-    });
-
-    it("should fail to verify aggregated signatures - different pubkeys and messsages", () => {
-      const keypair1 = Keypair.generate();
-      const keypair2 = Keypair.generate();
-      const keypair3 = Keypair.generate();
-      const keypair4 = Keypair.generate();
-
-      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
-
-      const signature1 = keypair1.privateKey.signMessage(message1);
-      const signature2 = keypair2.privateKey.signMessage(message1);
-      const signature3 = keypair3.privateKey.signMessage(message2);
-      const signature4 = keypair4.privateKey.signMessage(message2);
-
-      const aggregatePubKey12 = bls.aggregatePubkeys([
-        keypair1.publicKey.toBytesCompressed(),
-        keypair2.publicKey.toBytesCompressed(),
-      ]);
-
-      const aggregateSignature = bls.aggregateSignatures([
-        signature1.toBytesCompressed(),
-        signature2.toBytesCompressed(),
-        signature3.toBytesCompressed(),
-        signature4.toBytesCompressed(),
-      ]);
-
-      const result = bls.verifyMultiple([aggregatePubKey12], [message2, message1], aggregateSignature);
-
-      expect(result).to.be.false;
+      expect(isValid).to.be.true;
     });
 
     it("should fail to verify aggregated signatures - no public keys", () => {
-      const signature = Buffer.alloc(96);
+      const sig = Buffer.alloc(96);
+      const msg1 = randomMessage();
+      const msg2 = randomMessage();
 
-      const message1 = Buffer.from(SHA256.digest(Buffer.from("Test1")));
-      const message2 = Buffer.from(SHA256.digest(Buffer.from("Test2")));
-
-      const result = bls.verifyMultiple([], [message2, message1], signature);
-
-      expect(result).to.be.false;
+      const isValid = bls.verifyMultiple([], [msg2, msg1], sig);
+      expect(isValid).to.be.false;
     });
   });
-});
+}

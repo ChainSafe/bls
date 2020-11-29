@@ -1,18 +1,32 @@
-name: CI Tests
+name: Main
 
 on: [pull_request, push]
 
 jobs:
-  lint:
-    name: Quick tests
+  tests:
+    name: Tests
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
-    - name: Bootstrap
-      run: yarn
-    - name: Check types
-      run: yarn check-types
-    - name: Lint
-      run: yarn lint
-    - name: Tests
-      run: yarn test
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v1
+        with:
+          node-version: "12.x"
+          registry-url: "https://registry.npmjs.org"
+      - name: Install deps
+        run: yarn
+      - name: Check types
+        run: yarn check-types
+      - name: Lint
+        run: yarn lint
+      - name: Test build
+        run: yarn build
+
+      - name: Unit tests
+        run: yarn test:unit
+      - name: Spec tests
+        run: yarn test:spec
+      - name: Web tests
+        run: yarn test:web
+
+      - name: Benchmark
+        run: yarn benchmark

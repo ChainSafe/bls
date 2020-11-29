@@ -4,10 +4,9 @@
     "target": "esnext",
     "module": "commonjs",
     "pretty": true,
-    "lib": [
-      "esnext.bigint"
-    ],
-     "declaration": true,
+    "lib": ["esnext.bigint"],
+    "typeRoots": ["./node_modules/@types"],
+    "declaration": true,
     "strict": true,
     "strictNullChecks": false,
     "esModuleInterop": true

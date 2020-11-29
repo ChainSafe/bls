@@ -1,18 +1,26 @@
-import assert from "assert";
-import {PUBLIC_KEY_LENGTH, SIGNATURE_LENGTH} from "../constants";
+import randomBytes from "randombytes";
 
-/**
- * Pads byte array with zeroes on left side up to desired length.
- * Throws if source is larger than desired result.
- * @param source
- * @param length
- */
-export function padLeft(source: Uint8Array, length: number): Buffer {
-  assert(source.length <= length, "Given array must be smaller or equal to desired array size");
-  const result = Buffer.alloc(length, 0);
-  result.set(source, length - source.length);
-  return result;
+// Single import to ease changing this lib if necessary
+export {randomBytes};
+
+export function isEqualBytes(a: Buffer | Uint8Array, b: Buffer | Uint8Array): boolean {
+  return toBuffer(a).equals(toBuffer(b));
 }
 
-export const EMPTY_PUBLIC_KEY = Buffer.alloc(PUBLIC_KEY_LENGTH);
-export const EMPTY_SIGNATURE = Buffer.alloc(SIGNATURE_LENGTH);
+export function toBuffer(input: Uint8Array): Buffer {
+  return Buffer.from(input.buffer, input.byteOffset, input.length);
+}
+
+/**
+ * Validate bytes to prevent confusing WASM errors downstream if bytes is null
+ */
+export function validateBytes(
+  bytes: Uint8Array | Uint8Array[] | null,
+  argName?: string
+): asserts bytes is NonNullable<typeof bytes> {
+  for (const item of Array.isArray(bytes) ? bytes : [bytes]) {
+    if (item == null) {
+      throw Error(`${argName || "bytes"} is null or undefined`);
+    }
+  }
+}
