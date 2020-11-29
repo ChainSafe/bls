@@ -4,7 +4,7 @@ import {bls as blsHerumi} from "./herumi";
 export type Implementation = "herumi" | "blst-native";
 
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
-export let bls: IBls;
+export let bls: IBls = {} as IBls;
 
 async function getImplementation(impl: Implementation = "herumi"): Promise<IBls> {
   switch (impl) {
@@ -25,7 +25,10 @@ async function getImplementation(impl: Implementation = "herumi"): Promise<IBls>
 }
 
 export async function init(impl: Implementation): Promise<void> {
-  bls = await getImplementation(impl);
+  // Using Object.assign instead of just bls = getImplementation()
+  // because otherwise the default import breaks. The reference is lost
+  // and the imported object is still undefined after calling init()
+  Object.assign(bls, await getImplementation(impl));
 }
 
 export default bls;
