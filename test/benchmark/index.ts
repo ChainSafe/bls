@@ -3,9 +3,7 @@ import {runForAllImplementations} from "../switch";
 import {IPublicKey, ISignature} from "../../src/interface";
 import {randomBytes} from "../../src/helpers";
 
-runForAllImplementations(async (bls, implementation) => {
-  await bls.init();
-
+runForAllImplementations((bls, implementation) => {
   const aggCount = 30;
 
   // verify
