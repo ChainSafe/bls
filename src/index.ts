@@ -4,7 +4,7 @@ import {bls as blsHerumi} from "./herumi";
 export type Implementation = "herumi" | "blst-native";
 
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
-export let bls: IBls = {} as IBls;
+export const bls: IBls = {} as IBls;
 
 async function getImplementation(impl: Implementation = "herumi"): Promise<IBls> {
   switch (impl) {
