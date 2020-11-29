@@ -1,4 +1,4 @@
-import {assert} from "./helpers";
+import {validateBytes} from "./helpers";
 import {IBls} from "./interface";
 
 // Returned type is enforced at each implementation's index
@@ -14,8 +14,9 @@ export function functionalInterfaceFactory({
    * @param message
    */
   function sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array {
-    assert(secretKey, "secretKey is null or undefined");
-    assert(message, "message is null or undefined");
+    validateBytes(secretKey, "secretKey");
+    validateBytes(message, "message");
+
     const privateKey = PrivateKey.fromBytes(secretKey);
     return privateKey.sign(message).toBytes();
   }
@@ -45,9 +46,10 @@ export function functionalInterfaceFactory({
    * @param signature
    */
   function verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
-    assert(publicKey, "publicKey is null or undefined");
-    assert(message, "message is null or undefined");
-    assert(signature, "signature is null or undefined");
+    validateBytes(publicKey, "publicKey");
+    validateBytes(message, "message");
+    validateBytes(signature, "signature");
+
     try {
       return Signature.fromBytes(signature).verify(PublicKey.fromBytes(publicKey), message);
     } catch (e) {
@@ -62,9 +64,10 @@ export function functionalInterfaceFactory({
    * @param signature
    */
   function verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean {
-    assert(publicKeys, "publicKey is null or undefined");
-    assert(message, "message is null or undefined");
-    assert(signature, "signature is null or undefined");
+    validateBytes(publicKeys, "publicKey");
+    validateBytes(message, "message");
+    validateBytes(signature, "signature");
+
     try {
       return Signature.fromBytes(signature).verifyAggregate(
         publicKeys.map((pubkey) => PublicKey.fromBytes(pubkey)),
@@ -83,9 +86,9 @@ export function functionalInterfaceFactory({
    * @param fast Check if all messages are different
    */
   function verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean {
-    assert(publicKeys, "publicKey is null or undefined");
-    assert(messages, "message is null or undefined");
-    assert(signature, "signature is null or undefined");
+    validateBytes(publicKeys, "publicKey");
+    validateBytes(messages, "message");
+    validateBytes(signature, "signature");
 
     if (publicKeys.length === 0 || publicKeys.length != messages.length) {
       return false;
