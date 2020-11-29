@@ -2,7 +2,7 @@ export interface IBls {
   PrivateKey: {
     fromBytes(bytes: Uint8Array): IPrivateKey;
     fromHex(hex: string): IPrivateKey;
-    fromKeygen(): IPrivateKey;
+    fromKeygen(ikm?: Uint8Array): IPrivateKey;
   };
   PublicKey: {
     fromBytes(bytes: Uint8Array): IPublicKey;
