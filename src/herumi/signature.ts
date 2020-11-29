@@ -44,12 +44,6 @@ export class Signature implements ISignature {
     return new Signature(signature);
   }
 
-  add(other: Signature): Signature {
-    const agg = this.value.clone();
-    agg.add(other.value);
-    return new Signature(agg);
-  }
-
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
     return publicKey.value.verify(this.value, message);
   }

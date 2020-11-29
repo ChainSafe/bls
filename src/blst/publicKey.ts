@@ -1,7 +1,6 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {IPublicKey} from "../interface";
-import {Signature} from "./signature";
 
 export class PublicKey implements IPublicKey {
   readonly affine: blst.PublicKey;
@@ -26,10 +25,6 @@ export class PublicKey implements IPublicKey {
     const jacobian = blst.aggregatePubkeys(pubkeys.map((pk) => pk.jacobian));
     const affine = jacobian.toPublicKey();
     return new PublicKey(affine, jacobian);
-  }
-
-  verifyMessage(signature: Signature, message: Uint8Array): boolean {
-    return signature.verify(this, message);
   }
 
   toBytes(): Uint8Array {
