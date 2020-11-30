@@ -61,6 +61,8 @@ export declare class PublicKey implements IPublicKey {
   static aggregate(pubkeys: PublicKey[]): PublicKey;
   toBytes(): Uint8Array;
   toHex(): string;
+  // Virtual property so PublicKey type != Signature type
+  private isPublicKey: true; 
 }
 
 export declare class Signature implements ISignature {
