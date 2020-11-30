@@ -31,7 +31,20 @@ export async function init(impl: Implementation): Promise<void> {
   // Using Object.assign instead of just bls = getImplementation()
   // because otherwise the default import breaks. The reference is lost
   // and the imported object is still undefined after calling init()
-  Object.assign(bls, await getImplementation(impl));
+  const blsImpl = await getImplementation(impl);
+  Object.assign(bls, blsImpl);
+  Object.assign(exports, blsImpl);
 }
+
+// Proxy named exports, will get set by `Object.assign(exports, blsImpl)`
+export let sign: IBls["sign"];
+export let aggregateSignatures: IBls["aggregateSignatures"];
+export let aggregatePubkeys: IBls["aggregatePubkeys"];
+export let verify: IBls["verify"];
+export let verifyAggregate: IBls["verifyAggregate"];
+export let verifyMultiple: IBls["verifyMultiple"];
+export let PrivateKey: IBls["PrivateKey"];
+export let PublicKey: IBls["PublicKey"];
+export let Signature: IBls["Signature"];
 
 export default bls;
