@@ -5,7 +5,7 @@ import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes} from "../helpers";
-import {ISecretKey} from "../interface";
+import {SecretKey as ISecretKey} from "../interface";
 import {InvalidLengthError, ZeroSecretKeyError} from "../errors";
 
 export class SecretKey implements ISecretKey {

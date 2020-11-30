@@ -1,7 +1,7 @@
 import * as blst from "@chainsafe/blst";
 import {EmptyAggregateError, ZeroPublicKeyError} from "../errors";
 import {bytesToHex, hexToBytes} from "../helpers";
-import {IPublicKey} from "../interface";
+import {PublicKey as IPublicKey} from "../interface";
 
 export class PublicKey implements IPublicKey {
   readonly affine: blst.PublicKey;

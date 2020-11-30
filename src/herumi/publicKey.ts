@@ -2,7 +2,7 @@ import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PUBLIC_KEY_LENGTH} from "../constants";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
-import {IPublicKey} from "../interface";
+import {PublicKey as IPublicKey} from "../interface";
 import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors";
 
 export class PublicKey implements IPublicKey {

@@ -3,7 +3,7 @@ import {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
-import {ISignature} from "../interface";
+import {Signature as ISignature} from "../interface";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors";
 
 export class Signature implements ISignature {
