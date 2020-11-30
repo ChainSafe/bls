@@ -1,13 +1,13 @@
 export interface IBls {
-  PrivateKey: {
-    fromBytes(bytes: Uint8Array): IPrivateKey;
-    fromHex(hex: string): IPrivateKey;
-    fromKeygen(ikm?: Uint8Array): IPrivateKey;
+  SecretKey: {
+    fromBytes(bytes: Uint8Array): ISecretKey;
+    fromHex(hex: string): ISecretKey;
+    fromKeygen(ikm?: Uint8Array): ISecretKey;
   };
   PublicKey: {
     fromBytes(bytes: Uint8Array): IPublicKey;
     fromHex(hex: string): IPublicKey;
-    aggregate(pubkeys: IPublicKey[]): IPublicKey;
+    aggregate(publicKeys: IPublicKey[]): IPublicKey;
   };
   Signature: {
     fromBytes(bytes: Uint8Array): ISignature;
@@ -16,7 +16,7 @@ export interface IBls {
   };
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
-  aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array;
+  aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array;
   aggregateSignatures(signatures: Uint8Array[]): Uint8Array;
   verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean;
   verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
@@ -28,7 +28,7 @@ export interface IBls {
 
 export interface IKeypair {
   publicKey: IPublicKey;
-  privateKey: IPrivateKey;
+  secretKey: ISecretKey;
 }
 
 export interface IPublicKey {
@@ -44,7 +44,7 @@ export interface ISignature {
   verifyMultiple(publicKeys: IPublicKey[], messages: Uint8Array[]): boolean;
 }
 
-export interface IPrivateKey {
+export interface ISecretKey {
   toPublicKey(): IPublicKey;
   sign(message: Uint8Array): ISignature;
   toBytes(): Uint8Array;

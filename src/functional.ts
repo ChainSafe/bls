@@ -5,10 +5,10 @@ import {NotInitializedError} from "./errors";
 // Returned type is enforced at each implementation's index
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 export function functionalInterfaceFactory({
-  PrivateKey,
+  SecretKey,
   PublicKey,
   Signature,
-}: Pick<IBls, "PrivateKey" | "PublicKey" | "Signature">) {
+}: Pick<IBls, "SecretKey" | "PublicKey" | "Signature">) {
   /**
    * Signs given message using secret key.
    * @param secretKey
@@ -18,8 +18,7 @@ export function functionalInterfaceFactory({
     validateBytes(secretKey, "secretKey");
     validateBytes(message, "message");
 
-    const privateKey = PrivateKey.fromBytes(secretKey);
-    return privateKey.sign(message).toBytes();
+    return SecretKey.fromBytes(secretKey).sign(message).toBytes();
   }
 
   /**
@@ -35,7 +34,7 @@ export function functionalInterfaceFactory({
    * Combines all given public keys into single one
    * @param publicKeys
    */
-  function aggregatePubkeys(publicKeys: Uint8Array[]): Uint8Array {
+  function aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array {
     const agg = PublicKey.aggregate(publicKeys.map((p) => PublicKey.fromBytes(p)));
     return agg.toBytes();
   }
@@ -72,7 +71,7 @@ export function functionalInterfaceFactory({
 
     try {
       return Signature.fromBytes(signature).verifyAggregate(
-        publicKeys.map((pubkey) => PublicKey.fromBytes(pubkey)),
+        publicKeys.map((publicKey) => PublicKey.fromBytes(publicKey)),
         message
       );
     } catch (e) {
@@ -110,7 +109,7 @@ export function functionalInterfaceFactory({
   return {
     sign,
     aggregateSignatures,
-    aggregatePubkeys,
+    aggregatePublicKeys,
     verify,
     verifyAggregate,
     verifyMultiple,

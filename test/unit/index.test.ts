@@ -5,7 +5,7 @@ import {getN, randomMessage} from "../util";
 export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
-    const sk = bls.PrivateKey.fromKeygen();
+    const sk = bls.SecretKey.fromKeygen();
     const pk = sk.toPublicKey();
     const msg = randomMessage();
     const sig = sk.sign(msg);
@@ -47,15 +47,15 @@ export function runIndexTests(bls: IBls): void {
 
   describe("verify multiple", () => {
     it("should verify aggregated signatures", () => {
-      const sks = getN(4, () => bls.PrivateKey.fromKeygen());
+      const sks = getN(4, () => bls.SecretKey.fromKeygen());
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
 
       const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[0]), sks[2].sign(msgs[1]), sks[3].sign(msgs[1])];
 
       const aggPubkeys = [
-        bls.aggregatePubkeys([pks[0], pks[1]].map((pk) => pk.toBytes())),
-        bls.aggregatePubkeys([pks[2], pks[3]].map((pk) => pk.toBytes())),
+        bls.aggregatePublicKeys([pks[0], pks[1]].map((pk) => pk.toBytes())),
+        bls.aggregatePublicKeys([pks[2], pks[3]].map((pk) => pk.toBytes())),
       ];
 
       const aggSig = bls.aggregateSignatures(sigs.map((sig) => sig.toBytes()));
@@ -67,7 +67,7 @@ export function runIndexTests(bls: IBls): void {
     it("should verify aggregated signatures - same message", () => {
       const n = 4;
       const msg = randomMessage();
-      const sks = getN(n, () => bls.PrivateKey.fromKeygen());
+      const sks = getN(n, () => bls.SecretKey.fromKeygen());
       const pks = sks.map((sk) => sk.toPublicKey());
       const sigs = sks.map((sk) => sk.sign(msg));
 

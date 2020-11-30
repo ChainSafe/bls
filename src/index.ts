@@ -1,4 +1,4 @@
-import {IBls, IPrivateKey, IPublicKey, ISignature} from "./interface";
+import {IBls, ISecretKey, IPublicKey, ISignature} from "./interface";
 import {bls as blsHerumi} from "./herumi";
 
 export type Implementation = "herumi" | "blst-native";
@@ -40,15 +40,15 @@ export async function init(impl: Implementation): Promise<void> {
 // Proxy named exports, will get set by `Object.assign(exports, blsImpl)`
 export declare let sign: IBls["sign"];
 export declare let aggregateSignatures: IBls["aggregateSignatures"];
-export declare let aggregatePubkeys: IBls["aggregatePubkeys"];
+export declare let aggregatePublicKeys: IBls["aggregatePublicKeys"];
 export declare let verify: IBls["verify"];
 export declare let verifyAggregate: IBls["verifyAggregate"];
 export declare let verifyMultiple: IBls["verifyMultiple"];
 
-export declare class PrivateKey implements IPrivateKey {
-  static fromBytes(bytes: Uint8Array): PrivateKey;
-  static fromHex(hex: string): PrivateKey;
-  static fromKeygen(entropy?: Uint8Array): PrivateKey;
+export declare class SecretKey implements ISecretKey {
+  static fromBytes(bytes: Uint8Array): SecretKey;
+  static fromHex(hex: string): SecretKey;
+  static fromKeygen(entropy?: Uint8Array): SecretKey;
   sign(message: Uint8Array): Signature;
   toPublicKey(): PublicKey;
   toBytes(): Uint8Array;
@@ -56,13 +56,14 @@ export declare class PrivateKey implements IPrivateKey {
 }
 
 export declare class PublicKey implements IPublicKey {
+  // Virtual property so PublicKey type != Signature type
+  private isPublicKey: true;
+
   static fromBytes(bytes: Uint8Array): PublicKey;
   static fromHex(hex: string): PublicKey;
-  static aggregate(pubkeys: PublicKey[]): PublicKey;
+  static aggregate(publicKeys: PublicKey[]): PublicKey;
   toBytes(): Uint8Array;
   toHex(): string;
-  // Virtual property so PublicKey type != Signature type
-  private isPublicKey: true; 
 }
 
 export declare class Signature implements ISignature {

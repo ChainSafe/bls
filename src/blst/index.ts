@@ -1,11 +1,11 @@
-import {PrivateKey} from "./privateKey";
+import {SecretKey} from "./secretKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {IBls} from "../interface";
 import {functionalInterfaceFactory} from "../functional";
 export * from "../constants";
 
-export {PrivateKey, PublicKey, Signature};
+export {SecretKey, PublicKey, Signature};
 
 export async function init(): Promise<void> {
   // Native bindings require no init() call
@@ -15,11 +15,11 @@ export function destroy(): void {
 }
 
 export const bls: IBls = {
-  PrivateKey,
+  SecretKey,
   PublicKey,
   Signature,
 
-  ...functionalInterfaceFactory({PrivateKey, PublicKey, Signature}),
+  ...functionalInterfaceFactory({SecretKey, PublicKey, Signature}),
   init,
   destroy,
 };

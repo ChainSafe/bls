@@ -1,5 +1,5 @@
 import herumi from "../../src/herumi";
-import {runPrivateKeyTests} from "./privateKey.test";
+import {runSecretKeyTests} from "./secretKey.test";
 import {runPublicKeyTests} from "./publicKey.test";
 // import {runKeypairTests} from "./keypair.test";
 import {runIndexTests} from "./index.test";
@@ -14,7 +14,7 @@ describe("herumi", () => {
     await herumi.init();
   });
 
-  runPrivateKeyTests(herumi);
+  runSecretKeyTests(herumi);
   runPublicKeyTests(herumi);
   // runKeypairTests(bls);
   runIndexTests(herumi);

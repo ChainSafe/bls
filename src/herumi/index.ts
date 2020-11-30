@@ -1,4 +1,4 @@
-import {PrivateKey} from "./privateKey";
+import {SecretKey} from "./secretKey";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {init, destroy} from "./context";
@@ -6,14 +6,14 @@ import {IBls} from "../interface";
 import {functionalInterfaceFactory} from "../functional";
 export * from "../constants";
 
-export {PrivateKey, PublicKey, Signature, init, destroy};
+export {SecretKey, PublicKey, Signature, init, destroy};
 
 export const bls: IBls = {
-  PrivateKey,
+  SecretKey,
   PublicKey,
   Signature,
 
-  ...functionalInterfaceFactory({PrivateKey, PublicKey, Signature}),
+  ...functionalInterfaceFactory({SecretKey, PublicKey, Signature}),
   init,
   destroy,
 };
