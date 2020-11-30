@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [5.0.0] - 2020-11-30
+
+### BREAKING CHANGES
+
+- Compatible with [Eth2 spec 1.0.0](https://github.com/ethereum/eth2.0-specs/blob/v1.0.0/specs/phase0/beacon-chain.md#bls-signatures)
+- Update bls-keygen to latest EIP-2333 standard
+- Refactored class-based interface, minor functional interface changes
+- BLST support
+
 ## [4.0.0] - 2020-08-31
 
 ### BREAKING CHANGES
