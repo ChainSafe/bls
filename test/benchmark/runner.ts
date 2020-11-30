@@ -1,21 +1,23 @@
-export function runBenchmark<T, R>({
+type PromiseOptional<T> = T | Promise<T>;
+
+export async function runBenchmark<T, R>({
   prepareTest,
   testRunner,
   runs = 100,
   id,
 }: {
-  prepareTest: (i: number) => {input: T; resultCheck?: (result: R) => boolean};
-  testRunner: (input: T) => R;
+  prepareTest: (i: number) => PromiseOptional<{input: T; resultCheck?: (result: R) => boolean}>;
+  testRunner: (input: T) => PromiseOptional<R>;
   runs?: number;
   id: string;
-}): void {
+}): Promise<void> {
   const diffsNanoSec: bigint[] = [];
 
   for (let i = 0; i < runs; i++) {
-    const {input, resultCheck} = prepareTest(i);
+    const {input, resultCheck} = await prepareTest(i);
 
     const start = process.hrtime.bigint();
-    const result = testRunner(input);
+    const result = await testRunner(input);
     const end = process.hrtime.bigint();
 
     if (resultCheck && !resultCheck(result)) throw Error("Result fails check test");
