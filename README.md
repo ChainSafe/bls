@@ -2,11 +2,11 @@
 
 [![Build Status](https://travis-ci.org/ChainSafe/lodestar.svg?branch=master)](https://travis-ci.org/ChainSafe/lodestar)
 [![codecov](https://codecov.io/gh/ChainSafe/lodestar/branch/master/graph/badge.svg)](https://codecov.io/gh/ChainSafe/lodestar)
-![ETH2.0_Spec_Version 0.12.0](https://img.shields.io/badge/ETH2.0_Spec_Version-0.12.0-2e86c1.svg)
+![ETH2.0_Spec_Version 1.0.0](https://img.shields.io/badge/ETH2.0_Spec_Version-1.0.0-2e86c1.svg)
 ![ES Version](https://img.shields.io/badge/ES-2017-yellow)
 ![Node Version](https://img.shields.io/badge/node-12.x-green)
 
-Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggregation.
+Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggregation, tailored for use in Eth2.
 
 ## Usage
 
@@ -23,17 +23,24 @@ yarn add @chainsafe/bls @chainsafe/blst
 You must initialize the library once in your application before using it. The result is cached and use across all your imports
 
 ```ts
-import bls, {init} from "@chainsafe/bls";
+import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
 
 (async () => {
   await init("herumi");
 
-  const secretKey = bls.PrivateKey.fromKeygen();
+  // class-based interface
+  const secretKey = SecretKey.fromKeygen();
   const publicKey = secretKey.toPublicKey();
   const message = new Uint8Array(32);
 
   const signature = secretKey.sign(message);
   console.log("Is valid: ", signature.verify(publicKey, message));
+
+  // functional interface
+  const sk = secretKey.toBytes();
+  const pk = secretKeyToPublicKey(sk);
+  const sig = sign(sk, message);
+  console.log("Is valid: ", verify(pk, message, sig));
 })();
 ```
 
@@ -66,12 +73,12 @@ yarn add @chainsafe/bls @chainsafe/blst
 ```
 
 ```ts
-import bls from "@chainsafe/bls";
+import {init} from "@chainsafe/bls";
 
 try {
-  await bls.init("blst-native");
+  await init("blst-native");
 } catch (e) {
-  await bls.init("herumi");
+  await init("herumi");
   console.warn("Using WASM");
 }
 ```
@@ -80,13 +87,14 @@ The API is identical for all implementations.
 
 ## Spec versioning
 
-| Version | Bls spec version |
+| Version | Bls spec hash-to-curve version |
 | ------- | :--------------: |
+| 5.x.x   |     draft #9     |
 | 2.x.x   |     draft #7     |
 | 1.x.x   |     draft #6     |
 | 0.3.x   | initial version  |
 
-> [spec](https://github.com/ethereum/eth2.0-specs/blob/v0.11.1/specs/phase0/beacon-chain.md#bls-signatures)
+> [spec](https://github.com/ethereum/eth2.0-specs/blob/v1.0.0/specs/phase0/beacon-chain.md#bls-signatures)
 
 > [test vectors](https://github.com/ethereum/eth2.0-spec-tests/tree/master/tests/bls)
 
