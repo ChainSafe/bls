@@ -57,9 +57,6 @@ export declare class SecretKey implements ISecretKey {
 }
 
 export declare class PublicKey implements IPublicKey {
-  // Virtual property so PublicKey type != Signature type
-  private isPublicKey: true;
-
   static fromBytes(bytes: Uint8Array): PublicKey;
   static fromHex(hex: string): PublicKey;
   static aggregate(publicKeys: PublicKey[]): PublicKey;
