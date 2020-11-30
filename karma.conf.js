@@ -6,7 +6,7 @@ module.exports = function(config) {
 
         basePath: "",
         frameworks: ["mocha", "chai"],
-        files: ["test/unit/run-web-implementation.test.ts"],
+        files: ["test/unit/run-web-implementation.test.ts", "test/unit/index-named-exports.test.ts"],
         exclude: [],
         preprocessors: {
             "test/**/*.ts": ["webpack"]
