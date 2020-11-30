@@ -37,14 +37,14 @@ export async function init(impl: Implementation): Promise<void> {
 }
 
 // Proxy named exports, will get set by `Object.assign(exports, blsImpl)`
-export let sign: IBls["sign"];
-export let aggregateSignatures: IBls["aggregateSignatures"];
-export let aggregatePubkeys: IBls["aggregatePubkeys"];
-export let verify: IBls["verify"];
-export let verifyAggregate: IBls["verifyAggregate"];
-export let verifyMultiple: IBls["verifyMultiple"];
-export let PrivateKey: IBls["PrivateKey"];
-export let PublicKey: IBls["PublicKey"];
-export let Signature: IBls["Signature"];
+export declare let sign: IBls["sign"];
+export declare let aggregateSignatures: IBls["aggregateSignatures"];
+export declare let aggregatePubkeys: IBls["aggregatePubkeys"];
+export declare let verify: IBls["verify"];
+export declare let verifyAggregate: IBls["verifyAggregate"];
+export declare let verifyMultiple: IBls["verifyMultiple"];
+export declare let PrivateKey: IBls["PrivateKey"];
+export declare let PublicKey: IBls["PublicKey"];
+export declare let Signature: IBls["Signature"];
 
 export default bls;
