@@ -17,7 +17,6 @@ describe("helpers / bytes", () => {
     for (const {hex, isZero} of testCases) {
       it(`${hex} isZero = ${isZero}`, () => {
         const bytes = hexToBytesNode(hex);
-        console.log(bytes);
         expect(isZeroUint8Array(bytes)).to.equal(isZero);
       });
     }
