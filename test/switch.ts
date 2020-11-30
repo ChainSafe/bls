@@ -15,11 +15,12 @@ export function getBls(implementation: Implementation): IBls {
 }
 
 export async function runForAllImplementations(
-  callback: (bls: IBls, implementation: Implementation) => Promise<void> | void
+  callback: (bls: IBls, implementation: Implementation) => void
 ): Promise<void> {
   for (const implementation of ["blst", "herumi"] as Implementation[]) {
     const bls = getBls(implementation);
-    await callback(bls, implementation);
+    await bls.init();
+    callback(bls, implementation);
   }
 }
 

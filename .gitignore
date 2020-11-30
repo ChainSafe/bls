@@ -65,3 +65,5 @@ typings/
 dist/
 lib/
 benchmark-reports
+
+.vscode/

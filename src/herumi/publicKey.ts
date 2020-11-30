@@ -1,24 +1,29 @@
 import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
-import {EMPTY_PUBLIC_KEY, PUBLIC_KEY_LENGTH} from "../constants";
-import {bytesToHex, hexToBytes, isEqualBytes} from "../helpers";
+import {PUBLIC_KEY_LENGTH} from "../constants";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
 import {IPublicKey} from "../interface";
+import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors";
 
 export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;
 
   constructor(value: PublicKeyType) {
+    if (value.isZero()) {
+      throw new ZeroPublicKeyError();
+    }
+
     this.value = value;
   }
 
   static fromBytes(bytes: Uint8Array): PublicKey {
     if (bytes.length !== PUBLIC_KEY_LENGTH) {
-      throw Error(`Public key must have ${PUBLIC_KEY_LENGTH} bytes`);
+      throw new InvalidLengthError("PublicKey", PUBLIC_KEY_LENGTH);
     }
 
     const context = getContext();
     const publicKey = new context.PublicKey();
-    if (!isEqualBytes(EMPTY_PUBLIC_KEY, bytes)) {
+    if (!isZeroUint8Array(bytes)) {
       publicKey.deserialize(bytes);
     }
     return new PublicKey(publicKey);
@@ -30,7 +35,7 @@ export class PublicKey implements IPublicKey {
 
   static aggregate(pubkeys: PublicKey[]): PublicKey {
     if (pubkeys.length === 0) {
-      throw Error("EMPTY_AGGREGATE_ARRAY");
+      throw new EmptyAggregateError();
     }
 
     const agg = new PublicKey(pubkeys[0].value.clone());

@@ -2,6 +2,7 @@ import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {ISignature} from "../interface";
 import {PublicKey} from "./publicKey";
+import {EmptyAggregateError, ZeroSignatureError} from "../errors";
 
 export class Signature implements ISignature {
   readonly affine: blst.Signature;
@@ -19,11 +20,20 @@ export class Signature implements ISignature {
   }
 
   static aggregate(signatures: Signature[]): Signature {
+    if (signatures.length === 0) {
+      throw new EmptyAggregateError();
+    }
+
     const agg = blst.AggregateSignature.fromSignatures(signatures.map((sig) => sig.affine));
     return new Signature(agg.toSignature());
   }
 
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
+    // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
+    if (this.affine.value.is_inf()) {
+      throw new ZeroSignatureError();
+    }
+
     return this.aggregateVerify([message], [publicKey.affine]);
   }
 

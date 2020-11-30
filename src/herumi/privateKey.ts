@@ -6,17 +6,22 @@ import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {IPrivateKey} from "../interface";
+import {InvalidLengthError, ZeroPrivateKeyError} from "../errors";
 
 export class PrivateKey implements IPrivateKey {
   readonly value: SecretKeyType;
 
   constructor(value: SecretKeyType) {
+    if (value.isZero()) {
+      throw new ZeroPrivateKeyError();
+    }
+
     this.value = value;
   }
 
   static fromBytes(bytes: Uint8Array): PrivateKey {
     if (bytes.length !== SECRET_KEY_LENGTH) {
-      throw Error(`Private key should have ${SECRET_KEY_LENGTH} bytes`);
+      throw new InvalidLengthError("PrivateKey", SECRET_KEY_LENGTH);
     }
 
     const context = getContext();

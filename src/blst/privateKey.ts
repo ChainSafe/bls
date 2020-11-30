@@ -1,9 +1,10 @@
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes, randomBytes} from "../helpers";
+import {bytesToHex, hexToBytes, isZeroUint8Array, randomBytes} from "../helpers";
 import {SECRET_KEY_LENGTH} from "../constants";
 import {IPrivateKey} from "../interface";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
+import {ZeroPrivateKeyError} from "../errors";
 
 export class PrivateKey implements IPrivateKey {
   readonly value: blst.SecretKey;
@@ -13,6 +14,11 @@ export class PrivateKey implements IPrivateKey {
   }
 
   static fromBytes(bytes: Uint8Array): PrivateKey {
+    // draft-irtf-cfrg-bls-signature-04 does not allow SK == 0
+    if (isZeroUint8Array(bytes)) {
+      throw new ZeroPrivateKeyError();
+    }
+
     const sk = blst.SecretKey.fromBytes(bytes);
     return new PrivateKey(sk);
   }
