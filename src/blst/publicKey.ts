@@ -1,4 +1,5 @@
 import * as blst from "@chainsafe/blst";
+import {ZeroPublicKeyError} from "../errors";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {IPublicKey} from "../interface";
 
@@ -13,6 +14,10 @@ export class PublicKey implements IPublicKey {
 
   static fromBytes(bytes: Uint8Array): PublicKey {
     const affine = blst.PublicKey.fromBytes(bytes);
+    if (affine.value.is_inf()) {
+      throw new ZeroPublicKeyError();
+    }
+
     const jacobian = blst.AggregatePublicKey.fromPublicKey(affine);
     return new PublicKey(affine, jacobian);
   }

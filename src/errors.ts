@@ -15,3 +15,9 @@ export class ZeroPublicKeyError extends Error {
     super("PUBLIC_KEY_IS_ZERO");
   }
 }
+
+export class ZeroSignatureError extends Error {
+  constructor() {
+    super("SIGNATURE_IS_ZERO");
+  }
+}

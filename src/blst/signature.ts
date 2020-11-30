@@ -2,6 +2,7 @@ import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {ISignature} from "../interface";
 import {PublicKey} from "./publicKey";
+import {ZeroSignatureError} from "../errors";
 
 export class Signature implements ISignature {
   readonly affine: blst.Signature;
@@ -11,7 +12,12 @@ export class Signature implements ISignature {
   }
 
   static fromBytes(bytes: Uint8Array): Signature {
-    return new Signature(blst.Signature.fromBytes(bytes));
+    const affine = blst.Signature.fromBytes(bytes);
+    if (affine.value.is_inf()) {
+      throw new ZeroSignatureError();
+    }
+
+    return new Signature(affine);
   }
 
   static fromHex(hex: string): Signature {
