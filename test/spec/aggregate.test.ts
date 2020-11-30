@@ -3,7 +3,7 @@ import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-tes
 import {bytesToHex, hexToBytes} from "../../src/helpers";
 import {SPEC_TESTS_DIR} from "../params";
 import {describeForAllImplementations} from "../switch";
-import {EmptyAggregateError, ZeroSignatureError} from "../../src/errors";
+import {EmptyAggregateError} from "../../src/errors";
 
 interface IAggregateSigsTestCase {
   data: {
