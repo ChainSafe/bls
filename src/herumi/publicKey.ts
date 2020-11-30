@@ -33,13 +33,13 @@ export class PublicKey implements IPublicKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(pubkeys: PublicKey[]): PublicKey {
-    if (pubkeys.length === 0) {
+  static aggregate(publicKeys: PublicKey[]): PublicKey {
+    if (publicKeys.length === 0) {
       throw new EmptyAggregateError();
     }
 
-    const agg = new PublicKey(pubkeys[0].value.clone());
-    for (const pk of pubkeys.slice(1)) {
+    const agg = new PublicKey(publicKeys[0].value.clone());
+    for (const pk of publicKeys.slice(1)) {
       agg.value.add(pk.value);
     }
     return agg;

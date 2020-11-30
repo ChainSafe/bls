@@ -5,36 +5,36 @@ import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {bytesToHex, hexToBytes} from "../helpers";
-import {IPrivateKey} from "../interface";
-import {InvalidLengthError, ZeroPrivateKeyError} from "../errors";
+import {ISecretKey} from "../interface";
+import {InvalidLengthError, ZeroSecretKeyError} from "../errors";
 
-export class PrivateKey implements IPrivateKey {
+export class SecretKey implements ISecretKey {
   readonly value: SecretKeyType;
 
   constructor(value: SecretKeyType) {
     if (value.isZero()) {
-      throw new ZeroPrivateKeyError();
+      throw new ZeroSecretKeyError();
     }
 
     this.value = value;
   }
 
-  static fromBytes(bytes: Uint8Array): PrivateKey {
+  static fromBytes(bytes: Uint8Array): SecretKey {
     if (bytes.length !== SECRET_KEY_LENGTH) {
-      throw new InvalidLengthError("PrivateKey", SECRET_KEY_LENGTH);
+      throw new InvalidLengthError("SecretKey", SECRET_KEY_LENGTH);
     }
 
     const context = getContext();
     const secretKey = new context.SecretKey();
     secretKey.deserialize(bytes);
-    return new PrivateKey(secretKey);
+    return new SecretKey(secretKey);
   }
 
-  static fromHex(hex: string): PrivateKey {
+  static fromHex(hex: string): SecretKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static fromKeygen(entropy?: Uint8Array): PrivateKey {
+  static fromKeygen(entropy?: Uint8Array): SecretKey {
     const sk = generateRandomSecretKey(entropy && Buffer.from(entropy));
     return this.fromBytes(sk);
   }

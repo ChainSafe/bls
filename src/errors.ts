@@ -8,9 +8,9 @@ export class NotInitializedError extends Error {
   }
 }
 
-export class ZeroPrivateKeyError extends Error {
+export class ZeroSecretKeyError extends Error {
   constructor() {
-    super("ZERO_PRIVATE_KEY");
+    super("ZERO_SECRET_KEY");
   }
 }
 

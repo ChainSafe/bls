@@ -58,8 +58,8 @@ export class Signature implements ISignature {
   }
 
   private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {
-    // If this set is simply an infinity signature and infinity pubkey then skip verification.
-    // This has the effect of always declaring that this sig/pubkey combination is valid.
+    // If this set is simply an infinity signature and infinity publicKey then skip verification.
+    // This has the effect of always declaring that this sig/publicKey combination is valid.
     // for Eth2.0 specs tests
     if (this.affine.value.is_inf() && pks.length === 1 && pks[0].value.is_inf()) {
       return true;

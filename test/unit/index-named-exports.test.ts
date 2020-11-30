@@ -1,11 +1,11 @@
 import {expect} from "chai";
-import {PrivateKey, PublicKey, Signature, init} from "../../src";
+import {SecretKey, PublicKey, Signature, init} from "../../src";
 
 describe("index named exports", () => {
   it("Classes and methods should be defined", async () => {
     await init("herumi");
 
-    const sk = PrivateKey.fromKeygen();
+    const sk = SecretKey.fromKeygen();
     const msg = new Uint8Array(32);
     const sig = sk.sign(msg);
     const pk = sk.toPublicKey();

@@ -26,12 +26,12 @@ export class PublicKey implements IPublicKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(pubkeys: PublicKey[]): PublicKey {
-    if (pubkeys.length === 0) {
+  static aggregate(publicKeys: PublicKey[]): PublicKey {
+    if (publicKeys.length === 0) {
       throw new EmptyAggregateError();
     }
 
-    const jacobian = blst.aggregatePubkeys(pubkeys.map((pk) => pk.jacobian));
+    const jacobian = blst.aggregatePubkeys(publicKeys.map((pk) => pk.jacobian));
     const affine = jacobian.toPublicKey();
     return new PublicKey(affine, jacobian);
   }

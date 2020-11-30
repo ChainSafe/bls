@@ -13,7 +13,7 @@ runForAllImplementations((bls, implementation) => {
 
     prepareTest: () => {
       const msg = randomMsg();
-      const sk = bls.PrivateKey.fromKeygen();
+      const sk = bls.SecretKey.fromKeygen();
       const pk = sk.toPublicKey();
       const sig = sk.sign(msg);
       return {
@@ -34,7 +34,7 @@ runForAllImplementations((bls, implementation) => {
     prepareTest: () => {
       const msg = randomMsg();
       const dataArr = range(aggCount).map(() => {
-        const sk = bls.PrivateKey.fromKeygen();
+        const sk = bls.SecretKey.fromKeygen();
         const pk = sk.toPublicKey();
         const sig = sk.sign(msg);
         return {pk, sig};
@@ -60,7 +60,7 @@ runForAllImplementations((bls, implementation) => {
 
     prepareTest: () => {
       return {
-        input: range(aggCount).map(() => bls.PrivateKey.fromKeygen().toPublicKey()),
+        input: range(aggCount).map(() => bls.SecretKey.fromKeygen().toPublicKey()),
       };
     },
     testRunner: (pks) => {
@@ -76,7 +76,7 @@ runForAllImplementations((bls, implementation) => {
     prepareTest: () => {
       const msg = randomMsg();
       const sigs = range(aggCount).map(() => {
-        const sk = bls.PrivateKey.fromKeygen();
+        const sk = bls.SecretKey.fromKeygen();
         return sk.sign(msg);
       });
       return {

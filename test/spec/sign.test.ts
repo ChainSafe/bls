@@ -3,7 +3,7 @@ import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-tes
 import {bytesToHex, hexToBytes} from "../../src/helpers";
 import {SPEC_TESTS_DIR} from "../params";
 import {describeForAllImplementations} from "../switch";
-import {ZeroPrivateKeyError} from "../../src/errors";
+import {ZeroSecretKeyError} from "../../src/errors";
 
 interface ISignMessageTestCase {
   data: {
@@ -25,7 +25,7 @@ describeForAllImplementations((bls) => {
         const signature = bls.sign(hexToBytes(privkey), hexToBytes(message));
         return bytesToHex(signature);
       } catch (e) {
-        if (e instanceof ZeroPrivateKeyError) return null;
+        if (e instanceof ZeroSecretKeyError) return null;
         else throw e;
       }
     },

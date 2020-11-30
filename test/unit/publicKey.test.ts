@@ -14,8 +14,8 @@ export function runPublicKeyTests(bls: IBls): void {
       expect(bls.PublicKey.fromHex(publicKey).toHex()).to.be.equal(publicKey);
     });
 
-    it("from private key", () => {
-      bls.PrivateKey.fromKeygen().toPublicKey();
+    it("from secret key", () => {
+      bls.SecretKey.fromKeygen().toPublicKey();
     });
   });
 }
