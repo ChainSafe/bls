@@ -21,6 +21,7 @@ export interface IBls {
   verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean;
   verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
   verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
+  secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
 
   init(): Promise<void>;
   destroy(): void;

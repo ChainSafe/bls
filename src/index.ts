@@ -44,6 +44,7 @@ export declare let aggregatePublicKeys: IBls["aggregatePublicKeys"];
 export declare let verify: IBls["verify"];
 export declare let verifyAggregate: IBls["verifyAggregate"];
 export declare let verifyMultiple: IBls["verifyMultiple"];
+export declare let secretKeyToPublicKey: IBls["secretKeyToPublicKey"];
 
 export declare class SecretKey implements ISecretKey {
   static fromBytes(bytes: Uint8Array): SecretKey;

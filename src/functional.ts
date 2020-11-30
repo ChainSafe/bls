@@ -106,6 +106,14 @@ export function functionalInterfaceFactory({
     }
   }
 
+  /**
+   * Computes a public key from a secret key
+   */
+  function secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array {
+    validateBytes(secretKey, "secretKey");
+    return SecretKey.fromBytes(secretKey).toPublicKey().toBytes();
+  }
+
   return {
     sign,
     aggregateSignatures,
@@ -113,5 +121,6 @@ export function functionalInterfaceFactory({
     verify,
     verifyAggregate,
     verifyMultiple,
+    secretKeyToPublicKey,
   };
 }
