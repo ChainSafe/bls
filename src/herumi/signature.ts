@@ -4,13 +4,14 @@ import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
 import {ISignature} from "../interface";
+import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors";
 
 export class Signature implements ISignature {
   readonly value: SignatureType;
 
   constructor(value: SignatureType) {
     if (!value.isValidOrder()) {
-      throw Error("Signature is not in valid order");
+      throw new InvalidOrderError();
     }
 
     this.value = value;
@@ -18,7 +19,7 @@ export class Signature implements ISignature {
 
   static fromBytes(bytes: Uint8Array): Signature {
     if (bytes.length !== SIGNATURE_LENGTH) {
-      throw Error(`Signature must have ${SIGNATURE_LENGTH} bytes`);
+      throw new InvalidLengthError("Signature", SIGNATURE_LENGTH);
     }
 
     const context = getContext();
@@ -35,7 +36,7 @@ export class Signature implements ISignature {
 
   static aggregate(signatures: Signature[]): Signature {
     if (signatures.length === 0) {
-      throw Error("EMPTY_AGGREGATE_ARRAY");
+      throw new EmptyAggregateError();
     }
 
     const context = getContext();

@@ -1,5 +1,5 @@
 import * as blst from "@chainsafe/blst";
-import {ZeroPublicKeyError} from "../errors";
+import {EmptyAggregateError, ZeroPublicKeyError} from "../errors";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {IPublicKey} from "../interface";
 
@@ -27,6 +27,10 @@ export class PublicKey implements IPublicKey {
   }
 
   static aggregate(pubkeys: PublicKey[]): PublicKey {
+    if (pubkeys.length === 0) {
+      throw new EmptyAggregateError();
+    }
+
     const jacobian = blst.aggregatePubkeys(pubkeys.map((pk) => pk.jacobian));
     const affine = jacobian.toPublicKey();
     return new PublicKey(affine, jacobian);

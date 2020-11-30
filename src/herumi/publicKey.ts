@@ -3,7 +3,7 @@ import {getContext} from "./context";
 import {PUBLIC_KEY_LENGTH} from "../constants";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
 import {IPublicKey} from "../interface";
-import {ZeroPublicKeyError} from "../errors";
+import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors";
 
 export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;
@@ -18,7 +18,7 @@ export class PublicKey implements IPublicKey {
 
   static fromBytes(bytes: Uint8Array): PublicKey {
     if (bytes.length !== PUBLIC_KEY_LENGTH) {
-      throw Error(`Public key must have ${PUBLIC_KEY_LENGTH} bytes`);
+      throw new InvalidLengthError("PublicKey", PUBLIC_KEY_LENGTH);
     }
 
     const context = getContext();
@@ -35,7 +35,7 @@ export class PublicKey implements IPublicKey {
 
   static aggregate(pubkeys: PublicKey[]): PublicKey {
     if (pubkeys.length === 0) {
-      throw Error("EMPTY_AGGREGATE_ARRAY");
+      throw new EmptyAggregateError();
     }
 
     const agg = new PublicKey(pubkeys[0].value.clone());
