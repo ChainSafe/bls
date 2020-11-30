@@ -1,0 +1,12 @@
+{
+  "name": "bls-libs-benchmark",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "benchmark": "ts-node index && ts-node noble"
+  },
+  "dependencies": {
+    "noble-bls12-381": "^0.6.1"
+  }
+}
