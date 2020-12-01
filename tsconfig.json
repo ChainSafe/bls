@@ -1,5 +1,6 @@
 {
   "include": ["src", "test"],
+  "exclude": ["test/benchmark"],
   "compilerOptions": {
     "target": "esnext",
     "module": "commonjs",
