@@ -18,7 +18,7 @@ interface ISignMessageTestCase {
 describeForAllImplementations((bls) => {
   describeDirectorySpecTest<ISignMessageTestCase, string>(
     "bls/sign/small",
-    path.join(SPEC_TESTS_DIR, "general/phase0/bls/sign/small"),
+    path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/sign/small"),
     (testCase) => {
       try {
         const {privkey, message} = testCase.data.input;
