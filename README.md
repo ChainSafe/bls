@@ -105,6 +105,8 @@ noble verifyAgg:  11.241 ops/sec (10 runs)
 noble aggPubkey:  47.309 ops/sec (10 runs)
 ```
 
+Results from CI run https://github.com/ChainSafe/bls/runs/1478915060
+
 ## Spec versioning
 
 | Version | Bls spec hash-to-curve version |
