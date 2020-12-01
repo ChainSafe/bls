@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [5.0.1] - 2020-11-30
+
+- Remove foreign property breaking types ([ccd870](https://github.com/chainsafe/bls/commit/ccd870))
+- Deduplicate interface ([0bf6e9](https://github.com/chainsafe/bls/commit/0bf6e9))
+- Deprecate IKeypair ([293286](https://github.com/chainsafe/bls/commit/293286))
+
 ## [5.0.0] - 2020-11-30
 
 ### BREAKING CHANGES
