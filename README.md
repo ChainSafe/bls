@@ -85,14 +85,34 @@ try {
 
 The API is identical for all implementations.
 
+## Benchmarks
+
+- `blst`: [src/blst](src/blst)
+- `herumi`: [src/herumi](src/herumi)
+- `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381)
+
+```
+blst verify:      502.72 ops/sec (100 runs)
+blst verifyAgg:   489.60 ops/sec (100 runs)
+blst aggPubkey:   8326.6 ops/sec (100 runs)
+blst aggSigs:     6968.3 ops/sec (100 runs)
+herumi verify:    53.792 ops/sec (100 runs)
+herumi verifyAgg: 52.897 ops/sec (100 runs)
+herumi aggPubkey: 3020.1 ops/sec (100 runs)
+herumi aggSigs:   1151.2 ops/sec (100 runs)
+noble verify:     13.868 ops/sec (10 runs)
+noble verifyAgg:  11.241 ops/sec (10 runs)
+noble aggPubkey:  47.309 ops/sec (10 runs)
+```
+
 ## Spec versioning
 
 | Version | Bls spec hash-to-curve version |
-| ------- | :--------------: |
-| 5.x.x   |     draft #9     |
-| 2.x.x   |     draft #7     |
-| 1.x.x   |     draft #6     |
-| 0.3.x   | initial version  |
+| ------- | :----------------------------: |
+| 5.x.x   |            draft #9            |
+| 2.x.x   |            draft #7            |
+| 1.x.x   |            draft #6            |
+| 0.3.x   |        initial version         |
 
 > [spec](https://github.com/ethereum/eth2.0-specs/blob/v1.0.0/specs/phase0/beacon-chain.md#bls-signatures)
 
