@@ -15,7 +15,7 @@ interface IAggregateSigsTestCase {
 describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IAggregateSigsTestCase, string>(
     "bls/aggregate/small",
-    path.join(SPEC_TESTS_DIR, "general/phase0/bls/aggregate/small"),
+    path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/aggregate/small"),
     (testCase) => {
       try {
         const signatures = testCase.data.input;

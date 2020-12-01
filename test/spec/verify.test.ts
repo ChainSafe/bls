@@ -18,7 +18,7 @@ interface IVerifyTestCase {
 describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IVerifyTestCase, boolean>(
     "bls/verify/small",
-    path.join(SPEC_TESTS_DIR, "general/phase0/bls/verify/small"),
+    path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/verify/small"),
     (testCase) => {
       const {pubkey, message, signature} = testCase.data.input;
       return bls.verify(hexToBytes(pubkey), hexToBytes(message), hexToBytes(signature));

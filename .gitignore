@@ -67,3 +67,6 @@ lib/
 benchmark-reports
 
 .vscode/
+
+# Eth2.0 spec tests data
+test/spec-tests

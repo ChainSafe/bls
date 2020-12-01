@@ -1,7 +1,7 @@
 import {runBenchmark} from "./runner";
-import {runForAllImplementations} from "../switch";
-import {PublicKey, Signature} from "../../src/interface";
-import {range, randomMessage} from "../util";
+import {runForAllImplementations} from "../test/switch";
+import {PublicKey, Signature} from "../src/interface";
+import {range, randomMessage} from "../test/util";
 
 const aggCount = 30;
 
