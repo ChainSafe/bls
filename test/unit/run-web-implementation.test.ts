@@ -1,7 +1,6 @@
 import herumi from "../../src/herumi";
 import {runSecretKeyTests} from "./secretKey.test";
 import {runPublicKeyTests} from "./publicKey.test";
-// import {runKeypairTests} from "./keypair.test";
 import {runIndexTests} from "./index.test";
 
 // This file is intended to be compiled and run by Karma
@@ -16,6 +15,5 @@ describe("herumi", () => {
 
   runSecretKeyTests(herumi);
   runPublicKeyTests(herumi);
-  // runKeypairTests(bls);
   runIndexTests(herumi);
 });
