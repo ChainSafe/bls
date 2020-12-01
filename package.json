@@ -43,8 +43,8 @@
     "test": "yarn run test:unit && yarn run test:spec",
     "download-test-cases": "ts-node test/downloadSpecTests.ts",
     "coverage": "codecov -F bls",
-    "benchmark": "ts-node test/benchmark",
-    "benchmark:all": "cd test/benchmark && yarn install && yarn benchmark"
+    "benchmark": "ts-node benchmark",
+    "benchmark:all": "cd benchmark && yarn install && yarn benchmark"
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.3.0",

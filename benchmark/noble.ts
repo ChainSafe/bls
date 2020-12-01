@@ -1,5 +1,5 @@
 import {runBenchmark} from "./runner";
-import {range, randomMessage} from "../util";
+import {range, randomMessage} from "../test/util";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import * as noble from "noble-bls12-381";
 
