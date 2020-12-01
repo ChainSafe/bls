@@ -55,8 +55,3 @@ export declare class Signature {
   toBytes(): Uint8Array;
   toHex(): string;
 }
-
-export interface IKeypair {
-  publicKey: PublicKey;
-  secretKey: SecretKey;
-}
