@@ -1,4 +1,4 @@
-import {IBls, ISecretKey, IPublicKey, ISignature} from "./interface";
+import {IBls} from "./interface";
 import {bls as blsHerumi} from "./herumi";
 
 export type Implementation = "herumi" | "blst-native";
@@ -45,32 +45,3 @@ export declare let verify: IBls["verify"];
 export declare let verifyAggregate: IBls["verifyAggregate"];
 export declare let verifyMultiple: IBls["verifyMultiple"];
 export declare let secretKeyToPublicKey: IBls["secretKeyToPublicKey"];
-
-export declare class SecretKey implements ISecretKey {
-  static fromBytes(bytes: Uint8Array): SecretKey;
-  static fromHex(hex: string): SecretKey;
-  static fromKeygen(entropy?: Uint8Array): SecretKey;
-  sign(message: Uint8Array): Signature;
-  toPublicKey(): PublicKey;
-  toBytes(): Uint8Array;
-  toHex(): string;
-}
-
-export declare class PublicKey implements IPublicKey {
-  static fromBytes(bytes: Uint8Array): PublicKey;
-  static fromHex(hex: string): PublicKey;
-  static aggregate(publicKeys: PublicKey[]): PublicKey;
-  toBytes(): Uint8Array;
-  toHex(): string;
-}
-
-export declare class Signature implements ISignature {
-  static fromBytes(bytes: Uint8Array): Signature;
-  static fromHex(hex: string): Signature;
-  static aggregate(signatures: Signature[]): Signature;
-  verify(publicKey: PublicKey, message: Uint8Array): boolean;
-  verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean;
-  verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean;
-  toBytes(): Uint8Array;
-  toHex(): string;
-}

@@ -1,6 +1,6 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers";
-import {ISignature} from "../interface";
+import {Signature as ISignature} from "../interface";
 import {PublicKey} from "./publicKey";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors";
 

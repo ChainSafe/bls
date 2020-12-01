@@ -1,7 +1,7 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes, isZeroUint8Array, randomBytes} from "../helpers";
 import {SECRET_KEY_LENGTH} from "../constants";
-import {ISecretKey} from "../interface";
+import {SecretKey as ISecretKey} from "../interface";
 import {PublicKey} from "./publicKey";
 import {Signature} from "./signature";
 import {ZeroSecretKeyError} from "../errors";

@@ -1,6 +1,6 @@
 import {runBenchmark} from "./runner";
 import {runForAllImplementations} from "../switch";
-import {IPublicKey, ISignature} from "../../src/interface";
+import {PublicKey, Signature} from "../../src/interface";
 import {range, randomMessage} from "../util";
 
 const aggCount = 30;
@@ -9,7 +9,7 @@ const aggCount = 30;
   await runForAllImplementations(async (bls, implementation) => {
     // verify
 
-    await runBenchmark<{pk: IPublicKey; msg: Uint8Array; sig: ISignature}, boolean>({
+    await runBenchmark<{pk: PublicKey; msg: Uint8Array; sig: Signature}, boolean>({
       id: `${implementation} verify`,
 
       prepareTest: () => {
@@ -29,7 +29,7 @@ const aggCount = 30;
 
     // Fast aggregate
 
-    await runBenchmark<{pks: IPublicKey[]; msg: Uint8Array; sig: ISignature}, boolean>({
+    await runBenchmark<{pks: PublicKey[]; msg: Uint8Array; sig: Signature}, boolean>({
       id: `${implementation} verifyAggregate`,
 
       prepareTest: () => {
@@ -56,7 +56,7 @@ const aggCount = 30;
 
     // Aggregate pubkeys
 
-    await runBenchmark<IPublicKey[], void>({
+    await runBenchmark<PublicKey[], void>({
       id: `${implementation} aggregate pubkeys (${aggCount})`,
 
       prepareTest: () => {
@@ -71,7 +71,7 @@ const aggCount = 30;
 
     // Aggregate sigs
 
-    await runBenchmark<ISignature[], void>({
+    await runBenchmark<Signature[], void>({
       id: `${implementation} aggregate signatures (${aggCount})`,
 
       prepareTest: () => {
