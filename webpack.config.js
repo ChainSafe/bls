@@ -1,18 +1,21 @@
 module.exports = {
   entry: "./src/index.ts",
-  mode: "production",
+  mode: "development",
   node: {
-    fs: "empty"
+    fs: "empty",
   },
   output: {
-    filename: "dist/bundle.js"
+    filename: "dist/bundle.js",
   },
   resolve: {
-    extensions: [".ts", ".js"]
+    extensions: [".ts", ".js"],
   },
   module: {
-    rules: [
-      {test: /\.ts$/, use: {loader: "ts-loader", options: {transpileOnly: true}}}
-    ]
-  }
+    rules: [{test: /\.ts$/, use: {loader: "ts-loader", options: {transpileOnly: true}}}],
+  },
+  optimization: {
+    // Disable minification for better debugging on Karma tests
+    minimize: false,
+  },
+  devtool: "source-map",
 };
