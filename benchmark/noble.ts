@@ -2,9 +2,7 @@ import {runBenchmark} from "./runner";
 import {range, randomMessage} from "../test/util";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import * as noble from "noble-bls12-381";
-
-const aggCount = 30;
-const nobleRuns = 10;
+import {aggCount, runsNoble} from "./params";
 
 (async function () {
   // verify
@@ -26,13 +24,13 @@ const nobleRuns = 10;
     testRunner: async ({pk, msg, sig}) => {
       return await noble.verify(sig, msg, pk);
     },
-    runs: nobleRuns,
+    runs: runsNoble,
   });
 
   // Fast aggregate
 
   await runBenchmark<{pks: Uint8Array[]; msg: Uint8Array; sig: Uint8Array}, boolean>({
-    id: `noble verifyAggregate`,
+    id: `noble verifyAggregate (${aggCount})`,
 
     prepareTest: async () => {
       const msg = randomMessage();
@@ -57,7 +55,7 @@ const nobleRuns = 10;
       const pk = noble.aggregatePublicKeys(pks);
       return await noble.verify(sig, msg, pk);
     },
-    runs: nobleRuns,
+    runs: runsNoble,
   });
 
   // Aggregate pubkeys
@@ -73,6 +71,6 @@ const nobleRuns = 10;
     testRunner: async (pks) => {
       noble.aggregatePublicKeys(pks);
     },
-    runs: nobleRuns,
+    runs: runsNoble,
   });
 })();

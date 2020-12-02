@@ -91,19 +91,16 @@ The API is identical for all implementations.
 - `herumi`: [src/herumi](src/herumi)
 - `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381)
 
-```
-blst verify:      502.72 ops/sec (100 runs)
-blst verifyAgg:   489.60 ops/sec (100 runs)
-blst aggPubkey:   8326.6 ops/sec (100 runs)
-blst aggSigs:     6968.3 ops/sec (100 runs)
-herumi verify:    53.792 ops/sec (100 runs)
-herumi verifyAgg: 52.897 ops/sec (100 runs)
-herumi aggPubkey: 3020.1 ops/sec (100 runs)
-herumi aggSigs:   1151.2 ops/sec (100 runs)
-noble verify:     13.868 ops/sec (10 runs)
-noble verifyAgg:  11.241 ops/sec (10 runs)
-noble aggPubkey:  47.309 ops/sec (10 runs)
-```
+Results are in `ops/sec`. `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
+
+| Function - `ops/sec`      | `blst` | `herumi` | `noble`\* |
+| ------------------------- | :----: | :------: | :-------: |
+| `verify`                  | 502.72 |  53.792  |  13.868   |
+| `verifyAggregate` (30)    | 489.60 |  52.897  |  11.241   |
+| `aggregate` (pubkeys, 30) | 8326.6 |  3020.1  |  47.309   |
+| `aggregate` (sigs, 30)    | 6968.3 |  1151.2  |     -     |
+
+\*`noble` methods include serialization and deserialization to bytes, which may impact the `aggregate` benchmark
 
 Results from CI run https://github.com/ChainSafe/bls/runs/1478915060
 
