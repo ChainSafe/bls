@@ -119,9 +119,9 @@ export function runIndexTests(bls: IBls): void {
     });
 
     it("Test fails correctly against a malicous signature", async () => {
-      const pks = maliciousVerifyMultipleSignaturesData.pks.map(bls.PublicKey.fromHex);
+      const pks = maliciousVerifyMultipleSignaturesData.pks.map((pk) => bls.PublicKey.fromHex(pk));
       const msgs = maliciousVerifyMultipleSignaturesData.msgs.map(hexToBytes);
-      const sigs = maliciousVerifyMultipleSignaturesData.sigs.map(bls.Signature.fromHex);
+      const sigs = maliciousVerifyMultipleSignaturesData.sigs.map((sig) => bls.Signature.fromHex(sig));
 
       maliciousVerifyMultipleSignaturesData.manipulated.forEach((isManipulated, i) => {
         expect(sigs[i].verify(pks[i], msgs[i])).to.equal(
