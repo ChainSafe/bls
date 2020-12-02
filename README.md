@@ -91,18 +91,20 @@ The API is identical for all implementations.
 - `herumi`: [src/herumi](src/herumi)
 - `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381)
 
-Results are in `ops/sec`. `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
+Results are in `ops/sec (x times slower)`, where `x times slower` = times slower than fastest implementation (`blst`).
 
-| Function - `ops/sec`      | `blst` | `herumi` | `noble`\* |
-| ------------------------- | :----: | :------: | :-------: |
-| `verify`                  | 502.72 |  53.792  |  13.868   |
-| `verifyAggregate` (30)    | 489.60 |  52.897  |  11.241   |
-| `aggregate` (pubkeys, 30) | 8326.6 |  3020.1  |  47.309   |
-| `aggregate` (sigs, 30)    | 6968.3 |  1151.2  |     -     |
+| Function - `ops/sec`      | `blst` |   `herumi`   |   `noble`\*   |
+| ------------------------- | :----: | :----------: | :-----------: |
+| `verify`                  | 443.75 | 46.658 (x9)  | 12.355 (x36)  |
+| `verifyAggregate` (30)    | 438.68 | 46.615 (x9)  | 9.8803 (x44)  |
+| `verifyMultiple` (30)     | 35.138 | 3.4332 (x10) | 0.9217 (x38)  |
+| `aggregate` (pubkeys, 30) | 15761  | 2603.5 (x6)  | 42.956 (x366) |
+| `aggregate` (sigs, 30)    | 6587.8 | 1018.7 (x6)  |       -       |
 
-\*`noble` methods include serialization and deserialization to bytes, which may impact the `aggregate` benchmark
+\*`noble` methods include serialization and deserialization to bytes, which may impact all benchmarks specially `aggregate`.
+\*\* `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
 
-Results from CI run https://github.com/ChainSafe/bls/runs/1478915060
+Results from CI run https://github.com/ChainSafe/bls/runs/1488856560?check_suite_focus=true#step:12:13
 
 ## Spec versioning
 
