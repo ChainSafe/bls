@@ -107,6 +107,8 @@ export function runIndexTests(bls: IBls): void {
       const msgs = dataArr.map((data) => data.msg);
       const sigs = dataArr.map((data) => data.sig);
 
+      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(true, "class interface failed");
+
       expect(
         bls.verifyMultipleSignatures(
           pks.map((pk) => pk.toBytes()),
@@ -114,31 +116,30 @@ export function runIndexTests(bls: IBls): void {
           sigs.map((sig) => sig.toBytes())
         )
       ).to.equal(true, "functional (bytes serialized) interface failed");
-
-      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(true, "class interface failed");
     });
 
     it("Test fails correctly against a malicous signature", async () => {
-      const pks = maliciousVerifyMultipleSignaturesData.pks.map(hexToBytes);
+      const pks = maliciousVerifyMultipleSignaturesData.pks.map(bls.PublicKey.fromHex);
       const msgs = maliciousVerifyMultipleSignaturesData.msgs.map(hexToBytes);
-      const sigs = maliciousVerifyMultipleSignaturesData.sigs.map(hexToBytes);
+      const sigs = maliciousVerifyMultipleSignaturesData.sigs.map(bls.Signature.fromHex);
 
       maliciousVerifyMultipleSignaturesData.manipulated.forEach((isManipulated, i) => {
-        expect(bls.verify(pks[i], msgs[i], sigs[i])).to.equal(
+        expect(sigs[i].verify(pks[i], msgs[i])).to.equal(
           !isManipulated,
           isManipulated ? "Manipulated signature should not verify" : "Ok signature should verify"
         );
       });
 
       // This method (AggregateVerify in BLS spec lingo) should verify
-      const dangerousAggSig = bls.aggregateSignatures(sigs);
-      expect(bls.verifyMultiple(pks, msgs, dangerousAggSig)).to.equal(
+
+      const dangerousAggSig = bls.Signature.aggregate(sigs);
+      expect(dangerousAggSig.verifyMultiple(pks, msgs)).to.equal(
         true,
         "Malicious signature should be validated with bls.verifyMultiple"
       );
 
       // This method is expected to catch the malicious signature and not verify
-      expect(bls.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(
+      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(
         false,
         "Malicous signature should not validate with bls.verifyMultipleSignatures"
       );
