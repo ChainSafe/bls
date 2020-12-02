@@ -2,8 +2,7 @@ import {runBenchmark} from "./runner";
 import {runForAllImplementations} from "../test/switch";
 import {PublicKey, Signature} from "../src/interface";
 import {range, randomMessage} from "../test/util";
-
-const aggCount = 30;
+import {aggCount, runs} from "./params";
 
 (async function () {
   await runForAllImplementations(async (bls, implementation) => {
@@ -25,12 +24,13 @@ const aggCount = 30;
       testRunner: ({pk, msg, sig}) => {
         return sig.verify(pk, msg);
       },
+      runs,
     });
 
     // Fast aggregate
 
     await runBenchmark<{pks: PublicKey[]; msg: Uint8Array; sig: Signature}, boolean>({
-      id: `${implementation} verifyAggregate`,
+      id: `${implementation} verifyAggregate (${aggCount})`,
 
       prepareTest: () => {
         const msg = randomMessage();
@@ -52,6 +52,36 @@ const aggCount = 30;
       testRunner: ({pks, msg, sig}) => {
         return sig.verifyAggregate(pks, msg);
       },
+      runs,
+    });
+
+    // Verify multiple
+
+    await runBenchmark<{pks: PublicKey[]; msgs: Uint8Array[]; sig: Signature}, boolean>({
+      id: `${implementation} verifyMultiple (${aggCount})`,
+
+      prepareTest: () => {
+        const dataArr = range(aggCount).map(() => {
+          const sk = bls.SecretKey.fromKeygen();
+          const pk = sk.toPublicKey();
+          const msg = randomMessage();
+          const sig = sk.sign(msg);
+          return {pk, msg, sig};
+        });
+
+        const pks = dataArr.map((data) => data.pk);
+        const msgs = dataArr.map((data) => data.msg);
+        const sig = bls.Signature.aggregate(dataArr.map((data) => data.sig));
+
+        return {
+          input: {pks, msgs, sig},
+          resultCheck: (valid) => valid === true,
+        };
+      },
+      testRunner: ({pks, msgs, sig}) => {
+        return sig.verifyMultiple(pks, msgs);
+      },
+      runs,
     });
 
     // Aggregate pubkeys
@@ -67,6 +97,7 @@ const aggCount = 30;
       testRunner: (pks) => {
         bls.PublicKey.aggregate(pks);
       },
+      runs,
     });
 
     // Aggregate sigs
@@ -87,6 +118,7 @@ const aggCount = 30;
       testRunner: (sigs) => {
         bls.Signature.aggregate(sigs);
       },
+      runs,
     });
   });
 })();

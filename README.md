@@ -85,14 +85,35 @@ try {
 
 The API is identical for all implementations.
 
+## Benchmarks
+
+- `blst`: [src/blst](src/blst)
+- `herumi`: [src/herumi](src/herumi)
+- `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381)
+
+Results are in `ops/sec (x times slower)`, where `x times slower` = times slower than fastest implementation (`blst`).
+
+| Function - `ops/sec`      | `blst` |   `herumi`   |   `noble`\*   |
+| ------------------------- | :----: | :----------: | :-----------: |
+| `verify`                  | 443.75 | 46.658 (x9)  | 12.355 (x36)  |
+| `verifyAggregate` (30)    | 438.68 | 46.615 (x9)  | 9.8803 (x44)  |
+| `verifyMultiple` (30)     | 35.138 | 3.4332 (x10) | 0.9217 (x38)  |
+| `aggregate` (pubkeys, 30) | 15761  | 2603.5 (x6)  | 42.956 (x366) |
+| `aggregate` (sigs, 30)    | 6587.8 | 1018.7 (x6)  |       -       |
+
+\*`noble` methods include serialization and deserialization to bytes, which may impact all benchmarks specially `aggregate`.
+\*\* `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
+
+Results from CI run https://github.com/ChainSafe/bls/runs/1488856560?check_suite_focus=true#step:12:13
+
 ## Spec versioning
 
 | Version | Bls spec hash-to-curve version |
-| ------- | :--------------: |
-| 5.x.x   |     draft #9     |
-| 2.x.x   |     draft #7     |
-| 1.x.x   |     draft #6     |
-| 0.3.x   | initial version  |
+| ------- | :----------------------------: |
+| 5.x.x   |            draft #9            |
+| 2.x.x   |            draft #7            |
+| 1.x.x   |            draft #6            |
+| 0.3.x   |        initial version         |
 
 > [spec](https://github.com/ethereum/eth2.0-specs/blob/v1.0.0/specs/phase0/beacon-chain.md#bls-signatures)
 
