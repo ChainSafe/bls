@@ -107,6 +107,36 @@ export function functionalInterfaceFactory({
   }
 
   /**
+   * Verifies multiple signatures at once returning true if all valid or false
+   * if at least one is not. Optimized method when knowing which signature is
+   * wrong is not relevant, i.e. verifying an Eth2.0 block.
+   * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
+   */
+  function verifyMultipleSignatures(
+    publicKeys: Uint8Array[],
+    messages: Uint8Array[],
+    signatures: Uint8Array[]
+  ): boolean {
+    validateBytes(publicKeys, "publicKey");
+    validateBytes(messages, "message");
+    validateBytes(signatures, "signatures");
+
+    if (publicKeys.length === 0 || publicKeys.length !== messages.length || publicKeys.length !== signatures.length) {
+      return false;
+    }
+    try {
+      return Signature.verifyMultipleSignatures(
+        publicKeys.map((publicKey) => PublicKey.fromBytes(publicKey)),
+        messages.map((msg) => msg),
+        signatures.map((signature) => Signature.fromBytes(signature))
+      );
+    } catch (e) {
+      if (e instanceof NotInitializedError) throw e;
+      return false;
+    }
+  }
+
+  /**
    * Computes a public key from a secret key
    */
   function secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array {
@@ -121,6 +151,7 @@ export function functionalInterfaceFactory({
     verify,
     verifyAggregate,
     verifyMultiple,
+    verifyMultipleSignatures,
     secretKeyToPublicKey,
   };
 }

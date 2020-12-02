@@ -1,5 +1,5 @@
 import {SIGNATURE_LENGTH} from "../constants";
-import {SignatureType} from "bls-eth-wasm";
+import {SignatureType, multiVerify} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
@@ -43,6 +43,14 @@ export class Signature implements ISignature {
     const signature = new context.Signature();
     signature.aggregate(signatures.map((sig) => sig.value));
     return new Signature(signature);
+  }
+
+  static verifyMultipleSignatures(publicKeys: PublicKey[], messages: Uint8Array[], signatures: Signature[]): boolean {
+    return multiVerify(
+      publicKeys.map((publicKey) => publicKey.value),
+      signatures.map((signature) => signature.value),
+      messages
+    );
   }
 
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
