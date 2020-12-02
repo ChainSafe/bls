@@ -55,6 +55,35 @@ import {aggCount, runs} from "./params";
       runs,
     });
 
+    // Verify multiple
+
+    await runBenchmark<{pks: PublicKey[]; msgs: Uint8Array[]; sig: Signature}, boolean>({
+      id: `${implementation} verifyMultiple (${aggCount})`,
+
+      prepareTest: () => {
+        const dataArr = range(aggCount).map(() => {
+          const sk = bls.SecretKey.fromKeygen();
+          const pk = sk.toPublicKey();
+          const msg = randomMessage();
+          const sig = sk.sign(msg);
+          return {pk, msg, sig};
+        });
+
+        const pks = dataArr.map((data) => data.pk);
+        const msgs = dataArr.map((data) => data.msg);
+        const sig = bls.Signature.aggregate(dataArr.map((data) => data.sig));
+
+        return {
+          input: {pks, msgs, sig},
+          resultCheck: (valid) => valid === true,
+        };
+      },
+      testRunner: ({pks, msgs, sig}) => {
+        return sig.verifyMultiple(pks, msgs);
+      },
+      runs,
+    });
+
     // Aggregate pubkeys
 
     await runBenchmark<PublicKey[], void>({

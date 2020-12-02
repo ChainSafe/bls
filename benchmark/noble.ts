@@ -58,6 +58,37 @@ import {aggCount, runsNoble} from "./params";
     runs: runsNoble,
   });
 
+  // Verify multiple
+
+  await runBenchmark<{pks: Uint8Array[]; msgs: Uint8Array[]; sig: Uint8Array}, boolean>({
+    id: `noble verifyMultiple (${aggCount})`,
+
+    prepareTest: async () => {
+      const dataArr = await Promise.all(
+        range(aggCount).map(async () => {
+          const sk = generateRandomSecretKey();
+          const pk = noble.getPublicKey(sk);
+          const msg = randomMessage();
+          const sig = await noble.sign(msg, sk);
+          return {pk, msg, sig};
+        })
+      );
+
+      const pks = dataArr.map((data) => data.pk);
+      const msgs = dataArr.map((data) => data.msg);
+      const sig = noble.aggregateSignatures(dataArr.map((data) => data.sig));
+
+      return {
+        input: {pks, msgs, sig},
+        resultCheck: (valid: boolean) => valid === true,
+      };
+    },
+    testRunner: async ({pks, msgs, sig}) => {
+      return await noble.verifyBatch(msgs, pks, sig);
+    },
+    runs: runsNoble,
+  });
+
   // Aggregate pubkeys
 
   await runBenchmark<Uint8Array[], void>({
