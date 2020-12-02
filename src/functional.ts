@@ -108,8 +108,12 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies multiple signatures at once returning true if all valid or false
-   * if at least one is not. Optimized method when knowing which signature is
-   * wrong is not relevant, i.e. verifying an Eth2.0 block.
+   * if at least one is not. Optimization useful when knowing which signature is
+   * wrong is not relevant, i.e. verifying an entire Eth2.0 block.
+   *
+   * This method provides a safe way to do so by multiplying each signature by
+   * a random number so an attacker cannot craft a malicious signature that won't
+   * verify on its own but will if it's added to a specific predictable signature
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
   function verifyMultipleSignatures(
