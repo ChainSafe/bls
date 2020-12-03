@@ -8,6 +8,6 @@
     "benchmark:all": "ts-node index && ts-node noble"
   },
   "dependencies": {
-    "noble-bls12-381": "^0.6.1"
+    "noble-bls12-381": "^0.7.1"
   }
 }
