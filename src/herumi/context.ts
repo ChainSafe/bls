@@ -9,6 +9,16 @@ let blsGlobalPromise: Promise<void> | null = null;
 export async function setupBls(): Promise<void> {
   if (!blsGlobal) {
     await bls.init(bls.BLS12_381);
+
+    // Patch to fix multiVerify() calls on a browser with polyfilled NodeJS crypto
+    // @ts-ignore
+    if (typeof window === "object") {
+      // @ts-ignore
+      const crypto = window.crypto || window.msCrypto;
+      // @ts-ignore
+      bls.getRandomValues = (x) => crypto.getRandomValues(x);
+    }
+
     blsGlobal = bls;
   }
 }
