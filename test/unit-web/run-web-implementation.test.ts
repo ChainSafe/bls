@@ -1,7 +1,7 @@
 import herumi from "../../src/herumi";
-import {runSecretKeyTests} from "./secretKey.test";
-import {runPublicKeyTests} from "./publicKey.test";
-import {runIndexTests} from "./index.test";
+import {runSecretKeyTests} from "../unit/secretKey.test";
+import {runPublicKeyTests} from "../unit/publicKey.test";
+import {runIndexTests} from "../unit/index.test";
 
 // This file is intended to be compiled and run by Karma
 // Do not import the node.bindings or it will break with:
