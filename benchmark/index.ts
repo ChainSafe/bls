@@ -1,6 +1,6 @@
 import {runBenchmark} from "./runner";
 import {runForAllImplementations} from "../test/switch";
-import {PublicKey, Signature} from "../src/interface";
+import {PublicKey, Signature, SecretKey} from "../src/interface";
 import {range, randomMessage} from "../test/util";
 import {aggCount, runs} from "./params";
 
@@ -117,6 +117,23 @@ import {aggCount, runs} from "./params";
       },
       testRunner: (sigs) => {
         bls.Signature.aggregate(sigs);
+      },
+      runs,
+    });
+
+    // Sign
+
+    await runBenchmark<{sk: SecretKey; msg: Uint8Array}, void>({
+      id: `${implementation} sign`,
+
+      prepareTest: () => ({
+        input: {
+          sk: bls.SecretKey.fromKeygen(),
+          msg: randomMessage(),
+        },
+      }),
+      testRunner: ({sk, msg}) => {
+        sk.sign(msg);
       },
       runs,
     });
