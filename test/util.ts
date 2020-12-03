@@ -13,3 +13,11 @@ export function range(n: number): number[] {
   for (let i = 0; i < n; i++) nums.push(i);
   return nums;
 }
+
+/**
+ * ONLY for NodeJS tests, for any other use src/helpers/hex hexToBytes()
+ * Serves as a "ground-truth" reference
+ */
+export function hexToBytesNode(hex: string): Buffer {
+  return Buffer.from(hex.replace("0x", ""), "hex");
+}
