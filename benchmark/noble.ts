@@ -113,8 +113,8 @@ import {aggCount, runsNoble} from "./params";
         input: await Promise.all(range(aggCount).map(() => noble.PointG2.hashToCurve(generateRandomSecretKey()))),
       };
     },
-    testRunner: async (pks) => {
-      noble.aggregatePublicKeys(pks);
+    testRunner: async (sigs) => {
+      noble.aggregateSignatures(sigs);
     },
     runs: runsNoble,
   });
