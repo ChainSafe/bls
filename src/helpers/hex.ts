@@ -26,7 +26,6 @@ export function hexToBytes(hex: string): Uint8Array {
  * From https://github.com/herumi/bls-eth-wasm/blob/04eedb77aa96e66b4f65a0ab477228adf8090c36/src/bls.js#L50
  */
 export function bytesToHex(bytes: Uint8Array): string {
-  // return "0x" + Buffer.from(bytes).toString("hex");
   let s = "";
   const n = bytes.length;
 
