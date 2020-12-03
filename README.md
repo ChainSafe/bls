@@ -87,9 +87,9 @@ The API is identical for all implementations.
 
 ## Benchmarks
 
-- `blst`: [src/blst](src/blst)
-- `herumi`: [src/herumi](src/herumi)
-- `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381)
+- `blst`: [src/blst](src/blst) (node.js-only, bindings to C via node-gyp)
+- `herumi`: [src/herumi](src/herumi) (node.js & browser,  wasm)
+- `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381) (node.js & browser, pure JS)
 
 Results are in `ops/sec (x times slower)`, where `x times slower` = times slower than fastest implementation (`blst`).
 

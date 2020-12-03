@@ -105,32 +105,18 @@ import {aggCount, runsNoble} from "./params";
     runs: runsNoble,
   });
 
-  await runBenchmark<Uint8Array[], void>({
-    id: `noble aggregate sigs (${aggCount})`,
-
-    prepareTest: async () => {
-      return {
-        input: await Promise.all(range(aggCount).map(() => noble.PointG2.hashToCurve(generateRandomSecretKey()))),
-      };
-    },
-    testRunner: async (sigs) => {
-      noble.aggregateSignatures(sigs);
-    },
-    runs: runsNoble,
-  });
-  
   await runBenchmark<{sk: Uint8Array; msg: Uint8Array}, void>({
     id: `noble sign`,
 
     prepareTest: async () => ({
-     input: {
-       sk: generateRandomSecretKey(),
-       msg: randomMessage(),
-     },
+      input: {
+        sk: generateRandomSecretKey(),
+        msg: randomMessage(),
+      },
     }),
     testRunner: async ({sk, msg}) => {
-     await noble.sign(msg, sk);
+      await noble.sign(msg, sk);
     },
     runs: runsNoble,
-   });
+  });
 })();
