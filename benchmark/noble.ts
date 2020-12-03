@@ -118,4 +118,19 @@ import {aggCount, runsNoble} from "./params";
     },
     runs: runsNoble,
   });
+  
+  await runBenchmark<{sk: Uint8Array; msg: Uint8Array}, void>({
+    id: `noble sign`,
+
+    prepareTest: async () => ({
+     input: {
+       sk: generateRandomSecretKey(),
+       msg: randomMessage(),
+     },
+    }),
+    testRunner: async ({sk, msg}) => {
+     await noble.sign(msg, sk);
+    },
+    runs: runsNoble,
+   });
 })();
