@@ -1,5 +1,6 @@
 import {expect} from "chai";
-import {isZeroUint8Array} from "../../../src/helpers/utils";
+import {concatUint8Arrays, isZeroUint8Array} from "../../../src/helpers/utils";
+import {hexToBytesNode} from "../../util";
 
 describe("helpers / bytes", () => {
   describe("isZeroUint8Array", () => {
@@ -21,8 +22,22 @@ describe("helpers / bytes", () => {
       });
     }
   });
-});
 
-function hexToBytesNode(hex: string): Buffer {
-  return Buffer.from(hex.replace("0x", ""), "hex");
-}
+  describe("concatUint8Arrays", () => {
+    it("Should merge multiple Uint8Array", () => {
+      const bytesArr = [
+        new Uint8Array([1, 2, 3]),
+        new Uint8Array([4, 5]),
+        new Uint8Array([6]),
+        new Uint8Array([7, 8]),
+        new Uint8Array([9, 10, 11]),
+      ];
+
+      const expectedBytes = new Uint8Array([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]);
+
+      const bytes = concatUint8Arrays(bytesArr);
+
+      expect(bytes.toString()).to.equal(expectedBytes.toString());
+    });
+  });
+});
