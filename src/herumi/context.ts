@@ -8,6 +8,7 @@ let blsGlobalPromise: Promise<void> | null = null;
 
 // Patch to fix multiVerify() calls on a browser with polyfilled NodeJS crypto
 declare global {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
   interface Window {
     msCrypto: typeof window["crypto"];
   }
