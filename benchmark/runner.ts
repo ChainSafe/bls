@@ -7,7 +7,7 @@ export async function runBenchmark<T, R>({
   id,
 }: {
   prepareTest: (i: number) => PromiseOptional<{input: T; resultCheck?: (result: R) => boolean}>;
-  testRunner: (input: any) => PromiseOptional<R>;
+  testRunner: (input: T) => PromiseOptional<R>;
   runs?: number;
   id: string;
 }): Promise<void> {

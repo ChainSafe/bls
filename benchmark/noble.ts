@@ -7,7 +7,7 @@ import {aggCount, runsNoble} from "./params";
 (async function () {
   // verify
 
-  await runBenchmark<{pk: Uint8Array; msg: Uint8Array; sig: Uint8Array}, boolean>({
+  await runBenchmark<{pk: noble.PointG1; msg: noble.PointG2; sig: noble.PointG2}, boolean>({
     id: `noble verify`,
 
     prepareTest: async () => {
@@ -29,7 +29,7 @@ import {aggCount, runsNoble} from "./params";
 
   // Fast aggregate
 
-  await runBenchmark<{pks: Uint8Array[]; msg: Uint8Array; sig: Uint8Array}, boolean>({
+  await runBenchmark<{pks: noble.PointG1[]; msg: noble.PointG2; sig: noble.PointG2}, boolean>({
     id: `noble verifyAggregate (${aggCount})`,
 
     prepareTest: async () => {
@@ -44,15 +44,15 @@ import {aggCount, runsNoble} from "./params";
       );
 
       const pks = dataArr.map((data) => data.pk);
-      const sig = noble.aggregateSignatures(dataArr.map((data) => data.sig)) as unknown as noble.PointG2[];
+      const sig = noble.aggregateSignatures(dataArr.map((data) => data.sig)) as any as noble.PointG2;
 
       return {
-        input: {pks, msg, sig},
+        input: {pks, msg: await noble.PointG2.hashToCurve(msg), sig},
         resultCheck: (valid: boolean) => valid === true,
       };
     },
     testRunner: async ({pks, msg, sig}) => {
-      const pk = noble.aggregatePublicKeys(pks);
+      const pk = noble.aggregatePublicKeys(pks) as any as noble.PointG1;
       return await noble.verify(sig, msg, pk);
     },
     runs: runsNoble,
@@ -60,7 +60,7 @@ import {aggCount, runsNoble} from "./params";
 
   // // Verify multiple
 
-  await runBenchmark<{pks: Uint8Array[]; msgs: Uint8Array[]; sig: Uint8Array}, boolean>({
+  await runBenchmark<{pks: noble.PointG1[]; msgs: noble.PointG2[]; sig: noble.PointG2}, boolean>({
     id: `noble verifyMultiple (${aggCount})`,
 
     prepareTest: async () => {
@@ -76,7 +76,7 @@ import {aggCount, runsNoble} from "./params";
 
       const pks = dataArr.map((data) => data.pk);
       const msgs = dataArr.map((data) => data.msg);
-      const sig = noble.aggregateSignatures(dataArr.map((data) => data.sig));
+      const sig = noble.aggregateSignatures(dataArr.map((data) => data.sig)) as any as noble.PointG2;
 
       return {
         input: {pks, msgs, sig},
@@ -91,7 +91,7 @@ import {aggCount, runsNoble} from "./params";
 
   // Aggregate pubkeys
 
-  await runBenchmark<Uint8Array[], void>({
+  await runBenchmark<noble.PointG1[], void>({
     id: `noble aggregate pubkeys (${aggCount})`,
 
     prepareTest: () => {
@@ -105,13 +105,28 @@ import {aggCount, runsNoble} from "./params";
     runs: runsNoble,
   });
 
-  await runBenchmark<{sk: Uint8Array; msg: Uint8Array}, void>({
+  await runBenchmark<noble.PointG2[], void>({
+    id: `noble aggregate signatures (${aggCount})`,
+
+    prepareTest: async () => {
+      const hashes = range(aggCount).map(() => generateRandomSecretKey()).map(noble.PointG2.hashToCurve);
+      return {
+        input: await Promise.all(hashes),
+      };
+    },
+    testRunner: async (sigs) => {
+      noble.aggregateSignatures(sigs);
+    },
+    runs: runsNoble,
+  });
+
+  await runBenchmark<{sk: Uint8Array; msg: noble.PointG2}, void>({
     id: `noble sign`,
 
     prepareTest: async () => ({
       input: {
         sk: generateRandomSecretKey(),
-        msg: randomMessage(),
+        msg: await noble.PointG2.hashToCurve(randomMessage()),
       },
     }),
     testRunner: async ({sk, msg}) => {
