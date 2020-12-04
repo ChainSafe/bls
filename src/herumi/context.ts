@@ -6,9 +6,26 @@ type Bls = typeof bls;
 let blsGlobal: Bls | null = null;
 let blsGlobalPromise: Promise<void> | null = null;
 
+// Patch to fix multiVerify() calls on a browser with polyfilled NodeJS crypto
+declare global {
+  // eslint-disable-next-line @typescript-eslint/interface-name-prefix
+  interface Window {
+    msCrypto: typeof window["crypto"];
+  }
+}
+
 export async function setupBls(): Promise<void> {
   if (!blsGlobal) {
     await bls.init(bls.BLS12_381);
+
+    // Patch to fix multiVerify() calls on a browser with polyfilled NodeJS crypto
+    if (typeof window === "object") {
+      const crypto = window.crypto || window.msCrypto;
+      // getRandomValues is not typed in `bls-eth-wasm` because it's not meant to be exposed
+      // @ts-ignore
+      bls.getRandomValues = (x) => crypto.getRandomValues(x);
+    }
+
     blsGlobal = bls;
   }
 }

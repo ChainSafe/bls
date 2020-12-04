@@ -4,7 +4,7 @@
     "target": "esnext",
     "module": "commonjs",
     "pretty": true,
-    "lib": ["esnext.bigint"],
+    "lib": ["esnext.bigint", "DOM"],
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "strict": true,

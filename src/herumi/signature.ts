@@ -1,8 +1,8 @@
 import {SIGNATURE_LENGTH} from "../constants";
-import {SignatureType} from "bls-eth-wasm";
+import {SignatureType, multiVerify} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
-import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
+import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers";
 import {Signature as ISignature} from "../interface";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors";
 
@@ -45,6 +45,14 @@ export class Signature implements ISignature {
     return new Signature(signature);
   }
 
+  static verifyMultipleSignatures(publicKeys: PublicKey[], messages: Uint8Array[], signatures: Signature[]): boolean {
+    return multiVerify(
+      publicKeys.map((publicKey) => publicKey.value),
+      signatures.map((signature) => signature.value),
+      messages
+    );
+  }
+
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
     return publicKey.value.verify(this.value, message);
   }
@@ -57,10 +65,9 @@ export class Signature implements ISignature {
   }
 
   verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
-    const msgs = Buffer.concat(messages);
     return this.value.aggregateVerifyNoCheck(
       publicKeys.map((key) => key.value),
-      msgs
+      concatUint8Arrays(messages)
     );
   }
 

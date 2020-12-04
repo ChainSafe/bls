@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import {hexToBytes, bytesToHex} from "../../../src/helpers/hex";
+import {hexToBytesNode} from "../../util";
 
 describe("helpers / hex", () => {
   const testCases: {id: string; hex: string}[] = [
@@ -23,7 +24,3 @@ describe("helpers / hex", () => {
     });
   }
 });
-
-function hexToBytesNode(hex: string): Buffer {
-  return Buffer.from(hex.replace("0x", ""), "hex");
-}

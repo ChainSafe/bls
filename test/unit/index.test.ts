@@ -1,6 +1,8 @@
 import {expect} from "chai";
 import {IBls} from "../../src/interface";
 import {getN, randomMessage} from "../util";
+import {hexToBytes} from "../../src/helpers";
+import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data";
 
 export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -88,6 +90,59 @@ export function runIndexTests(bls: IBls): void {
 
       const isValid = bls.verifyMultiple([], [msg2, msg1], sig);
       expect(isValid).to.be.false;
+    });
+  });
+
+  describe("verifyMultipleSignatures", () => {
+    it("Should verify multiple signatures", () => {
+      const n = 4;
+      const dataArr = getN(n, () => {
+        const sk = bls.SecretKey.fromKeygen();
+        const pk = sk.toPublicKey();
+        const msg = randomMessage();
+        const sig = sk.sign(msg);
+        return {pk, msg, sig};
+      });
+      const pks = dataArr.map((data) => data.pk);
+      const msgs = dataArr.map((data) => data.msg);
+      const sigs = dataArr.map((data) => data.sig);
+
+      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(true, "class interface failed");
+
+      expect(
+        bls.verifyMultipleSignatures(
+          pks.map((pk) => pk.toBytes()),
+          msgs,
+          sigs.map((sig) => sig.toBytes())
+        )
+      ).to.equal(true, "functional (bytes serialized) interface failed");
+    });
+
+    it("Test fails correctly against a malicous signature", async () => {
+      const pks = maliciousVerifyMultipleSignaturesData.pks.map((pk) => bls.PublicKey.fromHex(pk));
+      const msgs = maliciousVerifyMultipleSignaturesData.msgs.map(hexToBytes);
+      const sigs = maliciousVerifyMultipleSignaturesData.sigs.map((sig) => bls.Signature.fromHex(sig));
+
+      maliciousVerifyMultipleSignaturesData.manipulated.forEach((isManipulated, i) => {
+        expect(sigs[i].verify(pks[i], msgs[i])).to.equal(
+          !isManipulated,
+          isManipulated ? "Manipulated signature should not verify" : "Ok signature should verify"
+        );
+      });
+
+      // This method (AggregateVerify in BLS spec lingo) should verify
+
+      const dangerousAggSig = bls.Signature.aggregate(sigs);
+      expect(dangerousAggSig.verifyMultiple(pks, msgs)).to.equal(
+        true,
+        "Malicious signature should be validated with bls.verifyMultiple"
+      );
+
+      // This method is expected to catch the malicious signature and not verify
+      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(
+        false,
+        "Malicous signature should not validate with bls.verifyMultipleSignatures"
+      );
     });
   });
 }

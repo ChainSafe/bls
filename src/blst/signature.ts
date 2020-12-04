@@ -28,6 +28,14 @@ export class Signature implements ISignature {
     return new Signature(agg.toSignature());
   }
 
+  static verifyMultipleSignatures(publicKeys: PublicKey[], messages: Uint8Array[], signatures: Signature[]): boolean {
+    return blst.verifyMultipleAggregateSignatures(
+      messages,
+      publicKeys.map((publicKey) => publicKey.affine),
+      signatures.map((signature) => signature.affine)
+    );
+  }
+
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
     if (this.affine.value.is_inf()) {

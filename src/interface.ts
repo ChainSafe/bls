@@ -13,6 +13,7 @@ export interface IBls {
     fromBytes(bytes: Uint8Array): Signature;
     fromHex(hex: string): Signature;
     aggregate(signatures: Signature[]): Signature;
+    verifyMultipleSignatures(publicKeys: PublicKey[], messages: Uint8Array[], signatures: Signature[]): boolean;
   };
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
@@ -21,6 +22,7 @@ export interface IBls {
   verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean;
   verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
   verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
+  verifyMultipleSignatures(publicKeys: Uint8Array[], messages: Uint8Array[], signatures: Uint8Array[]): boolean;
   secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
 
   init(): Promise<void>;
@@ -49,6 +51,7 @@ export declare class Signature {
   static fromBytes(bytes: Uint8Array): Signature;
   static fromHex(hex: string): Signature;
   static aggregate(signatures: Signature[]): Signature;
+  static verifyMultipleSignatures(publicKeys: PublicKey[], messages: Uint8Array[], signatures: Signature[]): boolean;
   verify(publicKey: PublicKey, message: Uint8Array): boolean;
   verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean;
   verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean;
