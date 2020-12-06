@@ -6,7 +6,7 @@
     "module": "esnext",
     "moduleResolution": "Node",
     "pretty": true,
-    "lib": ["esnext.bigint", "DOM"],
+    "lib": ["esnext.bigint"],
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "strict": true,
