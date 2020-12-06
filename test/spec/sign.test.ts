@@ -16,7 +16,7 @@ interface ISignMessageTestCase {
 }
 
 describeForAllImplementations((bls) => {
-  describeDirectorySpecTest<ISignMessageTestCase, string>(
+  describeDirectorySpecTest<ISignMessageTestCase, string | null>(
     "bls/sign/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/sign/small"),
     (testCase) => {

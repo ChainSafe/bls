@@ -8,7 +8,8 @@
     "typeRoots": ["./node_modules/@types"],
     "declaration": true,
     "strict": true,
-    "strictNullChecks": false,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
     "esModuleInterop": true
   }
 }
