@@ -14,8 +14,6 @@ jobs:
           registry-url: "https://registry.npmjs.org"
       - name: Install deps
         run: yarn
-      - name: Check types
-        run: yarn check-types
       - name: Lint
         run: yarn lint
       - name: Test build
