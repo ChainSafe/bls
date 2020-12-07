@@ -13,7 +13,7 @@ interface IAggregateSigsTestCase {
 }
 
 describeForAllImplementations((bls) => {
-  describeDirectorySpecTest<IAggregateSigsTestCase, string>(
+  describeDirectorySpecTest<IAggregateSigsTestCase, string | null>(
     "bls/aggregate/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/aggregate/small"),
     (testCase) => {
