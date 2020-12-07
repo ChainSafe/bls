@@ -5,7 +5,7 @@
   "license": "MIT",
   "scripts": {
     "benchmark": "ts-node index",
-    "benchmark:all": "ts-node index && ts-node noble"
+    "benchmark:all": "ts-node index && ts-node noble && ts-node verifyMultipleSignaturesSavings"
   },
   "dependencies": {
     "noble-bls12-381": "^0.7.2"
