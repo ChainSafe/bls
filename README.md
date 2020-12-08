@@ -88,23 +88,24 @@ The API is identical for all implementations.
 ## Benchmarks
 
 - `blst`: [src/blst](src/blst) (node.js-only, bindings to C via node-gyp)
-- `herumi`: [src/herumi](src/herumi) (node.js & browser,  wasm)
+- `herumi`: [src/herumi](src/herumi) (node.js & browser, wasm)
 - `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381) (node.js & browser, pure JS)
 
 Results are in `ops/sec (x times slower)`, where `x times slower` = times slower than fastest implementation (`blst`).
 
-| Function - `ops/sec`      | `blst` |   `herumi`   |   `noble`\*   |
-| ------------------------- | :----: | :----------: | :-----------: |
-| `verify`                  | 443.75 | 46.658 (x9)  | 12.355 (x36)  |
-| `verifyAggregate` (30)    | 438.68 | 46.615 (x9)  | 9.8803 (x44)  |
-| `verifyMultiple` (30)     | 35.138 | 3.4332 (x10) | 0.9217 (x38)  |
-| `aggregate` (pubkeys, 30) | 15761  | 2603.5 (x6)  | 42.956 (x366) |
-| `aggregate` (sigs, 30)    | 6587.8 | 1018.7 (x6)  |       -       |
+| Function - `ops/sec`             | `blst` |   `herumi`   |   `noble`   |
+| -------------------------------- | :----: | :----------: | :-----------: |
+| `verify`                         | 326.38 | 47.674 (x7)  | 17.906 (x18)  |
+| `verifyAggregate` (30)           | 453.29 | 51.151 (x9)  | 18.372 (x25)  |
+| `verifyMultiple` (30)            | 34.497 | 3.5233 (x10) | 2.0286 (x17)  |
+| `verifyMultipleSignatures` (30)  | 26.381 | 3.1633 (x8)  | -             |
+| `aggregate` (pubkeys, 30)        | 15686  | 2898.9 (x5)  | 1875.0 (x8)   |
+| `aggregate` (sigs, 30)           | 6373.4 | 1033.0 (x6)  | 526.25 (x12)  |
+| `sign`                           | 925.49 | 108.81 (x9)  | 10.246 (x90)  |
 
-\*`noble` methods include serialization and deserialization to bytes, which may impact all benchmarks specially `aggregate`.
-\*\* `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
+\* `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
 
-Results from CI run https://github.com/ChainSafe/bls/runs/1488856560?check_suite_focus=true#step:12:13
+Results from CI run https://github.com/ChainSafe/bls/runs/1513710175?check_suite_focus=true#step:12:13
 
 ## Spec versioning
 
