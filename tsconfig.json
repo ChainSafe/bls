@@ -1,7 +1,8 @@
 {
   "include": ["src", "test"],
   "compilerOptions": {
-    "target": "esnext",
+    "outDir": "lib",
+    "target": "es2019",
     "module": "commonjs",
     "pretty": true,
     "lib": ["esnext.bigint", "DOM"],
