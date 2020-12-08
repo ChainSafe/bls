@@ -7,6 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [5.1.0] - 2020-11-30
+
+- Bump @chainsafe/lodestar-spec-test-util [#56](https://github.com/ChainSafe/bls/pull/56)
+- Add benchmark results [#57](https://github.com/ChainSafe/bls/pull/57)
+- Add verifyMultipleSignatures method [#58](https://github.com/ChainSafe/bls/pull/58)
+- Set strictNullChecks to true [#67](https://github.com/ChainSafe/bls/pull/67)
+- Simplify build setup with tsc [#68](https://github.com/ChainSafe/bls/pull/68)
+
 ## [5.0.1] - 2020-11-30
 
 - Remove foreign property breaking types ([ccd870](https://github.com/chainsafe/bls/commit/ccd870))
