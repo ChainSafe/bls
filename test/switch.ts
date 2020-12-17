@@ -26,12 +26,18 @@ export async function runForAllImplementations(
 
 export function describeForAllImplementations(callback: (bls: IBls) => void): void {
   runForAllImplementations((bls, implementation) => {
-    describe(implementation, () => {
+    describe(implementation, function () {
       before(async () => {
         await bls.init();
       });
 
-      callback(bls);
+      try {
+        callback(bls);
+      } catch (e) {
+        it("Error generating test cases", function (done) {
+          done(e);
+        });
+      }
     });
   });
 }
