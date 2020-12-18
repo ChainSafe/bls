@@ -46,7 +46,7 @@
     "randombytes": "^2.1.0"
   },
   "devDependencies": {
-    "@chainsafe/blst": "^0.1.3",
+    "@chainsafe/blst": "^0.1.4",
     "@chainsafe/lodestar-spec-test-util": "^0.12.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^8.0.4",
