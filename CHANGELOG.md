@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [5.1.1] - 2020-12-18
+
+- Enable worker-threads support for blst [#76](https://github.com/ChainSafe/bls/pull/76)
+
 ## [5.1.0] - 2020-11-30
 
 - Bump @chainsafe/lodestar-spec-test-util [#56](https://github.com/ChainSafe/bls/pull/56)
