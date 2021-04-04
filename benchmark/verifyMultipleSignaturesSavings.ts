@@ -15,12 +15,8 @@ import {range, randomMessage} from "../test/util";
         return {pk, msg, sig};
       });
 
-      const pks = dataArr.map((data) => data.pk);
-      const msgs = dataArr.map((data) => data.msg);
-      const sigs = dataArr.map((data) => data.sig);
-
       const startMulti = process.hrtime.bigint();
-      bls.Signature.verifyMultipleSignatures(pks, msgs, sigs);
+      bls.Signature.verifyMultipleSignatures(dataArr);
       const endMulti = process.hrtime.bigint();
       const diffMulti = endMulti - startMulti;
 

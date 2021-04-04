@@ -9,6 +9,7 @@ export * from "../constants";
 export {SecretKey, PublicKey, Signature, init, destroy};
 
 export const bls: IBls = {
+  implementation: "herumi",
   SecretKey,
   PublicKey,
   Signature,

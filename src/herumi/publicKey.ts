@@ -1,9 +1,9 @@
 import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context";
-import {PUBLIC_KEY_LENGTH} from "../constants";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
-import {PublicKey as IPublicKey} from "../interface";
+import {PointFormat, PublicKey as IPublicKey} from "../interface";
 import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors";
+import {PUBLIC_KEY_LENGTH_COMPRESSED, PUBLIC_KEY_LENGTH_UNCOMPRESSED} from "../constants";
 
 export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;
@@ -17,14 +17,16 @@ export class PublicKey implements IPublicKey {
   }
 
   static fromBytes(bytes: Uint8Array): PublicKey {
-    if (bytes.length !== PUBLIC_KEY_LENGTH) {
-      throw new InvalidLengthError("PublicKey", PUBLIC_KEY_LENGTH);
-    }
-
     const context = getContext();
     const publicKey = new context.PublicKey();
     if (!isZeroUint8Array(bytes)) {
-      publicKey.deserialize(bytes);
+      if (bytes.length === PUBLIC_KEY_LENGTH_COMPRESSED) {
+        publicKey.deserialize(bytes);
+      } else if (bytes.length === PUBLIC_KEY_LENGTH_UNCOMPRESSED) {
+        publicKey.deserializeUncompressed(bytes);
+      } else {
+        throw new InvalidLengthError("PublicKey", bytes.length);
+      }
     }
     return new PublicKey(publicKey);
   }
@@ -45,11 +47,15 @@ export class PublicKey implements IPublicKey {
     return agg;
   }
 
-  toBytes(): Uint8Array {
-    return this.value.serialize();
+  toBytes(format?: PointFormat): Uint8Array {
+    if (format === PointFormat.uncompressed) {
+      return this.value.serializeUncompressed();
+    } else {
+      return this.value.serialize();
+    }
   }
 
-  toHex(): string {
-    return bytesToHex(this.toBytes());
+  toHex(format?: PointFormat): string {
+    return bytesToHex(this.toBytes(format));
   }
 }

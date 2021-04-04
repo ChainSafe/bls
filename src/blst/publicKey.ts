@@ -1,25 +1,20 @@
 import * as blst from "@chainsafe/blst";
 import {EmptyAggregateError, ZeroPublicKeyError} from "../errors";
 import {bytesToHex, hexToBytes} from "../helpers";
-import {PublicKey as IPublicKey} from "../interface";
+import {CoordType, PointFormat, PublicKey as IPublicKey} from "../interface";
 
-export class PublicKey implements IPublicKey {
-  readonly affine: blst.PublicKey;
-  readonly jacobian: blst.AggregatePublicKey;
-
-  constructor(affine: blst.PublicKey, jacobian: blst.AggregatePublicKey) {
-    this.affine = affine;
-    this.jacobian = jacobian;
+export class PublicKey extends blst.PublicKey implements IPublicKey {
+  constructor(value: ConstructorParameters<typeof blst.PublicKey>[0]) {
+    super(value);
   }
 
-  static fromBytes(bytes: Uint8Array): PublicKey {
-    const affine = blst.PublicKey.fromBytes(bytes);
-    if (affine.value.is_inf()) {
+  static fromBytes(bytes: Uint8Array, type?: blst.CoordType): PublicKey {
+    const pk = blst.PublicKey.fromBytes(bytes, type);
+    if (pk.value.is_inf()) {
       throw new ZeroPublicKeyError();
     }
 
-    const jacobian = blst.AggregatePublicKey.fromPublicKey(affine);
-    return new PublicKey(affine, jacobian);
+    return new PublicKey(pk.value);
   }
 
   static fromHex(hex: string): PublicKey {
@@ -31,16 +26,19 @@ export class PublicKey implements IPublicKey {
       throw new EmptyAggregateError();
     }
 
-    const jacobian = blst.aggregatePubkeys(publicKeys.map((pk) => pk.jacobian));
-    const affine = jacobian.toPublicKey();
-    return new PublicKey(affine, jacobian);
+    const pk = blst.aggregatePubkeys(publicKeys);
+    return new PublicKey(pk.value);
   }
 
-  toBytes(): Uint8Array {
-    return this.affine.toBytes();
+  toBytes(format?: PointFormat): Uint8Array {
+    if (format === PointFormat.uncompressed) {
+      return this.value.serialize();
+    } else {
+      return this.value.compress();
+    }
   }
 
-  toHex(): string {
-    return bytesToHex(this.toBytes());
+  toHex(format?: PointFormat): string {
+    return bytesToHex(this.toBytes(format));
   }
 }

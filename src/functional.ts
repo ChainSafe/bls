@@ -117,22 +117,17 @@ export function functionalInterfaceFactory({
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
   function verifyMultipleSignatures(
-    publicKeys: Uint8Array[],
-    messages: Uint8Array[],
-    signatures: Uint8Array[]
+    sets: {publicKey: Uint8Array; message: Uint8Array; signature: Uint8Array}[]
   ): boolean {
-    validateBytes(publicKeys, "publicKey");
-    validateBytes(messages, "message");
-    validateBytes(signatures, "signatures");
+    if (!sets) throw Error("sets is null or undefined");
 
-    if (publicKeys.length === 0 || publicKeys.length !== messages.length || publicKeys.length !== signatures.length) {
-      return false;
-    }
     try {
       return Signature.verifyMultipleSignatures(
-        publicKeys.map((publicKey) => PublicKey.fromBytes(publicKey)),
-        messages.map((msg) => msg),
-        signatures.map((signature) => Signature.fromBytes(signature))
+        sets.map((s) => ({
+          publicKey: PublicKey.fromBytes(s.publicKey),
+          message: s.message,
+          signature: Signature.fromBytes(s.signature),
+        }))
       );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;

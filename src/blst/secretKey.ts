@@ -8,7 +8,6 @@ import {ZeroSecretKeyError} from "../errors";
 
 export class SecretKey implements ISecretKey {
   readonly value: blst.SecretKey;
-
   constructor(value: blst.SecretKey) {
     this.value = value;
   }
@@ -33,13 +32,12 @@ export class SecretKey implements ISecretKey {
   }
 
   sign(message: Uint8Array): Signature {
-    return new Signature(this.value.sign(message));
+    return new Signature(this.value.sign(message).value);
   }
 
   toPublicKey(): PublicKey {
-    const jacobian = this.value.toAggregatePublicKey();
-    const affine = jacobian.toPublicKey();
-    return new PublicKey(affine, jacobian);
+    const pk = this.value.toPublicKey();
+    return new PublicKey(pk.value);
   }
 
   toBytes(): Uint8Array {

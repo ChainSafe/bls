@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import {IBls} from "../../src/interface";
-import {getN, randomMessage} from "../util";
+import {IBls, PointFormat} from "../../src/interface";
+import {getN, randomMessage, hexToBytesNode} from "../util";
 import {hexToBytes} from "../../src/helpers";
 import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data";
 
@@ -96,24 +96,23 @@ export function runIndexTests(bls: IBls): void {
   describe("verifyMultipleSignatures", () => {
     it("Should verify multiple signatures", () => {
       const n = 4;
-      const dataArr = getN(n, () => {
+      const sets = getN(n, () => {
         const sk = bls.SecretKey.fromKeygen();
-        const pk = sk.toPublicKey();
-        const msg = randomMessage();
-        const sig = sk.sign(msg);
-        return {pk, msg, sig};
+        const publicKey = sk.toPublicKey();
+        const message = randomMessage();
+        const signature = sk.sign(message);
+        return {publicKey, message, signature};
       });
-      const pks = dataArr.map((data) => data.pk);
-      const msgs = dataArr.map((data) => data.msg);
-      const sigs = dataArr.map((data) => data.sig);
 
-      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(true, "class interface failed");
+      expect(bls.Signature.verifyMultipleSignatures(sets)).to.equal(true, "class interface failed");
 
       expect(
         bls.verifyMultipleSignatures(
-          pks.map((pk) => pk.toBytes()),
-          msgs,
-          sigs.map((sig) => sig.toBytes())
+          sets.map((s) => ({
+            publicKey: s.publicKey.toBytes(),
+            message: s.message,
+            signature: s.signature.toBytes(),
+          }))
         )
       ).to.equal(true, "functional (bytes serialized) interface failed");
     });
@@ -138,11 +137,47 @@ export function runIndexTests(bls: IBls): void {
         "Malicious signature should be validated with bls.verifyMultiple"
       );
 
+      const maliciousSets = pks.map((_, i) => ({
+        publicKey: pks[i],
+        message: msgs[i],
+        signature: sigs[i],
+      }));
+
       // This method is expected to catch the malicious signature and not verify
-      expect(bls.Signature.verifyMultipleSignatures(pks, msgs, sigs)).to.equal(
+      expect(bls.Signature.verifyMultipleSignatures(maliciousSets)).to.equal(
         false,
         "Malicous signature should not validate with bls.verifyMultipleSignatures"
       );
+    });
+  });
+
+  describe("serialize deserialize", () => {
+    /* eslint-disable max-len */
+
+    const skHex = "0x0101010101010101010101010101010101010101010101010101010101010101";
+    const pkHexCompExpected =
+      "0xaa1a1c26055a329817a5759d877a2795f9499b97d6056edde0eea39512f24e8bc874b4471f0501127abb1ea0d9f68ac1";
+    const pkHexUncompExpected =
+      "0x0a1a1c26055a329817a5759d877a2795f9499b97d6056edde0eea39512f24e8bc874b4471f0501127abb1ea0d9f68ac111392125a1c3750363c2c97d9650fb78696e6428db8ff9efaf0471cbfd20324916ab545746db83756d335e92f9e8c8b8";
+
+    it("Should serialize comp pubkey", () => {
+      const sk = bls.SecretKey.fromBytes(hexToBytesNode(skHex));
+      const pkHexComp = sk.toPublicKey().toHex(PointFormat.compressed);
+      expect(pkHexComp).to.equal(pkHexCompExpected, "Wrong pkHexComp");
+    });
+
+    it("Should serialize uncomp pubkey", () => {
+      const sk = bls.SecretKey.fromBytes(hexToBytesNode(skHex));
+      const pkHexUncomp = sk.toPublicKey().toHex(PointFormat.uncompressed);
+      expect(pkHexUncomp).to.equal(pkHexUncompExpected, "Wrong pkHexUncomp");
+    });
+
+    it("Should deserialize comp pubkey", () => {
+      bls.PublicKey.fromHex(pkHexCompExpected);
+    });
+
+    it("Should deserialize uncomp pubkey", () => {
+      bls.PublicKey.fromHex(pkHexUncompExpected);
     });
   });
 }

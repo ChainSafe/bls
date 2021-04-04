@@ -15,6 +15,7 @@ export function destroy(): void {
 }
 
 export const bls: IBls = {
+  implementation: "blst-native",
   SecretKey,
   PublicKey,
   Signature,
