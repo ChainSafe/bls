@@ -2,7 +2,7 @@
 # yarn lockfile v1
 
 
-noble-bls12-381@^0.6.1:
-  version "0.6.1"
-  resolved "https://registry.yarnpkg.com/noble-bls12-381/-/noble-bls12-381-0.6.1.tgz#b44bb5443b4b5c409723f19a8288155f0b3ad126"
-  integrity sha512-Dt0lq24ez75HqOqNIsxxbzfY7YOuwArtE3H6Clp1XbwnY4Ga1OjFbTaXq5aDBE3+ab1wLK11s0b3yR3+RiWWqw==
+noble-bls12-381@^0.7.2:
+  version "0.7.2"
+  resolved "https://registry.yarnpkg.com/noble-bls12-381/-/noble-bls12-381-0.7.2.tgz#9a9384891569ba32785d6e4ff8588b783487eae4"
+  integrity sha512-Z5isbU6opuWPL3dxsGqO5BdOE8WP1XUM7HFIn/xeE5pATTnml/PEIy4MFQQrktHiitkuJdsCDtzEOnS9eIpC3Q==

@@ -40,6 +40,6 @@ export class InvalidOrderError extends Error {
 
 export class InvalidLengthError extends Error {
   constructor(arg: string, length: number) {
-    super(`INVALID_LENGTH: ${arg} must have ${length} bytes`);
+    super(`INVALID_LENGTH: ${arg} - ${length} bytes`);
   }
 }

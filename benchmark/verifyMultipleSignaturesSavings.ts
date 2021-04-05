@@ -12,21 +12,17 @@ import {range, randomMessage} from "../test/util";
         const pk = sk.toPublicKey();
         const msg = randomMessage();
         const sig = sk.sign(msg);
-        return {pk, msg, sig};
+        return {publicKey: pk, message: msg, signature: sig};
       });
 
-      const pks = dataArr.map((data) => data.pk);
-      const msgs = dataArr.map((data) => data.msg);
-      const sigs = dataArr.map((data) => data.sig);
-
       const startMulti = process.hrtime.bigint();
-      bls.Signature.verifyMultipleSignatures(pks, msgs, sigs);
+      bls.Signature.verifyMultipleSignatures(dataArr);
       const endMulti = process.hrtime.bigint();
       const diffMulti = endMulti - startMulti;
 
       const startSingle = process.hrtime.bigint();
-      for (const {pk, msg, sig} of dataArr) {
-        sig.verify(pk, msg);
+      for (const {publicKey, message, signature} of dataArr) {
+        signature.verify(publicKey, message);
       }
       const endSingle = process.hrtime.bigint();
       const diffSingle = endSingle - startSingle;
