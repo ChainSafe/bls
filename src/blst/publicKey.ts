@@ -1,5 +1,5 @@
 import * as blst from "@chainsafe/blst";
-import {EmptyAggregateError, ZeroPublicKeyError} from "../errors";
+import {EmptyAggregateError} from "../errors";
 import {bytesToHex, hexToBytes} from "../helpers";
 import {PointFormat, PublicKey as IPublicKey} from "../interface";
 
@@ -9,12 +9,9 @@ export class PublicKey extends blst.PublicKey implements IPublicKey {
   }
 
   /** @param type Defaults to `CoordType.jacobian` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType): PublicKey {
+  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate?: boolean): PublicKey {
     const pk = blst.PublicKey.fromBytes(bytes, type);
-    if (pk.value.is_inf()) {
-      throw new ZeroPublicKeyError();
-    }
-
+    if (validate) pk.keyValidate();
     return new PublicKey(pk.value);
   }
 

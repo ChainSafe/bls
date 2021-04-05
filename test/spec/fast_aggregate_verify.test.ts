@@ -3,6 +3,7 @@ import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-tes
 import {hexToBytes} from "../../src/helpers";
 import {SPEC_TESTS_DIR} from "../params";
 import {describeForAllImplementations} from "../switch";
+import {CoordType} from "@chainsafe/blst";
 
 interface IAggregateSigsVerifyTestCase {
   data: {
@@ -21,7 +22,14 @@ describeForAllImplementations((bls) => {
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/fast_aggregate_verify/small"),
     (testCase) => {
       const {pubkeys, message, signature} = testCase.data.input;
-      return bls.verifyAggregate(pubkeys.map(hexToBytes), hexToBytes(message), hexToBytes(signature));
+      try {
+        return bls.Signature.fromBytes(hexToBytes(signature)).verifyAggregate(
+          pubkeys.map((hex) => bls.PublicKey.fromBytes(hexToBytes(hex), CoordType.jacobian, true)),
+          hexToBytes(message)
+        );
+      } catch (e) {
+        return false;
+      }
     },
     {
       inputTypes: {data: InputType.YAML},

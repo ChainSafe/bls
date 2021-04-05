@@ -29,7 +29,7 @@ export declare class SecretKey {
 
 export declare class PublicKey {
   /** @param type Only for impl `blst-native`. Defaults to `CoordType.jacobian` */
-  static fromBytes(bytes: Uint8Array, type?: CoordType): PublicKey;
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey;
   static fromHex(hex: string): PublicKey;
   static aggregate(publicKeys: PublicKey[]): PublicKey;
   /** @param format Defaults to `PointFormat.compressed` */
