@@ -1,166 +1,84 @@
 import {runBenchmark} from "./runner";
 import {runForAllImplementations} from "../test/switch";
-import {PublicKey, Signature, SecretKey} from "../src/interface";
-import {range, randomMessage} from "../test/util";
-import {aggCount, runs} from "./params";
+import {PublicKey, Signature} from "../src/interface";
+import {aggCount} from "./params";
 
 (async function () {
   await runForAllImplementations(async (bls, implementation) => {
+    const msgSame = Buffer.alloc(32, 255);
+    const sameMessage: {pk: PublicKey; msg: Uint8Array; sig: Signature}[] = [];
+    const diffMessage: {pk: PublicKey; msg: Uint8Array; sig: Signature}[] = [];
+
+    for (let i = 0; i < aggCount; i++) {
+      const msg = Buffer.alloc(32, i + 1);
+      const sk = bls.SecretKey.fromBytes(Buffer.alloc(32, i + 1));
+      const pk = sk.toPublicKey();
+      sameMessage.push({pk, msg: msgSame, sig: sk.sign(msgSame)});
+      diffMessage.push({pk, msg, sig: sk.sign(msg)});
+    }
+    const {pk, msg, sig} = diffMessage[0];
+    const sameMessageSig = bls.Signature.aggregate(sameMessage.map((s) => s.sig));
+    const diffMessageSig = bls.Signature.aggregate(diffMessage.map((s) => s.sig));
+
     // verify
 
-    await runBenchmark<{pk: PublicKey; msg: Uint8Array; sig: Signature}, boolean>({
+    await runBenchmark({
       id: `${implementation} verify`,
-
-      prepareTest: () => {
-        const msg = randomMessage();
-        const sk = bls.SecretKey.fromKeygen();
-        const pk = sk.toPublicKey();
-        const sig = sk.sign(msg);
-        return {
-          input: {pk, msg, sig},
-          resultCheck: (valid) => valid === true,
-        };
-      },
-      testRunner: ({pk, msg, sig}) => {
-        return sig.verify(pk, msg);
-      },
-      runs,
+      prepareTest: () => ({pk, msg, sig}),
+      testRunner: ({pk, msg, sig}) => sig.verify(pk, msg),
     });
 
     // Fast aggregate
 
-    await runBenchmark<{pks: PublicKey[]; msg: Uint8Array; sig: Signature}, boolean>({
+    await runBenchmark({
       id: `${implementation} verifyAggregate (${aggCount})`,
-
-      prepareTest: () => {
-        const msg = randomMessage();
-        const dataArr = range(aggCount).map(() => {
-          const sk = bls.SecretKey.fromKeygen();
-          const pk = sk.toPublicKey();
-          const sig = sk.sign(msg);
-          return {pk, sig};
-        });
-
-        const pks = dataArr.map((data) => data.pk);
-        const sig = bls.Signature.aggregate(dataArr.map((data) => data.sig));
-
-        return {
-          input: {pks, msg, sig},
-          resultCheck: (valid) => valid === true,
-        };
-      },
-      testRunner: ({pks, msg, sig}) => {
-        return sig.verifyAggregate(pks, msg);
-      },
-      runs,
+      prepareTest: () => ({pks: sameMessage.map((s) => s.pk), msg: msgSame, sig: sameMessageSig}),
+      testRunner: ({pks, msg, sig}) => sig.verifyAggregate(pks, msg),
     });
 
     // Verify multiple
 
-    await runBenchmark<{pks: PublicKey[]; msgs: Uint8Array[]; sig: Signature}, boolean>({
+    await runBenchmark({
       id: `${implementation} verifyMultiple (${aggCount})`,
-
-      prepareTest: () => {
-        const dataArr = range(aggCount).map(() => {
-          const sk = bls.SecretKey.fromKeygen();
-          const pk = sk.toPublicKey();
-          const msg = randomMessage();
-          const sig = sk.sign(msg);
-          return {pk, msg, sig};
-        });
-
-        const pks = dataArr.map((data) => data.pk);
-        const msgs = dataArr.map((data) => data.msg);
-        const sig = bls.Signature.aggregate(dataArr.map((data) => data.sig));
-
-        return {
-          input: {pks, msgs, sig},
-          resultCheck: (valid) => valid === true,
-        };
-      },
-      testRunner: ({pks, msgs, sig}) => {
-        return sig.verifyMultiple(pks, msgs);
-      },
-      runs,
+      prepareTest: () => ({
+        pks: diffMessage.map((s) => s.pk),
+        msgs: diffMessage.map((s) => s.msg),
+        sig: diffMessageSig,
+      }),
+      testRunner: ({pks, msgs, sig}) => sig.verifyMultiple(pks, msgs),
     });
 
     // Verify multiple signatures
 
     await runBenchmark({
       id: `${implementation} verifyMultipleSignatures (${aggCount})`,
-
-      prepareTest: () => {
-        const sets = range(aggCount).map(() => {
-          const sk = bls.SecretKey.fromKeygen();
-          const pk = sk.toPublicKey();
-          const msg = randomMessage();
-          const sig = sk.sign(msg);
-          return {publicKey: pk, message: msg, signature: sig};
-        });
-
-        return {
-          input: sets,
-          resultCheck: (valid) => valid === true,
-        };
-      },
-      testRunner: (sets) => {
-        return bls.Signature.verifyMultipleSignatures(sets);
-      },
-      runs,
+      prepareTest: () => diffMessage,
+      testRunner: (sets) =>
+        bls.Signature.verifyMultipleSignatures(sets.map((s) => ({publicKey: s.pk, message: s.msg, signature: s.sig}))),
     });
 
     // Aggregate pubkeys
 
-    await runBenchmark<PublicKey[], void>({
+    await runBenchmark({
       id: `${implementation} aggregate pubkeys (${aggCount})`,
-
-      prepareTest: () => {
-        return {
-          input: range(aggCount).map(() => bls.SecretKey.fromKeygen().toPublicKey()),
-        };
-      },
-      testRunner: (pks) => {
-        bls.PublicKey.aggregate(pks);
-      },
-      runs,
+      prepareTest: () => diffMessage.map((s) => s.pk),
+      testRunner: (pks) => bls.PublicKey.aggregate(pks),
     });
 
     // Aggregate sigs
 
-    await runBenchmark<Signature[], void>({
+    await runBenchmark({
       id: `${implementation} aggregate signatures (${aggCount})`,
-
-      prepareTest: () => {
-        const msg = randomMessage();
-        const sigs = range(aggCount).map(() => {
-          const sk = bls.SecretKey.fromKeygen();
-          return sk.sign(msg);
-        });
-        return {
-          input: sigs,
-        };
-      },
-      testRunner: (sigs) => {
-        bls.Signature.aggregate(sigs);
-      },
-      runs,
+      prepareTest: () => diffMessage.map((s) => s.sig),
+      testRunner: (sigs) => bls.Signature.aggregate(sigs),
     });
 
     // Sign
 
-    await runBenchmark<{sk: SecretKey; msg: Uint8Array}, void>({
+    await runBenchmark({
       id: `${implementation} sign`,
-
-      prepareTest: () => ({
-        input: {
-          sk: bls.SecretKey.fromKeygen(),
-          msg: randomMessage(),
-        },
-      }),
-      testRunner: ({sk, msg}) => {
-        sk.sign(msg);
-      },
-      runs,
+      prepareTest: () => ({sk: bls.SecretKey.fromKeygen(), msg: msgSame}),
+      testRunner: ({sk, msg}) => sk.sign(msg),
     });
   });
 })();
