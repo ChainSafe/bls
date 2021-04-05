@@ -1,8 +1,8 @@
 export interface IBls {
   implementation: Implementation;
-  SecretKey: typeof SecretKey;
-  PublicKey: typeof PublicKey;
-  Signature: typeof Signature;
+  SecretKey: Omit<typeof SecretKey, "prototype">;
+  PublicKey: Omit<typeof PublicKey, "prototype">;
+  Signature: Omit<typeof Signature, "prototype">;
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
   aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array;
