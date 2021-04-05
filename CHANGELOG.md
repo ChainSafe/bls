@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [6.0.1] - 2021-04-05
+
+- Add validate key option to PublicKey.fromBytes() [#90](https://github.com/ChainSafe/bls/pull/90)
+
 ## [6.0.0] - 2021-04-05
 
 - Allow to export points compressed and uncompressed [#85](https://github.com/ChainSafe/bls/pull/85)
