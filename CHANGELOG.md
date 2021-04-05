@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [6.0.0] - 2021-04-05
+
+- Allow to export points compressed and uncompressed [#85](https://github.com/ChainSafe/bls/pull/85)
+- For BLST impl allow to choose what point coordinates to deserialize to [#85](https://github.com/ChainSafe/bls/pull/85)
+- Update function signature of `verifyMultipleSignatures()` to use grouped signature sets [#85](https://github.com/ChainSafe/bls/pull/85)
+- Bump BLST implementation to fix multi-thread issues [#85](https://github.com/ChainSafe/bls/pull/85)
+
 ## [5.1.1] - 2020-12-18
 
 - Enable worker-threads support for blst [#76](https://github.com/ChainSafe/bls/pull/76)
