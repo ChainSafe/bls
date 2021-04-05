@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: ${{matrix.node}}
       - name: Install deps
-        run: yarn
+        run: yarn --non-interactive --frozen-lockfile
       - name: Lint
         run: yarn lint
       - name: Test build
