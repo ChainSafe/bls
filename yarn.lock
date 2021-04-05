@@ -152,10 +152,10 @@
     buffer "^5.4.3"
     randombytes "^2.1.0"
 
-"@chainsafe/bls@5.0.1":
-  version "5.0.1"
-  resolved "https://registry.yarnpkg.com/@chainsafe/bls/-/bls-5.0.1.tgz#cb9b6a297b76815f4ccdde595f57775305bfcf00"
-  integrity sha512-MYImjOqlXb7LzR3I7xzBejQDSyQ1gqjWEReSVY6BgnrzRkYe+MNpku9CSi2khrfGn+Tftxl4olPb4GC4kHyBrw==
+"@chainsafe/bls@5.1.0":
+  version "5.1.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/bls/-/bls-5.1.0.tgz#e1b447f3dacef9c74f237afd320e00974716e8ed"
+  integrity sha512-WrKcQiFD1GG04OBnWeeb51Gr0ETx9v4n13S+GI24HQx+NeG1A0LfS44zeu3Tp4PGLbU2cziZudlC0WjF3y/HLQ==
   dependencies:
     "@chainsafe/bls-keygen" "^0.3.0"
     bls-eth-wasm "^0.4.4"
@@ -169,14 +169,14 @@
     node-fetch "^2.6.1"
     node-gyp "^7.1.2"
 
-"@chainsafe/lodestar-spec-test-util@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-spec-test-util/-/lodestar-spec-test-util-0.12.0.tgz#75be0f8455ab92d58719ff0be35e84f3d02000cf"
-  integrity sha512-FpwzjuUGyUnxMII77bP9D0kig/XDoSLsxytOudR0jwn1P0rZ4PrNVEa2HqqjW/a4YsCqEFFB/TCrnaLJNakpqw==
+"@chainsafe/lodestar-spec-test-util@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-spec-test-util/-/lodestar-spec-test-util-0.18.0.tgz#c48732146981bfa2c343adcaff89d4130281cfb8"
+  integrity sha512-NM86nSeNN0JAWPVdZ7u+Kur18y3uaXrucCzNcclgxpfpVZNCSY1cEJBIGyUKTkqUVNthiPVoX49mwzIDuKmhxQ==
   dependencies:
-    "@chainsafe/bls" "5.0.1"
-    "@chainsafe/lodestar-utils" "^0.12.0"
-    "@chainsafe/ssz" "^0.6.13"
+    "@chainsafe/bls" "5.1.0"
+    "@chainsafe/lodestar-utils" "^0.18.0"
+    "@chainsafe/ssz" "^0.7.0"
     axios "^0.21.0"
     chai "^4.2.0"
     mocha "^8.1.1"
@@ -184,14 +184,15 @@
     tar "^6.0.5"
     v8-profiler-next "^1.1.1"
 
-"@chainsafe/lodestar-utils@^0.12.0":
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-utils/-/lodestar-utils-0.12.0.tgz#8db356edcaeed3c8b0a555a18e6e57ee49dcde70"
-  integrity sha512-LCRXFxp73xQZPH99OVeLUaX4NKpEuUFqAJ7rmnYmrHIum678LDylPGrzw72HB69SMBiTtmbFFuypLwf81gitTQ==
+"@chainsafe/lodestar-utils@^0.18.0":
+  version "0.18.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/lodestar-utils/-/lodestar-utils-0.18.0.tgz#9f34a7b042ce55b323c5c7210608300fe120fd1c"
+  integrity sha512-PqqDso9Mzmxa9SL2hL3jmiy4YCzOWhpOV1d/6pSs0w+43MFq3qX38TaSl3W6KoxWGAb13L7VfbG21H4HFIT/4w==
   dependencies:
-    "@chainsafe/bls" "5.0.1"
-    "@chainsafe/ssz" "^0.6.13"
+    "@chainsafe/bls" "5.1.0"
+    "@chainsafe/ssz" "^0.7.0"
     abort-controller "^3.0.0"
+    any-signal "2.1.1"
     bigint-buffer "^1.1.5"
     chalk "^2.4.2"
     event-iterator "^2.0.0"
@@ -199,20 +200,20 @@
     winston "^3.3.3"
     winston-transport "^4.3.0"
 
-"@chainsafe/persistent-merkle-tree@^0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@chainsafe/persistent-merkle-tree/-/persistent-merkle-tree-0.2.1.tgz#38eb5fd5772fd256e94639d0621fa606addebab1"
-  integrity sha512-07Hi5QiogeTuwNiZXxg7PQnwNyEqV3ArfITpEloGJ8JVOHxQ2Tha1fo4oNBF54628vTDMcDpMVFGrfnIMsQnxg==
+"@chainsafe/persistent-merkle-tree@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/persistent-merkle-tree/-/persistent-merkle-tree-0.3.0.tgz#a289a0e58dc07f37580c1d3ab70de9a0ebdb0bc8"
+  integrity sha512-iaWCSldEuoJ3wOUxQYAjgXz+4Ry7VvkI+h8LnOdSoci4l81cfmTk6nglEi8WLX7ER4RqvAO/SVPOPovLzoVc6A==
   dependencies:
     "@chainsafe/as-sha256" "^0.2.0"
 
-"@chainsafe/ssz@^0.6.13":
-  version "0.6.13"
-  resolved "https://registry.yarnpkg.com/@chainsafe/ssz/-/ssz-0.6.13.tgz#94333993b9eb5e8ae7798fc3e4a5db36f846e5ec"
-  integrity sha512-pKb1nlIRD3YvVlgbgB5kir+H2tu1pUhiZd9SIrwUr3xq/vQvoYcs3z+DBrhl1WtW5zwQorxgMe/1pnXp7raLtA==
+"@chainsafe/ssz@^0.7.0":
+  version "0.7.1"
+  resolved "https://registry.yarnpkg.com/@chainsafe/ssz/-/ssz-0.7.1.tgz#8e4962228975afbc5cc40c48cb89e8a529ce6010"
+  integrity sha512-0OgggA6tKIMqFgzKObz/k+Uk9vBfTnRDdmPY0D19NDn2bRoRiOn1Z4YHkS6CCeS17jZ1YXg1fg6oU3Toh4E/XQ==
   dependencies:
     "@chainsafe/as-sha256" "^0.2.0"
-    "@chainsafe/persistent-merkle-tree" "^0.2.1"
+    "@chainsafe/persistent-merkle-tree" "^0.3.0"
     case "^1.6.3"
 
 "@dabh/diagnostics@^2.0.2":
@@ -621,6 +622,14 @@ ansi-styles@^4.1.0:
   integrity sha512-zbB9rCJAT1rbjiVDb2hqKFHNYLxgtk8NURxZ3IZwD3F6NtxbXZQCnnSi1Lkx+IDohdPlFp222wVALIheZJQSEg==
   dependencies:
     color-convert "^2.0.1"
+
+any-signal@2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/any-signal/-/any-signal-2.1.1.tgz#6458f7ce08cfdd8df21953016ae03ca129b07e35"
+  integrity sha512-kjyMTtHQsB3yZAVDZlLVucPJnmnrXhamB/rm3Td3jse5Q+16FXXolP4elWU0yLFDyrxTkjjDXtIdjSPiEznf3w==
+  dependencies:
+    abort-controller "^3.0.0"
+    native-abort-controller "0.0.3"
 
 anymatch@^2.0.0:
   version "2.0.0"
@@ -2693,6 +2702,13 @@ globals@^12.1.0:
   dependencies:
     type-fest "^0.8.1"
 
+globalthis@^1.0.1:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/globalthis/-/globalthis-1.0.2.tgz#2a235d34f4d8036219f7e34929b5de9e18166b8b"
+  integrity sha512-ZQnSFO1la8P7auIOQECnm0sSuoMeaSq0EEdXMBFF2QJO4uNcwbyhSgG3MruWNbFTqCLmxVwGOl7LZ9kASvHdeQ==
+  dependencies:
+    define-properties "^1.1.3"
+
 graceful-fs@^4.1.11, graceful-fs@^4.1.15, graceful-fs@^4.1.2, graceful-fs@^4.1.6:
   version "4.2.3"
   resolved "https://registry.yarnpkg.com/graceful-fs/-/graceful-fs-4.2.3.tgz#4a12ff1b60376ef09862c2093edd908328be8423"
@@ -3982,6 +3998,13 @@ nanomatch@^1.2.9:
     regex-not "^1.0.0"
     snapdragon "^0.8.1"
     to-regex "^3.0.1"
+
+native-abort-controller@0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/native-abort-controller/-/native-abort-controller-0.0.3.tgz#4c528a6c9c7d3eafefdc2c196ac9deb1a5edf2f8"
+  integrity sha512-YIxU5nWqSHG1Xbu3eOu3pdFRD882ivQpIcu6AiPVe2oSVoRbfYW63DVkZm3g1gHiMtZSvZzF6THSzTGEBYl8YA==
+  dependencies:
+    globalthis "^1.0.1"
 
 natural-compare@^1.4.0:
   version "1.4.0"
