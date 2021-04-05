@@ -12,7 +12,7 @@ import {range, randomMessage} from "../test/util";
         const pk = sk.toPublicKey();
         const msg = randomMessage();
         const sig = sk.sign(msg);
-        return {pk, msg, sig};
+        return {publicKey: pk, message: msg, signature: sig};
       });
 
       const startMulti = process.hrtime.bigint();
@@ -21,8 +21,8 @@ import {range, randomMessage} from "../test/util";
       const diffMulti = endMulti - startMulti;
 
       const startSingle = process.hrtime.bigint();
-      for (const {pk, msg, sig} of dataArr) {
-        sig.verify(pk, msg);
+      for (const {publicKey, message, signature} of dataArr) {
+        signature.verify(publicKey, message);
       }
       const endSingle = process.hrtime.bigint();
       const diffSingle = endSingle - startSingle;

@@ -86,29 +86,25 @@ import {aggCount, runs} from "./params";
 
     // Verify multiple signatures
 
-    await runBenchmark<{pks: PublicKey[]; msgs: Uint8Array[]; sigs: Signature[]}, boolean>({
+    await runBenchmark({
       id: `${implementation} verifyMultipleSignatures (${aggCount})`,
 
       prepareTest: () => {
-        const dataArr = range(aggCount).map(() => {
+        const sets = range(aggCount).map(() => {
           const sk = bls.SecretKey.fromKeygen();
           const pk = sk.toPublicKey();
           const msg = randomMessage();
           const sig = sk.sign(msg);
-          return {pk, msg, sig};
+          return {publicKey: pk, message: msg, signature: sig};
         });
 
-        const pks = dataArr.map((data) => data.pk);
-        const msgs = dataArr.map((data) => data.msg);
-        const sigs = dataArr.map((data) => data.sig);
-
         return {
-          input: {pks, msgs, sigs},
+          input: sets,
           resultCheck: (valid) => valid === true,
         };
       },
-      testRunner: ({pks, msgs, sigs}) => {
-        return bls.Signature.verifyMultipleSignatures(pks, msgs, sigs);
+      testRunner: (sets) => {
+        return bls.Signature.verifyMultipleSignatures(sets);
       },
       runs,
     });
