@@ -1,10 +1,12 @@
 import {expect} from "chai";
 import {IBls, PublicKey, Signature} from "../../../../src";
 import {BlsMultiThreadNaive} from "./index";
-import {warmUpWorkers} from "./utils";
 
 export function runMultithreadTests(bls: IBls): void {
   describe("bls pool naive", function () {
+    // Starting all threads may take a while due to ts-node compilation
+    this.timeout(20 * 1000);
+
     const nodeJsSemver = process.versions.node;
     const nodeJsMajorVer = parseInt(nodeJsSemver.split(".")[0]);
     if (!nodeJsMajorVer) {
@@ -18,14 +20,10 @@ export function runMultithreadTests(bls: IBls): void {
     let pool: BlsMultiThreadNaive;
 
     before("Create pool and warm-up wallets", async function () {
-      // Starting all threads may take a while due to ts-node compilation
-      this.timeout(20 * 1000);
       pool = new BlsMultiThreadNaive(bls.implementation);
-      await warmUpWorkers(bls, pool);
     });
 
     after("Destroy pool", async function () {
-      this.timeout(20 * 1000);
       await pool.destroy();
     });
 
@@ -36,8 +34,12 @@ export function runMultithreadTests(bls: IBls): void {
       const sig = sk.sign(msg);
 
       it("verify", async () => {
-        const valid = await pool.verify(pk, msg, sig);
-        expect(valid).to.equal(true);
+        const validArr = await Promise.all(
+          Array.from({length: 32}, (i) => i).map(async () => pool.verify(pk, msg, sig))
+        );
+        for (const [i, valid] of validArr.entries()) {
+          expect(valid).to.equal(true, `Invalid ${i}`);
+        }
       });
     });
 
