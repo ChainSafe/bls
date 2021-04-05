@@ -1,21 +1,8 @@
 export interface IBls {
   implementation: Implementation;
-  SecretKey: {
-    fromBytes(bytes: Uint8Array): SecretKey;
-    fromHex(hex: string): SecretKey;
-    fromKeygen(ikm?: Uint8Array): SecretKey;
-  };
-  PublicKey: {
-    fromBytes(bytes: Uint8Array, type?: CoordType): PublicKey;
-    fromHex(hex: string): PublicKey;
-    aggregate(publicKeys: PublicKey[]): PublicKey;
-  };
-  Signature: {
-    fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): Signature;
-    fromHex(hex: string): Signature;
-    aggregate(signatures: Signature[]): Signature;
-    verifyMultipleSignatures(sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[]): boolean;
-  };
+  SecretKey: typeof SecretKey;
+  PublicKey: typeof PublicKey;
+  Signature: typeof Signature;
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
   aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array;
@@ -41,14 +28,17 @@ export declare class SecretKey {
 }
 
 export declare class PublicKey {
+  /** @param type Only for impl `blst-native`. Defaults to `CoordType.jacobian` */
   static fromBytes(bytes: Uint8Array, type?: CoordType): PublicKey;
   static fromHex(hex: string): PublicKey;
   static aggregate(publicKeys: PublicKey[]): PublicKey;
+  /** @param format Defaults to `PointFormat.compressed` */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
 }
 
 export declare class Signature {
+  /** @param type Only for impl `blst-native`. Defaults to `CoordType.affine` */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): Signature;
   static fromHex(hex: string): Signature;
   static aggregate(signatures: Signature[]): Signature;
@@ -56,6 +46,7 @@ export declare class Signature {
   verify(publicKey: PublicKey, message: Uint8Array): boolean;
   verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean;
   verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean;
+  /** @param format Defaults to `PointFormat.compressed` */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
 }

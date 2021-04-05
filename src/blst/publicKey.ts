@@ -8,6 +8,7 @@ export class PublicKey extends blst.PublicKey implements IPublicKey {
     super(value);
   }
 
+  /** @param type Defaults to `CoordType.jacobian` */
   static fromBytes(bytes: Uint8Array, type?: blst.CoordType): PublicKey {
     const pk = blst.PublicKey.fromBytes(bytes, type);
     if (pk.value.is_inf()) {
