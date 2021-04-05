@@ -7,15 +7,6 @@ export function runMultithreadTests(bls: IBls): void {
     // Starting all threads may take a while due to ts-node compilation
     this.timeout(20 * 1000);
 
-    const nodeJsSemver = process.versions.node;
-    const nodeJsMajorVer = parseInt(nodeJsSemver.split(".")[0]);
-    if (!nodeJsMajorVer) {
-      throw Error(`Error parsing NodeJS version: ${nodeJsSemver}`);
-    }
-    if (nodeJsMajorVer < 12) {
-      return; // Skip everything
-    }
-
     const n = 16;
     let pool: BlsMultiThreadNaive;
 
@@ -27,13 +18,15 @@ export function runMultithreadTests(bls: IBls): void {
       await pool.destroy();
     });
 
-    describe("1 msg, 1 pk", () => {
+    describe("1 msg, 1 pk", function () {
       const msg = Buffer.from("sample-msg");
       const sk = bls.SecretKey.fromKeygen(Buffer.alloc(32, 1));
       const pk = sk.toPublicKey();
       const sig = sk.sign(msg);
 
-      it("verify", async () => {
+      it("verify", async function () {
+        if (bls.implementation === "herumi") this.skip();
+
         const validArr = await Promise.all(
           Array.from({length: 32}, (i) => i).map(async () => pool.verify(pk, msg, sig))
         );
@@ -43,7 +36,7 @@ export function runMultithreadTests(bls: IBls): void {
       });
     });
 
-    describe("N msgs, N pks", () => {
+    describe("N msgs, N pks", function () {
       const sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[] = [];
       for (let i = 0; i < n; i++) {
         const message = Buffer.alloc(32, i);
@@ -51,14 +44,18 @@ export function runMultithreadTests(bls: IBls): void {
         sets.push({message, publicKey: sk.toPublicKey(), signature: sk.sign(message)});
       }
 
-      it("verify", async () => {
+      it("verify", async function () {
+        if (bls.implementation === "herumi") this.skip();
+
         const validArr = await Promise.all(sets.map((s) => pool.verify(s.publicKey, s.message, s.signature)));
         for (const [i, valid] of validArr.entries()) {
           expect(valid).to.equal(true, `Invalid ${i}`);
         }
       });
 
-      it("verifyMultipleAggregateSignatures", async () => {
+      it("verifyMultipleAggregateSignatures", async function () {
+        if (bls.implementation === "herumi") this.skip();
+
         const valid = await pool.verifyMultipleAggregateSignatures(sets);
         expect(valid).to.equal(true);
       });
