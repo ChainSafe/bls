@@ -66,7 +66,7 @@ import {aggCount, runsNoble} from "./params";
     await runBenchmark({
       id: `noble verifyMultiple (${aggCount})`,
       prepareTest: async () => ({pks, msgs, sig}),
-      testRunner: async ({pks, msgs, sig}) => await noble.verifyBatch(msgs, pks, sig),
+      testRunner: async ({pks, msgs, sig}) => await noble.verifyBatch(sig, msgs, pks),
       runs: runsNoble,
     });
   }
