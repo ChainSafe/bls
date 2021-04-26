@@ -8,6 +8,6 @@
     "benchmark:all": "ts-node index && ts-node noble && ts-node verifyMultipleSignaturesSavings"
   },
   "dependencies": {
-    "noble-bls12-381": "^0.7.2"
+    "noble-bls12-381": "^0.11.1"
   }
 }
