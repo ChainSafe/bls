@@ -42,7 +42,7 @@
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.3.0",
-    "bls-eth-wasm": "^0.4.4",
+    "bls-eth-wasm": "^0.4.6",
     "randombytes": "^2.1.0"
   },
   "devDependencies": {

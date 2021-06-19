@@ -938,6 +938,11 @@ bls-eth-wasm@^0.4.4:
   resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.4.tgz#3d4c99f8ddee6df23e188dc756125268a0f4d525"
   integrity sha512-S6XwscKuxxYTANHZX8tZQxZKvj9IhG3aOCEuy1EnNdsAOfuH2pdRIgWrORwpKd4SLdvmPWap9I+TbJRnFx1Yng==
 
+bls-eth-wasm@^0.4.6:
+  version "0.4.6"
+  resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.6.tgz#6159b8aee9eeb1aa24ebe2dc2e9aae4a65a0b8d3"
+  integrity sha512-ZHPnEcgtuCFj4exMN7ZInR6acOMkTAe3gVfjihzB/wE6twlFElLVY1S7CFYSMttzuhdCFU0OV/rjfRwZEselNQ==
+
 bluebird@^3.3.0, bluebird@^3.5.5:
   version "3.7.2"
   resolved "https://registry.yarnpkg.com/bluebird/-/bluebird-3.7.2.tgz#9f229c15be272454ffa973ace0dbee79a1b0c36f"
