@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [6.0.2] - 2021-08-23
+
+- Add register script [#102](https://github.com/ChainSafe/bls/pull/102)
+
 ## [6.0.1] - 2021-04-05
 
 - Add validate key option to PublicKey.fromBytes() [#90](https://github.com/ChainSafe/bls/pull/90)
