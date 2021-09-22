@@ -158,7 +158,7 @@
   integrity sha512-WrKcQiFD1GG04OBnWeeb51Gr0ETx9v4n13S+GI24HQx+NeG1A0LfS44zeu3Tp4PGLbU2cziZudlC0WjF3y/HLQ==
   dependencies:
     "@chainsafe/bls-keygen" "^0.3.0"
-    bls-eth-wasm "^0.4.4"
+    bls-eth-wasm "^0.4.8"
     randombytes "^2.1.0"
 
 "@chainsafe/blst@^0.2.0":
@@ -933,10 +933,10 @@ blob@0.0.5:
   resolved "https://registry.yarnpkg.com/blob/-/blob-0.0.5.tgz#d680eeef25f8cd91ad533f5b01eed48e64caf683"
   integrity sha512-gaqbzQPqOoamawKg0LGVd7SzLgXS+JH61oWprSLH+P+abTczqJbhTR8CmJ2u9/bUYNmHTGJx/UEmn6doAvvuig==
 
-bls-eth-wasm@^0.4.4:
-  version "0.4.4"
-  resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.4.tgz#3d4c99f8ddee6df23e188dc756125268a0f4d525"
-  integrity sha512-S6XwscKuxxYTANHZX8tZQxZKvj9IhG3aOCEuy1EnNdsAOfuH2pdRIgWrORwpKd4SLdvmPWap9I+TbJRnFx1Yng==
+bls-eth-wasm@^0.4.8:
+  version "0.4.8"
+  resolved "https://registry.yarnpkg.com/bls-eth-wasm/-/bls-eth-wasm-0.4.8.tgz#ad1818fbd1bfb64d8f3e6cd104bd28b96ebaa5f1"
+  integrity sha512-ye7+G6KFLb3i9xSrLASAoYqOUK5WLB6XA5DD8Sh0UQpZ3T999ylsYbFdoOJpmvTDuBuMi23Vy8Jm0pn/GF01CA==
 
 bluebird@^3.3.0, bluebird@^3.5.5:
   version "3.7.2"
