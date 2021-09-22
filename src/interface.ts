@@ -38,7 +38,8 @@ export declare class PublicKey {
 }
 
 export declare class Signature {
-  /** @param type Only for impl `blst-native`. Defaults to `CoordType.affine` */
+  /** @param type Only for impl `blst-native`. Defaults to `CoordType.affine`
+   *  @param validate When using `herumi` implementation, signature validation is always on regardless of this flag. */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): Signature;
   static fromHex(hex: string): Signature;
   static aggregate(signatures: Signature[]): Signature;
