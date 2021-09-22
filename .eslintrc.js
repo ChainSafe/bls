@@ -44,7 +44,8 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-require-imports": "error",
     "@typescript-eslint/no-unused-vars": ["error", {
-      "varsIgnorePattern": "^_"
+      "varsIgnorePattern": "^_",
+      "argsIgnorePattern": "^_",
     }],
     "@typescript-eslint/ban-ts-ignore": "warn",
     "@typescript-eslint/no-use-before-define": "off",

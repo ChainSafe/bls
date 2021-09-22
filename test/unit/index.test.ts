@@ -14,6 +14,23 @@ export function runIndexTests(bls: IBls): void {
     return {sk, pk, msg, sig};
   }
 
+  describe("signature", () => {
+    it("should fail loading an invalid signature point (not in G2)", () => {
+      /* eslint-disable max-len */
+      const POINT_NOT_IN_G2 = Buffer.from(
+        "8123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "hex"
+      );
+      let sig;
+      try {
+        sig = bls.Signature.fromBytes(POINT_NOT_IN_G2, undefined, true);
+      } catch {
+        /* eslint-disable no-empty */
+      }
+      expect(sig === undefined).to.be.true;
+    });
+  });
+
   describe("verify", () => {
     it("should verify signature", () => {
       const {pk, msg, sig} = getRandomData();

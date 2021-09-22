@@ -2,7 +2,7 @@ import {SignatureType, multiVerify} from "bls-eth-wasm";
 import {getContext} from "./context";
 import {PublicKey} from "./publicKey";
 import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers";
-import {PointFormat, Signature as ISignature} from "../interface";
+import {PointFormat, Signature as ISignature, CoordType} from "../interface";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors";
 import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants";
 
@@ -17,7 +17,8 @@ export class Signature implements ISignature {
     this.value = value;
   }
 
-  static fromBytes(bytes: Uint8Array): Signature {
+  static fromBytes(bytes: Uint8Array, _type?: CoordType, validate = true): Signature {
+    if (validate === false) throw new Error("ValidationSkipNotSupported");
     const context = getContext();
     const signature = new context.Signature();
     if (!isZeroUint8Array(bytes)) {

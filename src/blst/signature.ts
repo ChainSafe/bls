@@ -10,7 +10,7 @@ export class Signature extends blst.Signature implements ISignature {
   }
 
   /** @param type Defaults to `CoordType.affine` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate?: boolean): Signature {
+  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate = true): Signature {
     const sig = blst.Signature.fromBytes(bytes, type);
     if (validate) sig.sigValidate();
     return new Signature(sig.value);
