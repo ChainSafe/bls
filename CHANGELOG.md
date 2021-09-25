@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [dev]
 
+## [6.0.3] - 2021-09-25
+
+- bls-eth-wasm (herumi) package update to 0.4.8 for invalidating signature not in G2 [#106](https://github.com/ChainSafe/bls/pull/106)
+- Signature.fromBytes now has default verification on [#106](https://github.com/ChainSafe/bls/pull/106)
+
+
 ## [6.0.2] - 2021-08-23
 
 - Add register script [#102](https://github.com/ChainSafe/bls/pull/102)
