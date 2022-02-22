@@ -39,7 +39,7 @@
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"
   },
   "dependencies": {
-    "@chainsafe/bls-keygen": "^0.3.0",
+    "@chainsafe/bls-keygen": "^0.4.0",
     "bls-eth-wasm": "^0.4.8",
     "randombytes": "^2.1.0"
   },
