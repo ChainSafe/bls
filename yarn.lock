@@ -266,6 +266,18 @@
     "@chainsafe/persistent-merkle-tree" "^0.3.0"
     case "^1.6.3"
 
+"@chainsafe/threads@^1.9.0":
+  version "1.9.0"
+  resolved "https://registry.yarnpkg.com/@chainsafe/threads/-/threads-1.9.0.tgz#5ab07b1c150ad6ffc2325f344cde549a96b53802"
+  integrity sha512-TFSj5CWwi2o0Z3qBdrROdR+mJ23reBm+e0iPaifn657AxNtatdHNV9l6DiNwOKHTxTxKTm1daVuWW5TP0dJGDw==
+  dependencies:
+    callsites "^3.1.0"
+    debug "^4.2.0"
+    is-observable "^2.1.0"
+    observable-fns "^0.6.1"
+  optionalDependencies:
+    tiny-worker ">= 2"
+
 "@cspotcode/source-map-consumer@0.8.0":
   version "0.8.0"
   resolved "https://registry.yarnpkg.com/@cspotcode/source-map-consumer/-/source-map-consumer-0.8.0.tgz#33bf4b7b39c178821606f669bbc447a6a629786b"
@@ -6099,18 +6111,6 @@ text-table@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/text-table/-/text-table-0.2.0.tgz#7f5ee823ae805207c00af2df4a84ec3fcfa570b4"
   integrity sha1-f17oI66AUgfACvLfSoTsP8+lcLQ=
-
-threads@^1.7.0:
-  version "1.7.0"
-  resolved "https://registry.yarnpkg.com/threads/-/threads-1.7.0.tgz#d9e9627bfc1ef22ada3b733c2e7558bbe78e589c"
-  integrity sha512-Mx5NBSHX3sQYR6iI9VYbgHKBLisyB+xROCBGjjWm1O9wb9vfLxdaGtmT/KCjUqMsSNW6nERzCW3T6H43LqjDZQ==
-  dependencies:
-    callsites "^3.1.0"
-    debug "^4.2.0"
-    is-observable "^2.1.0"
-    observable-fns "^0.6.1"
-  optionalDependencies:
-    tiny-worker ">= 2"
 
 through2@^2.0.0:
   version "2.0.5"

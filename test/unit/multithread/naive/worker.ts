@@ -1,4 +1,4 @@
-import {expose} from "threads/worker";
+import {expose} from "@chainsafe/threads/worker";
 import {bls, init, CoordType, Implementation} from "../../../../src/index.js";
 
 export type WorkerApi = typeof workerApi;
