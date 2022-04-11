@@ -1,5 +1,5 @@
 // eslint-disable-next-line @typescript-eslint/no-require-imports
-const webpackConfig = require("./webpack.config");
+const webpackConfig = require("./webpack.config.cjs");
 
 module.exports = function (config) {
   config.set({

@@ -45,22 +45,22 @@ import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bl
 
 ### Browser
 
-If you are in the browser, import from `/browser` to import directly the WASM version
+If you are in the browser, import from `/herumi` to import directly the WASM version
 
 ```ts
-import bls from "@chainsafe/bls/browser";
+import bls from "@chainsafe/bls/herumi";
 ```
 
 ### Native bindings only
 
-If you are in NodeJS, import from `/node` to skip browser specific code. Also install peer dependency `@chainsafe/blst` which has the native bindings
+If you are in NodeJS, import from `/blst-native` to skip browser specific code. Also install peer dependency `@chainsafe/blst` which has the native bindings
 
 ```bash
 yarn add @chainsafe/bls @chainsafe/blst
 ```
 
 ```ts
-import bls from "@chainsafe/bls/node";
+import bls from "@chainsafe/bls/blst-native";
 ```
 
 ### Native bindings + WASM fallback
@@ -86,7 +86,7 @@ The API is identical for all implementations.
 
 ## Benchmarks
 
-- `blst`: [src/blst](src/blst) (node.js-only, bindings to C via node-gyp)
+- `blst`: [src/blst-native](src/blst-native) (node.js-only, bindings to C via node-gyp)
 - `herumi`: [src/herumi](src/herumi) (node.js & browser, wasm)
 - `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381) (node.js & browser, pure JS)
 

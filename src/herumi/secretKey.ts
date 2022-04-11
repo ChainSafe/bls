@@ -1,12 +1,12 @@
-import {SecretKeyType} from "bls-eth-wasm";
+import type {SecretKeyType} from "bls-eth-wasm";
 import {generateRandomSecretKey} from "@chainsafe/bls-keygen";
-import {SECRET_KEY_LENGTH} from "../constants";
-import {getContext} from "./context";
-import {PublicKey} from "./publicKey";
-import {Signature} from "./signature";
-import {bytesToHex, hexToBytes} from "../helpers";
-import {SecretKey as ISecretKey} from "../interface";
-import {InvalidLengthError, ZeroSecretKeyError} from "../errors";
+import {SECRET_KEY_LENGTH} from "../constants.js";
+import {getContext} from "./context.js";
+import {PublicKey} from "./publicKey.js";
+import {Signature} from "./signature.js";
+import {bytesToHex, hexToBytes} from "../helpers/index.js";
+import {SecretKey as ISecretKey} from "../interface.js";
+import {InvalidLengthError, ZeroSecretKeyError} from "../errors.js";
 
 export class SecretKey implements ISecretKey {
   readonly value: SecretKeyType;

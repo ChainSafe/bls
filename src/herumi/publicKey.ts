@@ -1,9 +1,9 @@
-import {PublicKeyType} from "bls-eth-wasm";
-import {getContext} from "./context";
-import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers";
-import {PointFormat, PublicKey as IPublicKey} from "../interface";
-import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors";
-import {PUBLIC_KEY_LENGTH_COMPRESSED, PUBLIC_KEY_LENGTH_UNCOMPRESSED} from "../constants";
+import type {PublicKeyType} from "bls-eth-wasm";
+import {getContext} from "./context.js";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
+import {PointFormat, PublicKey as IPublicKey} from "../interface.js";
+import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors.js";
+import {PUBLIC_KEY_LENGTH_COMPRESSED, PUBLIC_KEY_LENGTH_UNCOMPRESSED} from "../constants.js";
 
 export class PublicKey implements IPublicKey {
   readonly value: PublicKeyType;

@@ -1,7 +1,7 @@
 import * as blst from "@chainsafe/blst";
-import {EmptyAggregateError} from "../errors";
-import {bytesToHex, hexToBytes} from "../helpers";
-import {PointFormat, PublicKey as IPublicKey} from "../interface";
+import {EmptyAggregateError} from "../errors.js";
+import {bytesToHex, hexToBytes} from "../helpers/index.js";
+import {PointFormat, PublicKey as IPublicKey} from "../interface.js";
 
 export class PublicKey extends blst.PublicKey implements IPublicKey {
   constructor(value: ConstructorParameters<typeof blst.PublicKey>[0]) {

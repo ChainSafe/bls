@@ -1,5 +1,5 @@
 import {expose} from "threads/worker";
-import {bls, init, CoordType, Implementation} from "../../../../src";
+import {bls, init, CoordType, Implementation} from "../../../../src/index.js";
 
 export type WorkerApi = typeof workerApi;
 

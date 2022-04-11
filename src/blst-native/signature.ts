@@ -1,8 +1,8 @@
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes} from "../helpers";
-import {PointFormat, Signature as ISignature} from "../interface";
-import {PublicKey} from "./publicKey";
-import {EmptyAggregateError, ZeroSignatureError} from "../errors";
+import {bytesToHex, hexToBytes} from "../helpers/index.js";
+import {PointFormat, Signature as ISignature} from "../interface.js";
+import {PublicKey} from "./publicKey.js";
+import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 
 export class Signature extends blst.Signature implements ISignature {
   constructor(value: ConstructorParameters<typeof blst.Signature>[0]) {

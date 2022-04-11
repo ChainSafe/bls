@@ -1,6 +1,7 @@
 import {spawn, Pool, Worker, Thread} from "threads";
-import {Implementation, PointFormat, PublicKey, Signature} from "../../../../src";
-import {WorkerApi} from "./worker";
+import {Implementation, PointFormat} from "../../../../src/index.js";
+import {PublicKey, Signature} from "../../../../src/types.js";
+import {WorkerApi} from "./worker.js";
 
 type ThreadType = {
   [K in keyof WorkerApi]: (...args: Parameters<WorkerApi[K]>) => Promise<ReturnType<WorkerApi[K]>>;

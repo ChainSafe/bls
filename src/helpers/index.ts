@@ -1,2 +1,2 @@
-export * from "./hex";
-export * from "./utils";
+export * from "./hex.js";
+export * from "./utils.js";

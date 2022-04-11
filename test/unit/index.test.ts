@@ -1,8 +1,8 @@
 import {expect} from "chai";
-import {IBls, PointFormat} from "../../src/interface";
-import {getN, randomMessage, hexToBytesNode} from "../util";
-import {hexToBytes} from "../../src/helpers";
-import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data";
+import {IBls, PointFormat} from "../../src/interface.js";
+import {getN, randomMessage, hexToBytesNode} from "../util.js";
+import {hexToBytes} from "../../src/helpers/index.js";
+import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data.js";
 
 export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

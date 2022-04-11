@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {IBls} from "../../src/interface";
+import {IBls} from "../../src/interface.js";
 
 export function runSecretKeyTests(bls: IBls): void {
   describe("SecretKey", () => {

@@ -1,10 +1,10 @@
-import {SignatureType, multiVerify} from "bls-eth-wasm";
-import {getContext} from "./context";
-import {PublicKey} from "./publicKey";
-import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers";
-import {PointFormat, Signature as ISignature, CoordType} from "../interface";
-import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors";
-import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants";
+import type {SignatureType} from "bls-eth-wasm";
+import {getContext} from "./context.js";
+import {PublicKey} from "./publicKey.js";
+import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
+import {PointFormat, Signature as ISignature, CoordType} from "../interface.js";
+import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors.js";
+import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants.js";
 
 export class Signature implements ISignature {
   readonly value: SignatureType;
@@ -53,7 +53,8 @@ export class Signature implements ISignature {
   }
 
   static verifyMultipleSignatures(sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[]): boolean {
-    return multiVerify(
+    const context = getContext();
+    return context.multiVerify(
       sets.map((s) => s.publicKey.value),
       sets.map((s) => s.signature.value),
       sets.map((s) => s.message)

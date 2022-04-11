@@ -1,9 +1,9 @@
-import {SecretKey} from "./secretKey";
-import {PublicKey} from "./publicKey";
-import {Signature} from "./signature";
-import {IBls} from "../interface";
-import {functionalInterfaceFactory} from "../functional";
-export * from "../constants";
+import {SecretKey} from "./secretKey.js";
+import {PublicKey} from "./publicKey.js";
+import {Signature} from "./signature.js";
+import {IBls} from "../interface.js";
+import {functionalInterfaceFactory} from "../functional.js";
+export * from "../constants.js";
 
 export {SecretKey, PublicKey, Signature};
 

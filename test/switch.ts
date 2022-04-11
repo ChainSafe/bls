@@ -1,6 +1,6 @@
-import blst from "../src/blst";
-import herumi from "../src/herumi";
-import {IBls} from "../src/interface";
+import blst from "../src/blst-native/index.js";
+import herumi from "../src/herumi/index.js";
+import {IBls} from "../src/interface.js";
 
 export type Implementation = "blst" | "herumi";
 

@@ -1,4 +1,4 @@
-import herumi from "../../src/herumi";
+import herumi from "../../src/herumi/index.js";
 import {runSecretKeyTests} from "../unit/secretKey.test";
 import {runPublicKeyTests} from "../unit/publicKey.test";
 import {runIndexTests} from "../unit/index.test";

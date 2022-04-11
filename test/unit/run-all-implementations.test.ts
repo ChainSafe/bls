@@ -2,7 +2,7 @@ import {runSecretKeyTests} from "./secretKey.test";
 import {runPublicKeyTests} from "./publicKey.test";
 import {runIndexTests} from "./index.test";
 import {runMultithreadTests} from "./multithread/naive/naive.test";
-import {describeForAllImplementations} from "../switch";
+import {describeForAllImplementations} from "../switch.js";
 
 // Import test's bls lib lazily to prevent breaking test with Karma
 describeForAllImplementations((bls) => {
