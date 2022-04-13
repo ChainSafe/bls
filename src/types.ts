@@ -1,1 +1,1 @@
-export type {PublicKey, SecretKey, Signature} from "./interface.js";
+export * from "./interface.js";
