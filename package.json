@@ -13,6 +13,9 @@
     "./types": {
       "import": "./lib/types.js"
     },
+    "./default": {
+      "import": "./lib/default.js"
+    },
     "./blst-native": {
       "import": "./lib/blst-native/index.js"
     },

@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "lib",
     "target": "es2019",
-    "module": "ES2020",
+    "module": "es2022",
     "moduleResolution": "Node",
     "pretty": true,
     "lib": ["esnext.bigint", "DOM"],
