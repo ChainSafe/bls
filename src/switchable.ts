@@ -1,8 +1,6 @@
 import type {IBls, Implementation} from "./interface.js";
 import {getImplementation} from "./getImplementation.js";
 
-export * from "./interface.js";
-
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet
 const bls: IBls = {} as IBls;
 export default bls;
