@@ -19,10 +19,10 @@ To use native bindings you must install peer dependency `@chainsafe/blst`
 yarn add @chainsafe/bls @chainsafe/blst
 ```
 
-You must initialize the library once in your application before using it. The result is cached and use across all your imports
+By default, native bindings will be used if in NodeJS and they are installed. A WASM implementation ("herumi") is used as a fallback in case any error occurs.
 
 ```ts
-import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
+import {SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
 
 (async () => {
   await init("herumi");
@@ -45,7 +45,7 @@ import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bl
 
 ### Browser
 
-If you are in the browser, import from `/herumi` to import directly the WASM version
+If you are in the browser, import from `/herumi` to explicitly import the WASM version
 
 ```ts
 import bls from "@chainsafe/bls/herumi";
@@ -53,7 +53,7 @@ import bls from "@chainsafe/bls/herumi";
 
 ### Native bindings only
 
-If you are in NodeJS, import from `/blst-native` to skip browser specific code. Also install peer dependency `@chainsafe/blst` which has the native bindings
+If you are in NodeJS, import from `/blst-native` to explicitly import the native bindings. Also install peer dependency `@chainsafe/blst` which has the native bindings
 
 ```bash
 yarn add @chainsafe/bls @chainsafe/blst
@@ -63,23 +63,27 @@ yarn add @chainsafe/bls @chainsafe/blst
 import bls from "@chainsafe/bls/blst-native";
 ```
 
-### Native bindings + WASM fallback
+### Get implementation at runtime
 
-If you want to offer a fallback in NodeJS, first try to load native bindings and then fallback to WASM. Also install peer dependency `@chainsafe/blst` which has the native bindings
-
-```bash
-yarn add @chainsafe/bls @chainsafe/blst
-```
+If you need to get a bls implementation at runtime, import from `/getImplementation`.
 
 ```ts
-import {init} from "@chainsafe/bls";
+import {getImplementation} from "@chainsafe/bls/getImplementation";
 
-try {
-  await init("blst-native");
-} catch (e) {
-  await init("herumi");
-  console.warn("Using WASM");
-}
+const bls = await getImplementation("herumi");
+```
+
+### Switchable singleton
+
+If you need a singleton that is switchable at runtime (the default behavior in <=v6), import from `/switchable`.
+
+```ts
+import bls, {init} from "@chainsafe/bls/switchable";
+
+// here `bls` is uninitialized
+await init("herumi");
+// here `bls` is initialized
+// now other modules can `import bls from "@chainsafe/bls/switchable"` and it will be initialized
 ```
 
 The API is identical for all implementations.

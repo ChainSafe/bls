@@ -6,9 +6,7 @@ const isNode = Object.prototype.toString.call(typeof process !== "undefined" ? p
 export async function getImplementation(impl: Implementation = "herumi"): Promise<IBls> {
   switch (impl) {
     case "herumi": {
-      const blsHerumi = (await import("./herumi/index.js")).bls;
-      await blsHerumi.init();
-      return blsHerumi;
+      return (await import("./herumi/index.js")).bls;
     }
 
     case "blst-native":

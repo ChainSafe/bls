@@ -7,14 +7,14 @@
     ".": {
       "import": "./lib/index.js"
     },
-    "./register": {
-      "import": "./register.js"
-    },
     "./types": {
       "import": "./lib/types.js"
     },
-    "./default": {
-      "import": "./lib/default.js"
+    "./getImplementation": {
+      "import": "./lib/getImplementation.js"
+    },
+    "./switchable": {
+      "import": "./lib/switchable.js"
     },
     "./blst-native": {
       "import": "./lib/blst-native/index.js"

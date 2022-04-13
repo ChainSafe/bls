@@ -7,13 +7,6 @@ export * from "../constants.js";
 
 export {SecretKey, PublicKey, Signature};
 
-export async function init(): Promise<void> {
-  // Native bindings require no init() call
-}
-export function destroy(): void {
-  // Native bindings require no destroy() call
-}
-
 export const bls: IBls = {
   implementation: "blst-native",
   SecretKey,
@@ -21,8 +14,6 @@ export const bls: IBls = {
   Signature,
 
   ...functionalInterfaceFactory({SecretKey, PublicKey, Signature}),
-  init,
-  destroy,
 };
 
 export default bls;

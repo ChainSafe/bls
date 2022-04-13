@@ -12,9 +12,6 @@ export interface IBls {
   verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
   verifyMultipleSignatures(sets: {publicKey: Uint8Array; message: Uint8Array; signature: Uint8Array}[]): boolean;
   secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
-
-  init(): Promise<void>;
-  destroy(): void;
 }
 
 export declare class SecretKey {
