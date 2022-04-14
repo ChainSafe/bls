@@ -1,4 +1,4 @@
-import type {IBls, Implementation} from "./interface.js";
+import type {IBls, Implementation} from "./types.js";
 import {getImplementation} from "./getImplementation.js";
 
 // TODO: Use a Proxy for example to throw an error if it's not initialized yet

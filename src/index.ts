@@ -1,4 +1,4 @@
-import type {IBls} from "./interface.js";
+import type {IBls} from "./types.js";
 import {getImplementation} from "./getImplementation.js";
 
 // Thanks https://github.com/iliakan/detect-node/blob/master/index.esm.js

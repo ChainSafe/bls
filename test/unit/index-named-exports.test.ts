@@ -1,11 +1,9 @@
 import {expect} from "chai";
-import {init, bls} from "../../src/index.js";
+import bls from "../../src/index.js";
 import type {SecretKey, PublicKey, Signature} from "../../src/types.js";
 
 describe("types named exports", () => {
   it("Classes and methods should be defined", async () => {
-    await init("herumi");
-
     /**
      * Sample helper to test argument typing
      */

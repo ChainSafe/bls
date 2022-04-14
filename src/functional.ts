@@ -1,4 +1,4 @@
-import {IBls} from "./interface.js";
+import {IBls} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
 

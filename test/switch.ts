@@ -1,6 +1,6 @@
 import blst from "../src/blst-native/index.js";
 import herumi from "../src/herumi/index.js";
-import {IBls} from "../src/interface.js";
+import {IBls} from "../src/types.js";
 
 export type Implementation = "blst" | "herumi";
 
@@ -19,7 +19,6 @@ export async function runForAllImplementations(
 ): Promise<void> {
   for (const implementation of ["blst", "herumi"] as Implementation[]) {
     const bls = getBls(implementation);
-    await bls.init();
     callback(bls, implementation);
   }
 }
@@ -27,10 +26,6 @@ export async function runForAllImplementations(
 export function describeForAllImplementations(callback: (bls: IBls) => void): void {
   runForAllImplementations((bls, implementation) => {
     describe(implementation, function () {
-      before(async () => {
-        await bls.init();
-      });
-
       try {
         callback(bls);
       } catch (e) {

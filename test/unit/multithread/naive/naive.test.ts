@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {IBls} from "../../../../src/index.js";
+import {IBls} from "../../../../src/types.js";
 import type {PublicKey, Signature} from "../../../../src/types.js";
 import {BlsMultiThreadNaive} from "./index.js";
 

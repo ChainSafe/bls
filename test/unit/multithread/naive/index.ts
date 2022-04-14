@@ -1,6 +1,5 @@
 import {spawn, Pool, Worker, Thread} from "@chainsafe/threads";
-import {Implementation, PointFormat} from "../../../../src/index.js";
-import {PublicKey, Signature} from "../../../../src/types.js";
+import {Implementation, PointFormat, PublicKey, Signature} from "../../../../src/types.js";
 import {WorkerApi} from "./worker.js";
 
 type ThreadType = {

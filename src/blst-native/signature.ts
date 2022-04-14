@@ -1,6 +1,6 @@
 import * as blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature} from "../interface.js";
+import {PointFormat, Signature as ISignature} from "../types.js";
 import {PublicKey} from "./publicKey.js";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 

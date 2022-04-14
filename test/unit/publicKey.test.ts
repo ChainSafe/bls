@@ -1,5 +1,5 @@
 import {expect} from "chai";
-import {IBls} from "../../src/interface.js";
+import {IBls} from "../../src/types.js";
 
 export function runPublicKeyTests(bls: IBls): void {
   describe("PublicKey", () => {

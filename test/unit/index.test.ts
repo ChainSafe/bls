@@ -1,6 +1,7 @@
 import {expect} from "chai";
-import {IBls, PointFormat} from "../../src/interface.js";
-import {getN, randomMessage, hexToBytesNode} from "../util.js";
+import {Buffer} from "buffer";
+import {IBls, PointFormat} from "../../src/types.js";
+import {getN, randomMessage} from "../util.js";
 import {hexToBytes} from "../../src/helpers/index.js";
 import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data.js";
 
@@ -178,13 +179,13 @@ export function runIndexTests(bls: IBls): void {
       "0x0a1a1c26055a329817a5759d877a2795f9499b97d6056edde0eea39512f24e8bc874b4471f0501127abb1ea0d9f68ac111392125a1c3750363c2c97d9650fb78696e6428db8ff9efaf0471cbfd20324916ab545746db83756d335e92f9e8c8b8";
 
     it("Should serialize comp pubkey", () => {
-      const sk = bls.SecretKey.fromBytes(hexToBytesNode(skHex));
+      const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
       const pkHexComp = sk.toPublicKey().toHex(PointFormat.compressed);
       expect(pkHexComp).to.equal(pkHexCompExpected, "Wrong pkHexComp");
     });
 
     it("Should serialize uncomp pubkey", () => {
-      const sk = bls.SecretKey.fromBytes(hexToBytesNode(skHex));
+      const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
       const pkHexUncomp = sk.toPublicKey().toHex(PointFormat.uncompressed);
       expect(pkHexUncomp).to.equal(pkHexUncompExpected, "Wrong pkHexUncomp");
     });

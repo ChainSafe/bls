@@ -5,7 +5,7 @@ import {getContext} from "./context.js";
 import {PublicKey} from "./publicKey.js";
 import {Signature} from "./signature.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {SecretKey as ISecretKey} from "../interface.js";
+import {SecretKey as ISecretKey} from "../types.js";
 import {InvalidLengthError, ZeroSecretKeyError} from "../errors.js";
 
 export class SecretKey implements ISecretKey {
@@ -35,7 +35,7 @@ export class SecretKey implements ISecretKey {
   }
 
   static fromKeygen(entropy?: Uint8Array): SecretKey {
-    const sk = generateRandomSecretKey(entropy && Buffer.from(entropy));
+    const sk = generateRandomSecretKey(entropy);
     return this.fromBytes(sk);
   }
 

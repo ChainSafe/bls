@@ -2,7 +2,7 @@ import type {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context.js";
 import {PublicKey} from "./publicKey.js";
 import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature, CoordType} from "../interface.js";
+import {PointFormat, Signature as ISignature, CoordType} from "../types.js";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors.js";
 import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants.js";
 

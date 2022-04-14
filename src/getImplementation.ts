@@ -1,4 +1,4 @@
-import type {IBls, Implementation} from "./interface.js";
+import type {IBls, Implementation} from "./types.js";
 
 // Thanks https://github.com/iliakan/detect-node/blob/master/index.esm.js
 const isNode = Object.prototype.toString.call(typeof process !== "undefined" ? process : 0) === "[object process]";

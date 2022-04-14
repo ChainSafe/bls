@@ -1,7 +1,7 @@
 import type {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context.js";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
-import {PointFormat, PublicKey as IPublicKey} from "../interface.js";
+import {PointFormat, PublicKey as IPublicKey} from "../types.js";
 import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors.js";
 import {PUBLIC_KEY_LENGTH_COMPRESSED, PUBLIC_KEY_LENGTH_UNCOMPRESSED} from "../constants.js";
 
