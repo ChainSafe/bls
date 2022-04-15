@@ -1,6 +1,6 @@
 import {runBenchmark} from "./runner.js";
 import {runForAllImplementations} from "../test/switch.js";
-import {PublicKey, Signature} from "../src/interface.js";
+import {PublicKey, Signature} from "../src/types.js";
 import {aggCount} from "./params.js";
 
 (async function () {
