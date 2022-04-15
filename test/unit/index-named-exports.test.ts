@@ -1,8 +1,13 @@
 import {expect} from "chai";
-import bls from "../../src/index.js";
-import type {SecretKey, PublicKey, Signature} from "../../src/types.js";
+import type {SecretKey, PublicKey, Signature, IBls} from "../../src/types.js";
 
-describe("types named exports", () => {
+describe("types named exports", async () => {
+  let bls: IBls;
+
+  before(async () => {
+    bls = (await import("../../src/index.js")).default;
+  });
+
   it("Classes and methods should be defined", async () => {
     /**
      * Sample helper to test argument typing

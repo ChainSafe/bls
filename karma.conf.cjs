@@ -7,7 +7,7 @@ module.exports = function (config) {
     frameworks: [
       "webpack",
       "mocha",
-      //"chai",
+      "chai",
     ],
     files: [
       "test/unit-web/run-web-implementation.test.ts",
