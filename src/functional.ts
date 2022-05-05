@@ -1,9 +1,10 @@
-import {IBls} from "./interface";
-import {validateBytes} from "./helpers";
-import {NotInitializedError} from "./errors";
+import {IBls} from "./types.js";
+import {validateBytes} from "./helpers/index.js";
+import {NotInitializedError} from "./errors.js";
 
 // Returned type is enforced at each implementation's index
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+// eslint-disable-next-line max-len
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types
 export function functionalInterfaceFactory({
   SecretKey,
   PublicKey,

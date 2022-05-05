@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import {concatUint8Arrays, isZeroUint8Array} from "../../../src/helpers/utils";
-import {hexToBytesNode} from "../../util";
+import {concatUint8Arrays, isZeroUint8Array} from "../../../src/helpers/utils.js";
+import {hexToBytesNode} from "../../util.js";
 
 describe("helpers / bytes", () => {
   describe("isZeroUint8Array", () => {

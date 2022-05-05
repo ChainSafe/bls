@@ -1,11 +1,12 @@
 {
   "name": "bls-libs-benchmark",
   "version": "1.0.0",
-  "main": "index.js",
+  "type": "module",
+  "exports": "./index.js",
   "license": "MIT",
   "scripts": {
-    "benchmark": "ts-node index",
-    "benchmark:all": "ts-node index && ts-node noble && ts-node verifyMultipleSignaturesSavings"
+    "benchmark": "ts-node-esm index",
+    "benchmark:all": "ts-node-esm index && ts-node-esm noble && ts-node-esm verifyMultipleSignaturesSavings"
   },
   "dependencies": {
     "noble-bls12-381": "^0.7.2"

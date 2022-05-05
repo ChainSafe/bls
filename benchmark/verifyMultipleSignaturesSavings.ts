@@ -1,5 +1,5 @@
-import {runForAllImplementations} from "../test/switch";
-import {range, randomMessage} from "../test/util";
+import {runForAllImplementations} from "../test/switch.js";
+import {range, randomMessage} from "../test/util.js";
 
 (async function () {
   console.log("verifyMultipleSignatures savings");

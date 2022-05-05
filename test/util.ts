@@ -1,4 +1,4 @@
-import {randomBytes} from "../src/helpers";
+import {randomBytes} from "../src/helpers/index.js";
 
 export function randomMessage(): Uint8Array {
   return randomBytes(32);

@@ -1,8 +1,8 @@
 export interface IBls {
   implementation: Implementation;
-  SecretKey: Omit<typeof SecretKey, "prototype">;
-  PublicKey: Omit<typeof PublicKey, "prototype">;
-  Signature: Omit<typeof Signature, "prototype">;
+  SecretKey: typeof SecretKey;
+  PublicKey: typeof PublicKey;
+  Signature: typeof Signature;
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
   aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array;
@@ -12,12 +12,11 @@ export interface IBls {
   verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
   verifyMultipleSignatures(sets: {publicKey: Uint8Array; message: Uint8Array; signature: Uint8Array}[]): boolean;
   secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
-
-  init(): Promise<void>;
-  destroy(): void;
 }
 
 export declare class SecretKey {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private constructor(...value: any);
   static fromBytes(bytes: Uint8Array): SecretKey;
   static fromHex(hex: string): SecretKey;
   static fromKeygen(entropy?: Uint8Array): SecretKey;
@@ -28,6 +27,8 @@ export declare class SecretKey {
 }
 
 export declare class PublicKey {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private constructor(...value: any);
   /** @param type Only for impl `blst-native`. Defaults to `CoordType.jacobian` */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey;
   static fromHex(hex: string): PublicKey;
@@ -38,6 +39,8 @@ export declare class PublicKey {
 }
 
 export declare class Signature {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  private constructor(...value: any);
   /** @param type Only for impl `blst-native`. Defaults to `CoordType.affine`
    *  @param validate When using `herumi` implementation, signature validation is always on regardless of this flag. */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): Signature;

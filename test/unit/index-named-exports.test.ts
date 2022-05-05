@@ -1,10 +1,14 @@
 import {expect} from "chai";
-import {SecretKey, PublicKey, Signature, init, bls} from "../../src";
+import type {SecretKey, PublicKey, Signature, IBls} from "../../src/types.js";
 
-describe("index named exports", () => {
+describe("types named exports", async () => {
+  let bls: IBls;
+
+  before(async () => {
+    bls = (await import("../../src/index.js")).default;
+  });
+
   it("Classes and methods should be defined", async () => {
-    await init("herumi");
-
     /**
      * Sample helper to test argument typing
      */
@@ -12,7 +16,7 @@ describe("index named exports", () => {
       return sig.verify(pk, msg);
     }
 
-    const sk = SecretKey.fromKeygen();
+    const sk = bls.SecretKey.fromKeygen();
     const msg = new Uint8Array(32);
     const sig = sk.sign(msg);
     const pk = sk.toPublicKey();

@@ -13,13 +13,15 @@ module.exports = {
   },
   parser: "@typescript-eslint/parser",
   parserOptions: {
-    ecmaVersion: 10,
-    project: "./tsconfig.json"
+    ecmaVersion: "latest",
+    project: "./tsconfig.json",
+    sourceType: "module",
   },
   plugins: [
     "@typescript-eslint",
     "eslint-plugin-import",
-    "prettier"
+    "prettier",
+    "@chainsafe/eslint-plugin-node"
   ],
   extends: [
     "eslint:recommended",
@@ -33,13 +35,13 @@ module.exports = {
     "prettier/prettier": "error",
     //doesnt work, it reports false errors
     "constructor-super": "off",
-    "@typescript-eslint/class-name-casing": "error",
+    //"@typescript-eslint/class-name-casing": "error",
     "@typescript-eslint/explicit-function-return-type": ["error", {
       "allowExpressions": true
     }],
     "@typescript-eslint/func-call-spacing": "error",
     "@typescript-eslint/indent": ["error", 2],
-    "@typescript-eslint/interface-name-prefix": ["error", "always"],
+    //"@typescript-eslint/interface-name-prefix": ["error", "always"],
     "@typescript-eslint/member-ordering": "error",
     "@typescript-eslint/no-explicit-any": "error",
     "@typescript-eslint/no-require-imports": "error",
@@ -47,7 +49,7 @@ module.exports = {
       "varsIgnorePattern": "^_",
       "argsIgnorePattern": "^_",
     }],
-    "@typescript-eslint/ban-ts-ignore": "warn",
+    "@typescript-eslint/ban-ts-comment": "warn",
     "@typescript-eslint/no-use-before-define": "off",
     "@typescript-eslint/semi": "error",
     "@typescript-eslint/type-annotation-spacing": "error",
@@ -76,7 +78,15 @@ module.exports = {
     "no-prototype-builtins": 0,
     "prefer-const": "error",
     "quotes": ["error", "double"],
-    "semi": "off"
+    "semi": "off",
+    "@chainsafe/node/file-extension-in-import": [
+      "error",
+      "always",
+      {
+        "esm": true
+      }
+    ],
+    "import/no-unresolved": "off",
   },
   "overrides": [
     {

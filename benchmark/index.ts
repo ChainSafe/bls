@@ -1,7 +1,7 @@
-import {runBenchmark} from "./runner";
-import {runForAllImplementations} from "../test/switch";
-import {PublicKey, Signature} from "../src/interface";
-import {aggCount} from "./params";
+import {runBenchmark} from "./runner.js";
+import {runForAllImplementations} from "../test/switch.js";
+import {PublicKey, Signature} from "../src/types.js";
+import {aggCount} from "./params.js";
 
 (async function () {
   await runForAllImplementations(async (bls, implementation) => {

@@ -1,4 +1,4 @@
-import {bls} from "./index";
+import {bls} from "./index.js";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 (function (window: any) {

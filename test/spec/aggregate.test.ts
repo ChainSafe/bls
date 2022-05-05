@@ -1,9 +1,9 @@
 import path from "path";
 import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
-import {bytesToHex, hexToBytes} from "../../src/helpers";
-import {SPEC_TESTS_DIR} from "../params";
-import {describeForAllImplementations} from "../switch";
-import {EmptyAggregateError} from "../../src/errors";
+import {bytesToHex, hexToBytes} from "../../src/helpers/index.js";
+import {SPEC_TESTS_DIR} from "../params.js";
+import {describeForAllImplementations} from "../switch.js";
+import {EmptyAggregateError} from "../../src/errors.js";
 
 interface IAggregateSigsTestCase {
   data: {

@@ -1,5 +1,6 @@
-import {expose} from "threads/worker";
-import {bls, init, CoordType, Implementation} from "../../../../src";
+import {expose} from "@chainsafe/threads/worker";
+import {CoordType, Implementation} from "../../../../src/types.js";
+import bls, {init} from "../../../../src/switchable.js";
 
 export type WorkerApi = typeof workerApi;
 

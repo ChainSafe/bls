@@ -1,6 +1,7 @@
 import {expect} from "chai";
-import {IBls, PublicKey, Signature} from "../../../../src";
-import {BlsMultiThreadNaive} from "./index";
+import {IBls} from "../../../../src/types.js";
+import type {PublicKey, Signature} from "../../../../src/types.js";
+import {BlsMultiThreadNaive} from "./index.js";
 
 export function runMultithreadTests(bls: IBls): void {
   describe("bls pool naive", function () {

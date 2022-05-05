@@ -1,18 +1,14 @@
 import {SecretKey} from "./secretKey.js";
 import {PublicKey} from "./publicKey.js";
 import {Signature} from "./signature.js";
-import {init, destroy} from "./context.js";
 import {IBls} from "../types.js";
 import {functionalInterfaceFactory} from "../functional.js";
-
-await init();
-
 export * from "../constants.js";
 
-export {SecretKey, PublicKey, Signature, init, destroy};
+export {SecretKey, PublicKey, Signature};
 
 export const bls: IBls = {
-  implementation: "herumi",
+  implementation: "blst-native",
   SecretKey,
   PublicKey,
   Signature,

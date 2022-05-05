@@ -2,8 +2,8 @@
 
 [![codecov](https://codecov.io/gh/ChainSafe/lodestar/branch/master/graph/badge.svg)](https://codecov.io/gh/ChainSafe/lodestar)
 ![ETH2.0_Spec_Version 1.0.0](https://img.shields.io/badge/ETH2.0_Spec_Version-1.0.0-2e86c1.svg)
-![ES Version](https://img.shields.io/badge/ES-2017-yellow)
-![Node Version](https://img.shields.io/badge/node-12.x-green)
+![ES Version](https://img.shields.io/badge/ES-2022-yellow)
+![Node Version](https://img.shields.io/badge/node-14.8-green)
 
 Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggregation, tailored for use in Eth2.
 
@@ -19,10 +19,10 @@ To use native bindings you must install peer dependency `@chainsafe/blst`
 yarn add @chainsafe/bls @chainsafe/blst
 ```
 
-You must initialize the library once in your application before using it. The result is cached and use across all your imports
+By default, native bindings will be used if in NodeJS and they are installed. A WASM implementation ("herumi") is used as a fallback in case any error occurs.
 
 ```ts
-import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
+import {SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
 
 (async () => {
   await init("herumi");
@@ -45,48 +45,52 @@ import {init, SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bl
 
 ### Browser
 
-If you are in the browser, import from `/browser` to import directly the WASM version
+If you are in the browser, import from `/herumi` to explicitly import the WASM version
 
 ```ts
-import bls from "@chainsafe/bls/browser";
+import bls from "@chainsafe/bls/herumi";
 ```
 
 ### Native bindings only
 
-If you are in NodeJS, import from `/node` to skip browser specific code. Also install peer dependency `@chainsafe/blst` which has the native bindings
+If you are in NodeJS, import from `/blst-native` to explicitly import the native bindings. Also install peer dependency `@chainsafe/blst` which has the native bindings
 
 ```bash
 yarn add @chainsafe/bls @chainsafe/blst
 ```
 
 ```ts
-import bls from "@chainsafe/bls/node";
+import bls from "@chainsafe/bls/blst-native";
 ```
 
-### Native bindings + WASM fallback
+### Get implementation at runtime
 
-If you want to offer a fallback in NodeJS, first try to load native bindings and then fallback to WASM. Also install peer dependency `@chainsafe/blst` which has the native bindings
-
-```bash
-yarn add @chainsafe/bls @chainsafe/blst
-```
+If you need to get a bls implementation at runtime, import from `/getImplementation`.
 
 ```ts
-import {init} from "@chainsafe/bls";
+import {getImplementation} from "@chainsafe/bls/getImplementation";
 
-try {
-  await init("blst-native");
-} catch (e) {
-  await init("herumi");
-  console.warn("Using WASM");
-}
+const bls = await getImplementation("herumi");
+```
+
+### Switchable singleton
+
+If you need a singleton that is switchable at runtime (the default behavior in <=v6), import from `/switchable`.
+
+```ts
+import bls, {init} from "@chainsafe/bls/switchable";
+
+// here `bls` is uninitialized
+await init("herumi");
+// here `bls` is initialized
+// now other modules can `import bls from "@chainsafe/bls/switchable"` and it will be initialized
 ```
 
 The API is identical for all implementations.
 
 ## Benchmarks
 
-- `blst`: [src/blst](src/blst) (node.js-only, bindings to C via node-gyp)
+- `blst`: [src/blst-native](src/blst-native) (node.js-only, bindings to C via node-gyp)
 - `herumi`: [src/herumi](src/herumi) (node.js & browser, wasm)
 - `noble`: [noble-bls12-381](https://github.com/paulmillr/noble-bls12-381) (node.js & browser, pure JS)
 

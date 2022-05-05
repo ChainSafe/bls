@@ -1,6 +1,6 @@
 import {expect} from "chai";
-import {hexToBytes, bytesToHex} from "../../../src/helpers/hex";
-import {hexToBytesNode} from "../../util";
+import {hexToBytes, bytesToHex} from "../../../src/helpers/hex.js";
+import {hexToBytesNode} from "../../util.js";
 
 describe("helpers / hex", () => {
   const testCases: {id: string; hex: string}[] = [
