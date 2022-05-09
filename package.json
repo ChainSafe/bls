@@ -13,6 +13,12 @@
     "./types": {
       "import": "./lib/types.js"
     },
+    "./errors": {
+      "import": "./lib/errors.js"
+    },
+    "./constants": {
+      "import": "./lib/constants.js"
+    },
     "./getImplementation": {
       "import": "./lib/getImplementation.js"
     },
