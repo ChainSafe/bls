@@ -22,24 +22,22 @@ yarn add @chainsafe/bls @chainsafe/blst
 By default, native bindings will be used if in NodeJS and they are installed. A WASM implementation ("herumi") is used as a fallback in case any error occurs.
 
 ```ts
-import {SecretKey, secretKeyToPublicKey, sign, verify} from "@chainsafe/bls";
+import bls from "@chainsafe/bls";
 
 (async () => {
-  await init("herumi");
+    // class-based interface
+    const secretKey = bls.SecretKey.fromKeygen();
+    const publicKey = secretKey.toPublicKey();
+    const message = new Uint8Array(32);
 
-  // class-based interface
-  const secretKey = SecretKey.fromKeygen();
-  const publicKey = secretKey.toPublicKey();
-  const message = new Uint8Array(32);
+    const signature = secretKey.sign(message);
+    console.log("Is valid: ", signature.verify(publicKey, message));
 
-  const signature = secretKey.sign(message);
-  console.log("Is valid: ", signature.verify(publicKey, message));
-
-  // functional interface
-  const sk = secretKey.toBytes();
-  const pk = secretKeyToPublicKey(sk);
-  const sig = sign(sk, message);
-  console.log("Is valid: ", verify(pk, message, sig));
+    // functional interface
+    const sk = secretKey.toBytes();
+    const pk = bls.secretKeyToPublicKey(sk);
+    const sig = bls.sign(sk, message);
+    console.log("Is valid: ", bls.verify(pk, message, sig));
 })();
 ```
 
