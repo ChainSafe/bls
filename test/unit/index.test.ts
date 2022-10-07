@@ -28,7 +28,7 @@ export function runIndexTests(bls: IBls): void {
       } catch {
         /* eslint-disable no-empty */
       }
-      expect(sig === undefined).to.be.true;
+      expect(sig === undefined).equals(true);
     });
   });
 
@@ -37,31 +37,31 @@ export function runIndexTests(bls: IBls): void {
       const {pk, msg, sig} = getRandomData();
       const pkHex = pk.toHex();
       const isValid = bls.verify(pk.toBytes(), msg, sig.toBytes());
-      expect(isValid, "fail verify").to.be.true;
+      expect(isValid, "fail verify").equals(true);
 
       // Make sure to not modify original pubkey when verifying
-      expect(pk.toHex()).to.be.equal(pkHex, "pubkey modified when verifying");
+      expect(pk.toHex()).equals(pkHex, "pubkey modified when verifying");
     });
 
     it("should fail verify empty signature", () => {
       const {pk, msg} = getRandomData();
       const emptySig = Buffer.alloc(96);
       const isValid = bls.verify(pk.toBytes(), msg, emptySig);
-      expect(isValid).to.be.false;
+      expect(isValid).equals(false);
     });
 
     it("should fail verify signature of different message", () => {
       const {pk, sig} = getRandomData();
       const msg2 = randomMessage();
       const isValid = bls.verify(pk.toBytes(), msg2, sig.toBytes());
-      expect(isValid).to.be.false;
+      expect(isValid).equals(false);
     });
 
     it("should fail verify signature signed by different key", () => {
       const {msg, sig} = getRandomData();
       const {pk: pk2} = getRandomData();
       const isValid = bls.verify(pk2.toBytes(), msg, sig.toBytes());
-      expect(isValid).to.be.false;
+      expect(isValid).equals(false);
     });
 
     it("should fail verify empty message", () => {
@@ -87,8 +87,8 @@ export function runIndexTests(bls: IBls): void {
 
       const aggSig = bls.aggregateSignatures(sigs.map((sig) => sig.toBytes()));
 
-      expect(bls.verifyMultiple(aggPubkeys, msgs, aggSig), "should be valid").to.be.true;
-      expect(bls.verifyMultiple(aggPubkeys.reverse(), msgs, aggSig), "should fail - swaped pubkeys").to.be.false;
+      expect(bls.verifyMultiple(aggPubkeys, msgs, aggSig), "should be valid").equals(true);
+      expect(bls.verifyMultiple(aggPubkeys.reverse(), msgs, aggSig), "should fail - swaped pubkeys").equals(false);
     });
 
     it("should verify aggregated signatures - same message", () => {
@@ -105,7 +105,7 @@ export function runIndexTests(bls: IBls): void {
         getN(4, () => msg), // Same message n times
         aggregateSignature
       );
-      expect(isValid).to.be.true;
+      expect(isValid).equals(true);
     });
 
     it("should fail to verify aggregated signatures - no public keys", () => {
@@ -114,7 +114,7 @@ export function runIndexTests(bls: IBls): void {
       const msg2 = randomMessage();
 
       const isValid = bls.verifyMultiple([], [msg2, msg1], sig);
-      expect(isValid).to.be.false;
+      expect(isValid).equals(false);
     });
 
     it("should fail verify empty message", () => {

@@ -12,11 +12,11 @@ export function runSecretKeyTests(bls: IBls): void {
     const secretKey = "0x07656fd676da43883d163f49566c72b9cbf0a5a294f26808c807700732456da7";
 
     it("should export secret key to hex string", () => {
-      expect(bls.SecretKey.fromHex(secretKey).toHex()).to.be.equal(secretKey);
+      expect(bls.SecretKey.fromHex(secretKey).toHex()).equals(secretKey);
     });
 
     it("should export secret key to hex string from non-prefixed hex", () => {
-      expect(bls.SecretKey.fromHex(secretKey).toHex()).to.be.equal(secretKey);
+      expect(bls.SecretKey.fromHex(secretKey).toHex()).equals(secretKey);
     });
 
     it("should not accept too short secret key", () => {
