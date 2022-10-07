@@ -63,6 +63,13 @@ export function runIndexTests(bls: IBls): void {
       const isValid = bls.verify(pk2.toBytes(), msg, sig.toBytes());
       expect(isValid).to.be.false;
     });
+
+    it("should fail verify empty message", () => {
+      const emptyMsg = new Uint8Array(0);
+      const {pk, sig} = getRandomData();
+      const isValid = sig.verify(pk, emptyMsg);
+      expect(isValid).equals(false);
+    });
   });
 
   describe("verify multiple", () => {
@@ -108,6 +115,18 @@ export function runIndexTests(bls: IBls): void {
 
       const isValid = bls.verifyMultiple([], [msg2, msg1], sig);
       expect(isValid).to.be.false;
+    });
+
+    it("should fail verify empty message", () => {
+      const sks = getN(2, () => bls.SecretKey.fromKeygen());
+      const msgs = getN(2, () => randomMessage());
+      const pks = sks.map((sk) => sk.toPublicKey());
+      const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[1])];
+      const aggSig = bls.Signature.aggregate(sigs);
+
+      const emptyMsgs = msgs.map(() => new Uint8Array(0));
+      const isValid = aggSig.verifyMultiple(pks, emptyMsgs);
+      expect(isValid).equals(false);
     });
   });
 
@@ -166,6 +185,22 @@ export function runIndexTests(bls: IBls): void {
         false,
         "Malicous signature should not validate with bls.verifyMultipleSignatures"
       );
+    });
+
+    it("should fail verify empty message", () => {
+      const n = 4;
+      const sets = getN(n, () => {
+        const sk = bls.SecretKey.fromKeygen();
+        const publicKey = sk.toPublicKey();
+        const message = randomMessage();
+        const signature = sk.sign(message);
+        return {publicKey, message, signature};
+      });
+
+      const setsWithEmptyMsgs = sets.map((set) => ({...set, message: new Uint8Array(0)}));
+
+      const isValid = bls.Signature.verifyMultipleSignatures(setsWithEmptyMsgs);
+      expect(isValid).equals(false);
     });
   });
 
