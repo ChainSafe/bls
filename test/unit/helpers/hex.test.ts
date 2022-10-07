@@ -14,7 +14,7 @@ describe("helpers / hex", () => {
     it(`${id} hexToBytes`, () => {
       const expectedBytes = hexToBytesNode(hex);
       const bytes = hexToBytes(hex);
-      expect(expectedBytes.equals(bytes)).to.be.true;
+      expect(expectedBytes.equals(bytes)).equals(true);
     });
 
     it(`${id} bytesToHex`, () => {

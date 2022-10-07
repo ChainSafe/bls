@@ -20,7 +20,7 @@ describe("types named exports", async () => {
     const msg = new Uint8Array(32);
     const sig = sk.sign(msg);
     const pk = sk.toPublicKey();
-    expect(verifyHelper(pk, sig, msg)).to.be.true;
+    expect(verifyHelper(pk, sig, msg)).equals(true);
   });
 
   it("Make sure exported classes are compatible with interface", () => {
