@@ -120,5 +120,10 @@
   },
   "peerDependencies": {
     "@chainsafe/blst": "^0.2.4"
+  },
+  "peerDependenciesMeta": {
+    "@chainsafe/blst": {
+      "optional": true
+    }
   }
 }
