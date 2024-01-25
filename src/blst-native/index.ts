@@ -7,13 +7,14 @@ export * from "../constants.js";
 
 export {SecretKey, PublicKey, Signature};
 
+const implementation = "blst-native";
 export const bls: IBls = {
-  implementation: "blst-native",
+  implementation,
   SecretKey,
   PublicKey,
   Signature,
 
-  ...functionalInterfaceFactory({SecretKey, PublicKey, Signature}),
+  ...functionalInterfaceFactory({implementation, SecretKey, PublicKey, Signature}),
 };
 
 export default bls;

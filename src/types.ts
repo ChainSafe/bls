@@ -1,5 +1,7 @@
 import {CoordType} from "@chainsafe/blst-ts";
 
+export type PublicKeyArg = PublicKey | Uint8Array;
+export type SignatureArg = Signature | Uint8Array;
 export interface IBls {
   implementation: Implementation;
   SecretKey: typeof SecretKey;
@@ -13,6 +15,12 @@ export interface IBls {
   verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
   verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
   verifyMultipleSignatures(sets: {publicKey: Uint8Array; message: Uint8Array; signature: Uint8Array}[]): boolean;
+  asyncVerify(message: Uint8Array, publicKey: PublicKeyArg, signature: SignatureArg): Promise<boolean>;
+  asyncVerifyAggregate(message: Uint8Array, publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
+  asyncVerifyMultiple(messages: Uint8Array[], publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
+  asyncVerifyMultipleSignatures(
+    sets: {message: Uint8Array; publicKey: PublicKeyArg; signature: SignatureArg}[]
+  ): Promise<boolean>;
   secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
 }
 

@@ -11,13 +11,14 @@ export * from "../constants.js";
 
 export {SecretKey, PublicKey, Signature, init, destroy};
 
+const implementation = "herumi";
 export const bls: IBls = {
-  implementation: "herumi",
+  implementation,
   SecretKey,
   PublicKey,
   Signature,
 
-  ...functionalInterfaceFactory({SecretKey, PublicKey, Signature}),
+  ...functionalInterfaceFactory({implementation, SecretKey, PublicKey, Signature}),
 };
 
 export default bls;

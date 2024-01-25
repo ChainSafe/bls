@@ -1,15 +1,18 @@
-import {IBls} from "./types.js";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import * as blst from "@chainsafe/blst-ts";
+import {IBls, PublicKey, PublicKeyArg, Signature, SignatureArg} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
-import {NotInitializedError} from "./errors.js";
+import {NotInitializedError, ZeroSignatureError} from "./errors.js";
 
 // Returned type is enforced at each implementation's index
 // eslint-disable-next-line max-len
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types
 export function functionalInterfaceFactory({
+  implementation,
   SecretKey,
   PublicKey,
   Signature,
-}: Pick<IBls, "SecretKey" | "PublicKey" | "Signature">) {
+}: Pick<IBls, "implementation" | "SecretKey" | "PublicKey" | "Signature">) {
   /**
    * Signs given message using secret key.
    * @param secretKey
@@ -47,14 +50,37 @@ export function functionalInterfaceFactory({
    * @param signature
    */
   function verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
-    validateBytes(publicKey, "publicKey");
-    validateBytes(message, "message");
-    validateBytes(signature, "signature");
+    if (implementation === "herumi") {
+      validateBytes(publicKey, "publicKey");
+      validateBytes(message, "message");
+      validateBytes(signature, "signature");
+    }
 
     try {
       return Signature.fromBytes(signature).verify(PublicKey.fromBytes(publicKey), message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
+      return false;
+    }
+  }
+  async function asyncVerify(message: Uint8Array, publicKey: PublicKeyArg, signature: SignatureArg): Promise<boolean> {
+    if (implementation === "herumi") {
+      throw new Error("WASM implementation does not support asyncVerify, use verify instead");
+    }
+
+    const pk = publicKey instanceof PublicKey ? ((publicKey as any).key as blst.PublicKey) : publicKey;
+    const sig =
+      signature instanceof Signature
+        ? ((signature as any).sig as blst.Signature)
+        : blst.Signature.deserialize(signature);
+
+    if (sig.isInfinity()) {
+      false;
+    }
+
+    try {
+      return blst.asyncVerify(message, pk, sig);
+    } catch {
       return false;
     }
   }
@@ -77,6 +103,26 @@ export function functionalInterfaceFactory({
       );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
+      return false;
+    }
+  }
+  async function asyncVerifyAggregate(
+    message: Uint8Array,
+    publicKeys: PublicKeyArg[],
+    signature: SignatureArg
+  ): Promise<boolean> {
+    if (implementation === "herumi") {
+      throw new Error("WASM implementation does not support asyncVerifyAggregate, use verifyAggregate instead");
+    }
+
+    const pks = publicKeys.map((pk) => (pk instanceof PublicKey ? ((pk as any).key as blst.PublicKey) : pk));
+    const sig = signature instanceof Signature ? ((signature as any).sig as blst.Signature) : signature;
+
+    // TODO: (matthewkeil) check spec to make sure this sig does not need inf check
+
+    try {
+      return blst.fastAggregateVerify(message, pks, sig);
+    } catch {
       return false;
     }
   }
@@ -103,6 +149,30 @@ export function functionalInterfaceFactory({
       );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
+      return false;
+    }
+  }
+  async function asyncVerifyMultiple(
+    messages: Uint8Array[],
+    publicKeys: PublicKeyArg[],
+    signature: SignatureArg
+  ): Promise<boolean> {
+    if (implementation === "herumi") {
+      throw new Error("WASM implementation does not support asyncVerifyMultiple, use verifyMultiple instead");
+    }
+
+    if (publicKeys.length === 0 || publicKeys.length != messages.length) {
+      return false;
+    }
+
+    const pks = publicKeys.map((pk) => (pk instanceof PublicKey ? ((pk as any).key as blst.PublicKey) : pk));
+    const sig = signature instanceof Signature ? ((signature as any).sig as blst.Signature) : signature;
+
+    // TODO: (matthewkeil) check spec to make sure this sig does not need inf check
+
+    try {
+      return blst.aggregateVerify(messages, pks, sig);
+    } catch {
       return false;
     }
   }
@@ -135,6 +205,25 @@ export function functionalInterfaceFactory({
       return false;
     }
   }
+  async function asyncVerifyMultipleSignatures(
+    sets: {message: Uint8Array; publicKey: PublicKeyArg; signature: SignatureArg}[]
+  ): Promise<boolean> {
+    if (!sets) throw Error("sets is null or undefined");
+
+    try {
+      return blst.asyncVerifyMultipleAggregateSignatures(
+        sets.map((set) => ({
+          message: set.message,
+          publicKey:
+            set.publicKey instanceof PublicKey ? ((set.publicKey as any).key as blst.PublicKey) : set.publicKey,
+          signature:
+            set.signature instanceof Signature ? ((set.signature as any).sig as blst.Signature) : set.signature,
+        }))
+      );
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Computes a public key from a secret key
@@ -152,6 +241,10 @@ export function functionalInterfaceFactory({
     verifyAggregate,
     verifyMultiple,
     verifyMultipleSignatures,
+    asyncVerify,
+    asyncVerifyAggregate,
+    asyncVerifyMultiple,
+    asyncVerifyMultipleSignatures,
     secretKeyToPublicKey,
   };
 }
