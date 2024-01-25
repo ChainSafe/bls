@@ -1,4 +1,4 @@
-import { CoordType } from "@chainsafe/blst-ts";
+import { CoordType } from "../temp-deps/blst-ts/lib/index.js";
 export declare type PublicKeyArg = PublicKey | Uint8Array;
 export declare type SignatureArg = Signature | Uint8Array;
 export interface IBls {
