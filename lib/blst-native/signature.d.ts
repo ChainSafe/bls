@@ -1,4 +1,4 @@
-import * as blst from "@chainsafe/blst-ts";
+import * as blst from "../../temp-deps/blst-ts/lib/index.js";
 import { PointFormat, Signature as ISignature } from "../types.js";
 import { PublicKey } from "./publicKey.js";
 export declare class Signature implements ISignature {
