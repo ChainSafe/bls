@@ -22,6 +22,7 @@ class PublicKey : public Napi::ObjectWrap<PublicKey> {
     PublicKey(const Napi::CallbackInfo &info);
     Napi::Value Serialize(const Napi::CallbackInfo &info);
     Napi::Value KeyValidate(const Napi::CallbackInfo &info);
+    Napi::Value IsInfinity(const Napi::CallbackInfo &info);
 };
 
 #endif /* BLST_TS_PUBLIC_KEY_H__ */

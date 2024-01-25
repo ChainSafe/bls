@@ -22,6 +22,7 @@ class Signature : public Napi::ObjectWrap<Signature> {
     Signature(const Napi::CallbackInfo &info);
     Napi::Value Serialize(const Napi::CallbackInfo &info);
     Napi::Value SigValidate(const Napi::CallbackInfo &info);
+    Napi::Value IsInfinity(const Napi::CallbackInfo &info);
 };
 
 #endif /* BLST_TS_SIGNATURE_H__ */

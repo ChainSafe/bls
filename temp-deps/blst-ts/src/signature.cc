@@ -124,3 +124,18 @@ Napi::Value Signature::SigValidate(const Napi::CallbackInfo &info) {
 
     return scope.Escape(env.Undefined());
 }
+
+Napi::Value Signature::IsInfinity(const Napi::CallbackInfo &info) {
+    Napi::Env env = info.Env();
+    Napi::EscapableHandleScope scope(env);
+
+    if (!_has_jacobian && !_has_affine) {
+        Napi::Error::New(env, "BLST_ERROR: Signature not initialized")
+            .ThrowAsJavaScriptException();
+    } else if (_has_jacobian && _jacobian->is_inf()) {
+        return scope.Escape(Napi::Boolean::New(env, true));
+    } else if (_has_affine && _affine->is_inf()) {
+        return scope.Escape(Napi::Boolean::New(env, true));
+    }
+    return scope.Escape(Napi::Boolean::New(env, false));
+}

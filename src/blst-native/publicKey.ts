@@ -1,18 +1,16 @@
-import * as blst from "@chainsafe/blst";
+import * as blst from "@chainsafe/blst-ts";
 import {EmptyAggregateError} from "../errors.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, PublicKey as IPublicKey} from "../types.js";
+import {PointFormat, PublicKey as IPublicKey, CoordType} from "../types.js";
 
-export class PublicKey extends blst.PublicKey implements IPublicKey {
-  constructor(value: ConstructorParameters<typeof blst.PublicKey>[0]) {
-    super(value);
-  }
+export class PublicKey implements IPublicKey {
+  private constructor(private readonly key: blst.PublicKey) {}
 
   /** @param type Defaults to `CoordType.jacobian` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate?: boolean): PublicKey {
-    const pk = blst.PublicKey.fromBytes(bytes, type);
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey {
+    const pk = blst.PublicKey.deserialize(bytes, type);
     if (validate) pk.keyValidate();
-    return new PublicKey(pk.value);
+    return new PublicKey(pk);
   }
 
   static fromHex(hex: string): PublicKey {
@@ -24,15 +22,19 @@ export class PublicKey extends blst.PublicKey implements IPublicKey {
       throw new EmptyAggregateError();
     }
 
-    const pk = blst.aggregatePubkeys(publicKeys);
-    return new PublicKey(pk.value);
+    const pk = blst.aggregatePublicKeys(publicKeys.map(({key}) => key));
+    return new PublicKey(pk);
+  }
+
+  private static friendBuild(key: blst.PublicKey): PublicKey {
+    return new PublicKey(key);
   }
 
   toBytes(format?: PointFormat): Uint8Array {
     if (format === PointFormat.uncompressed) {
-      return this.value.serialize();
+      return this.key.serialize(false);
     } else {
-      return this.value.compress();
+      return this.key.serialize(true);
     }
   }
 

@@ -63,6 +63,8 @@ typings/
 .idea/**
 
 dist/
+lib/
+!temp-deps/lib/
 benchmark-reports
 
 .vscode/

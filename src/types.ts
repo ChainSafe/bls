@@ -1,3 +1,5 @@
+import {CoordType} from "@chainsafe/blst-ts";
+
 export interface IBls {
   implementation: Implementation;
   SecretKey: typeof SecretKey;
@@ -62,7 +64,4 @@ export enum PointFormat {
   uncompressed = "uncompressed",
 }
 
-export enum CoordType {
-  affine,
-  jacobian,
-}
+export {CoordType};

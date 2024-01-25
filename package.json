@@ -61,6 +61,8 @@
     "bls"
   ],
   "scripts": {
+    "preinstall": "cd temp-deps/blst-ts && npm install --no-package-lock",
+    "postinstall": "yarn build",
     "clean": "rm -rf lib && rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "check-build": "node -e \"(async function() { await import('./lib/index.js') })()\"",
     "build": "tsc --incremental --project tsconfig.build.json",
@@ -78,12 +80,12 @@
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"
   },
   "dependencies": {
+    "@chainsafe/blst-ts": "file:./temp-deps/blst-ts",
     "@chainsafe/bls-keygen": "^0.4.0",
     "bls-eth-wasm": "^0.4.8",
     "randombytes": "^2.1.0"
   },
   "devDependencies": {
-    "@chainsafe/blst": "^0.2.4",
     "@chainsafe/eslint-plugin-node": "^11.2.3",
     "@chainsafe/lodestar-spec-test-util": "^0.18.0",
     "@chainsafe/threads": "^1.9.0",
