@@ -63,7 +63,7 @@ typings/
 .idea/**
 
 dist/
-lib/
+# lib/
 !temp-deps/lib/
 !temp-deps/blst-ts/deps/blst/build
 benchmark-reports

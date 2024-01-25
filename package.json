@@ -62,7 +62,6 @@
   ],
   "scripts": {
     "preinstall": "cd temp-deps/blst-ts && npm install --no-package-lock",
-    "postinstall": "yarn build",
     "clean": "rm -rf lib && rm -rf dist && rm -f tsconfig.tsbuildinfo",
     "check-build": "node -e \"(async function() { await import('./lib/index.js') })()\"",
     "build": "tsc --incremental --project tsconfig.build.json",
