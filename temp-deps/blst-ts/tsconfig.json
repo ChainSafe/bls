@@ -2,8 +2,8 @@
   "compilerOptions": {
     "noEmit": true,
     "target": "ESNext",
-    "module": "CommonJS",
-    "moduleResolution": "Node",
+    "module": "ESNext",
+    "moduleResolution": "NodeNext",
     "lib": [
       "ESNext"
     ],

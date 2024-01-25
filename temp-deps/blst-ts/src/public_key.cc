@@ -18,6 +18,10 @@ void PublicKey::Init(
             "keyValidate",
             &PublicKey::KeyValidate,
             static_cast<napi_property_attributes>(napi_enumerable)),
+        InstanceMethod(
+            "isInfinity",
+            &PublicKey::IsInfinity,
+            static_cast<napi_property_attributes>(napi_enumerable)),
     };
 
     Napi::Function ctr = DefineClass(env, "PublicKey", proto, module);

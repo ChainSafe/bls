@@ -73,7 +73,7 @@
     "test:coverage": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha 'test/unit/**/*.test.ts' && nyc report",
     "test:spec": "mocha 'test/spec/**/*.test.ts'",
     "test": "yarn run test:unit && yarn run test:spec",
-    "download-test-cases": "ts-node-esm test/downloadSpecTests.ts",
+    "download-spec-tests": "node --loader ts-node/esm test/downloadSpecTests.ts",
     "coverage": "codecov -F bls",
     "benchmark": "ts-node-esm benchmark",
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"

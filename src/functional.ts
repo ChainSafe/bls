@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as blst from "@chainsafe/blst-ts";
-import {IBls, PublicKey, PublicKeyArg, Signature, SignatureArg} from "./types.js";
+import * as blst from "../temp-deps/blst-ts/lib/index.js";
+import {IBls, PublicKeyArg, SignatureArg} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
-import {NotInitializedError, ZeroSignatureError} from "./errors.js";
+import {NotInitializedError} from "./errors.js";
 
 // Returned type is enforced at each implementation's index
 // eslint-disable-next-line max-len

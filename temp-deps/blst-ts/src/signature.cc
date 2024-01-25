@@ -18,6 +18,10 @@ void Signature::Init(
             "sigValidate",
             &Signature::SigValidate,
             static_cast<napi_property_attributes>(napi_enumerable)),
+        InstanceMethod(
+            "isInfinity",
+            &Signature::IsInfinity,
+            static_cast<napi_property_attributes>(napi_enumerable)),
     };
 
     Napi::Function ctr = DefineClass(env, "Signature", proto, module);
