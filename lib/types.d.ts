@@ -71,4 +71,9 @@ export declare enum PointFormat {
     compressed = "compressed",
     uncompressed = "uncompressed"
 }
+export interface SignatureSet {
+    message: Uint8Array;
+    publicKey: PublicKey;
+    signature: Signature;
+}
 export { CoordType };
