@@ -89,6 +89,7 @@
     "@lodestar/spec-test-util": "1.13.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^10.0.0",
+    "@types/node": "^20.11.13",
     "@types/randombytes": "^2.0.0",
     "@typescript-eslint/eslint-plugin": "^4.31.1",
     "@typescript-eslint/parser": "^4.31.1",

@@ -1,5 +1,6 @@
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes, isZeroUint8Array, randomBytes} from "../helpers/index.js";
+import {randomBytes} from "node:crypto";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
 import {SECRET_KEY_LENGTH} from "../constants.js";
 import {SecretKey as ISecretKey} from "../types.js";
 import {PublicKey} from "./publicKey.js";

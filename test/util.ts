@@ -1,4 +1,4 @@
-import {randomBytes} from "../src/helpers/index.js";
+import {randomBytes} from "node:crypto";
 
 export function randomMessage(): Uint8Array {
   return randomBytes(32);
