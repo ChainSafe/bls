@@ -1,7 +1,7 @@
-import {randomBytes} from "node:crypto";
+import crypto from "crypto";
 
 export function randomMessage(): Uint8Array {
-  return randomBytes(32);
+  return crypto.randomBytes(32);
 }
 
 export function getN<T>(n: number, getter: () => T): T[] {
