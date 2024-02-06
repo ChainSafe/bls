@@ -55,7 +55,7 @@ class P1Affine : public P1Wrapper {
     }
     void AddTo(blst::P1 &point) override { point.add(_point); };
     P1AffineGroup AsAffine() override {
-        P1AffineGroup group{.raw_point = &_point};
+        P1AffineGroup group{nullptr, &_point};
         return group;
     }
 };

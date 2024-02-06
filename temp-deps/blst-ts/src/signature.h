@@ -68,7 +68,7 @@ class P2Affine : public P2Wrapper {
     }
     void AddTo(blst::P2 &point) override { point.add(_point); };
     P2AffineGroup AsAffine() override {
-        P2AffineGroup group{.raw_point = &_point};
+        P2AffineGroup group{nullptr, &_point};
         return group;
     }
     void Sign(
