@@ -55,7 +55,7 @@ export const BLST_CONSTANTS: {
  * ```
  */
 export class SecretKey implements Serializable {
-  constructor();
+  private constructor();
   /**
    * `fromKeygen` takes two parameters. The first parameter is a salt and is
    * required. IKM MUST be at least 32 bytes long, but it MAY be longer. The
@@ -77,7 +77,7 @@ export class SecretKey implements Serializable {
 }
 
 export class PublicKey implements Serializable {
-  constructor();
+  private constructor();
   static deserialize(pkBytes: BlstBuffer, coordType?: CoordType): PublicKey;
   serialize(compress?: boolean): Buffer;
   toHex(compress?: boolean): string;
@@ -86,7 +86,7 @@ export class PublicKey implements Serializable {
 }
 
 export class Signature implements Serializable {
-  constructor();
+  private constructor();
   static deserialize(sigBytes: BlstBuffer, coordType?: CoordType): Signature;
   serialize(compress?: boolean): Buffer;
   toHex(compress?: boolean): string;
