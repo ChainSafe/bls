@@ -10,7 +10,7 @@ interface IAggregateSigsTestCase {
     input: string[];
     output: string;
   };
-  meta?: undefined;
+  meta?: unknown;
 }
 
 describeForAllImplementations((bls) => {

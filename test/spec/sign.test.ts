@@ -13,7 +13,7 @@ interface ISignMessageTestCase {
     };
     output: string;
   };
-  meta?: undefined;
+  meta?: unknown;
 }
 
 describeForAllImplementations((bls) => {

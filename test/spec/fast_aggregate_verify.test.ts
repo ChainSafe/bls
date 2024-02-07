@@ -14,7 +14,7 @@ interface IAggregateSigsVerifyTestCase {
     };
     output: boolean;
   };
-  meta?: undefined;
+  meta?: unknown;
 }
 
 describeForAllImplementations((bls) => {
