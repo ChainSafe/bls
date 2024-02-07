@@ -13,7 +13,7 @@ interface IVerifyTestCase {
     };
     output: boolean;
   };
-  meta?: undefined;
+  meta?: any;
 }
 
 describeForAllImplementations((bls) => {
