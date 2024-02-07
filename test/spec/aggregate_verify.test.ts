@@ -20,13 +20,13 @@ describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
     "bls/aggregate_verify/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/aggregate_verify/small"),
-    (testCase: any) => {
+    (testCase) => {
       const {pubkeys, messages, signature} = testCase.data.input;
       return bls.verifyMultiple(pubkeys.map(hexToBytes), messages.map(hexToBytes), hexToBytes(signature));
     },
     {
       inputTypes: {data: InputType.YAML},
-      getExpected: (testCase: any) => testCase.data.output,
+      getExpected: (testCase) => testCase.data.output,
     }
   );
 });

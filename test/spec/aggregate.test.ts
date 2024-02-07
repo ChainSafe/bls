@@ -17,7 +17,7 @@ describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IAggregateSigsTestCase, string | null>(
     "bls/aggregate/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/aggregate/small"),
-    (testCase: any) => {
+    (testCase) => {
       try {
         const signatures = testCase.data.input;
         const agg = bls.aggregateSignatures(signatures.map(hexToBytes));
@@ -29,7 +29,7 @@ describeForAllImplementations((bls) => {
     },
     {
       inputTypes: {data: InputType.YAML},
-      getExpected: (testCase: any) => testCase.data.output,
+      getExpected: (testCase) => testCase.data.output,
     }
   );
 });

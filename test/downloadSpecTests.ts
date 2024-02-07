@@ -11,7 +11,7 @@ downloadTests(
     specTestsRepoUrl: "https://github.com/ethereum/consensus-spec-tests",
   },
   console.log
-).catch((e: any) => {
+).catch((e) => {
   console.error(e);
   process.exit(1);
 });

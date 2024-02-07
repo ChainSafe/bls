@@ -20,7 +20,7 @@ describeForAllImplementations((bls) => {
   describeDirectorySpecTest<ISignMessageTestCase, string | null>(
     "bls/sign/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/sign/small"),
-    (testCase: any) => {
+    (testCase) => {
       try {
         const {privkey, message} = testCase.data.input;
         const signature = bls.sign(hexToBytes(privkey), hexToBytes(message));
@@ -32,7 +32,7 @@ describeForAllImplementations((bls) => {
     },
     {
       inputTypes: {data: InputType.YAML},
-      getExpected: (testCase: any) => testCase.data.output,
+      getExpected: (testCase) => testCase.data.output,
     }
   );
 });

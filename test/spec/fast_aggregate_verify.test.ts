@@ -21,11 +21,11 @@ describeForAllImplementations((bls) => {
   describeDirectorySpecTest<IAggregateSigsVerifyTestCase, boolean>(
     "bls/fast_aggregate_verify/small",
     path.join(SPEC_TESTS_DIR, "tests/general/phase0/bls/fast_aggregate_verify/small"),
-    (testCase: any) => {
+    (testCase) => {
       const {pubkeys, message, signature} = testCase.data.input;
       try {
         return bls.Signature.fromBytes(hexToBytes(signature)).verifyAggregate(
-          pubkeys.map((hex: any) => bls.PublicKey.fromBytes(hexToBytes(hex), CoordType.jacobian, true)),
+          pubkeys.map((hex) => bls.PublicKey.fromBytes(hexToBytes(hex), CoordType.jacobian, true)),
           hexToBytes(message)
         );
       } catch (e) {
@@ -34,7 +34,7 @@ describeForAllImplementations((bls) => {
     },
     {
       inputTypes: {data: InputType.YAML},
-      getExpected: (testCase: any) => testCase.data.output,
+      getExpected: (testCase) => testCase.data.output,
     }
   );
 });
