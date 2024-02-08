@@ -1,5 +1,5 @@
 import path from "path";
-import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import {describeDirectorySpecTest, InputType} from "@lodestar/spec-test-util";
 import {bytesToHex, hexToBytes} from "../../src/helpers/index.js";
 import {SPEC_TESTS_DIR} from "../params.js";
 import {describeForAllImplementations} from "../switch.js";
@@ -10,6 +10,7 @@ interface IAggregateSigsTestCase {
     input: string[];
     output: string;
   };
+  meta?: unknown;
 }
 
 describeForAllImplementations((bls) => {
