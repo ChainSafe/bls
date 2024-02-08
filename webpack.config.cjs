@@ -17,10 +17,13 @@ module.exports = {
   devtool: "source-map",
   resolve: {
     plugins: [new ResolveTypeScriptPlugin()],
+    alias: {
+      "crypto": "crypto-browserify"
+    },
     fallback: {
-      crypto: false,
       fs: false,
       path: false,
+      stream: false
     },
   },
   experiments: {

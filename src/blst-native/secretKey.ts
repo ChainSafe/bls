@@ -1,5 +1,6 @@
 import * as blst from "@chainsafe/blst";
-import {bytesToHex, hexToBytes, isZeroUint8Array, randomBytes} from "../helpers/index.js";
+import crypto from "crypto";
+import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
 import {SECRET_KEY_LENGTH} from "../constants.js";
 import {SecretKey as ISecretKey} from "../types.js";
 import {PublicKey} from "./publicKey.js";
@@ -27,7 +28,7 @@ export class SecretKey implements ISecretKey {
   }
 
   static fromKeygen(entropy?: Uint8Array): SecretKey {
-    const sk = blst.SecretKey.fromKeygen(entropy || randomBytes(SECRET_KEY_LENGTH));
+    const sk = blst.SecretKey.fromKeygen(entropy || crypto.randomBytes(SECRET_KEY_LENGTH));
     return new SecretKey(sk);
   }
 
