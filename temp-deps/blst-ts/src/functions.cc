@@ -7,7 +7,7 @@ Napi::Value AggregatePublicKeys(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(
             env, "BLST_ERROR: publicKeys must be of type PublicKeyArg[]")
             .ThrowAsJavaScriptException();
-        return scope.Escape(env.Undefined());
+        return env.Undefined();
     }
     Napi::Array arr = info[0].As<Napi::Array>();
     uint32_t length = arr.Length();
@@ -15,7 +15,7 @@ Napi::Value AggregatePublicKeys(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(
             env, "BLST_ERROR: PublicKeyArg[] must have length > 0")
             .ThrowAsJavaScriptException();
-        return scope.Escape(env.Undefined());
+        return env.Undefined();
     }
 
     blst::P1 aggregate{};
@@ -78,7 +78,7 @@ Napi::Value AggregateSignatures(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(
             env, "BLST_ERROR: signatures must be of type SignatureArg[]")
             .ThrowAsJavaScriptException();
-        return scope.Escape(env.Undefined());
+        return env.Undefined();
     }
     Napi::Array arr = info[0].As<Napi::Array>();
     uint32_t length = arr.Length();
@@ -86,7 +86,7 @@ Napi::Value AggregateSignatures(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(
             env, "BLST_ERROR: SignatureArg[] must have length > 0")
             .ThrowAsJavaScriptException();
-        return scope.Escape(env.Undefined());
+        return env.Undefined();
     }
 
     blst::P2 aggregate{};
@@ -179,7 +179,7 @@ Napi::Value AggregateVerify(const Napi::CallbackInfo &info) {
             Napi::TypeError::New(
                 env, "publicKeys must be of type PublicKeyArg[]")
                 .ThrowAsJavaScriptException();
-            return scope.Escape(env.Undefined());
+            return env.Undefined();
         }
         Napi::Array pk_array = info[1].As<Napi::Array>();
         uint32_t pk_array_length = pk_array.Length();

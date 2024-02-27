@@ -22,6 +22,8 @@ class P2Wrapper {
     virtual bool InGroup() = 0;
     virtual void Serialize(bool compress, blst::byte *out) = 0;
     virtual void AddTo(blst::P2 &point) = 0;
+    virtual blst::P2 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) = 0;
     virtual P2AffineGroup AsAffine() = 0;
     virtual void Sign(
         const blst::SecretKey &key,
@@ -41,6 +43,15 @@ class P2 : public P2Wrapper {
         compress ? _point.compress(out) : _point.serialize(out);
     }
     void AddTo(blst::P2 &point) override { point.add(_point); };
+    blst::P2 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) override {
+        blst::byte out[192];
+        _point.serialize(out);
+        // this should get std::move all the way into the P2 member value
+        blst::P2 point{out, 192};
+        point.mult(rand_bytes, rand_bytes_length);
+        return point;
+    };
     P2AffineGroup AsAffine() override {
         P2AffineGroup group{std::make_unique<blst::P2_Affine>(_point), nullptr};
         group.raw_point = group.smart_pointer.get();
@@ -67,6 +78,15 @@ class P2Affine : public P2Wrapper {
         compress ? _point.compress(out) : _point.serialize(out);
     }
     void AddTo(blst::P2 &point) override { point.add(_point); };
+    blst::P2 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) override {
+        blst::byte out[192];
+        _point.serialize(out);
+        // this should get std::move all the way into the P2 member value
+        blst::P2 point{out, 192};
+        point.mult(rand_bytes, rand_bytes_length);
+        return point;
+    };
     P2AffineGroup AsAffine() override {
         P2AffineGroup group{nullptr, &_point};
         return group;
@@ -93,6 +113,7 @@ class Signature : public Napi::ObjectWrap<Signature> {
     Napi::Value Serialize(const Napi::CallbackInfo &info);
     Napi::Value SigValidate(const Napi::CallbackInfo &info);
     Napi::Value IsInfinity(const Napi::CallbackInfo &info);
+    Napi::Value MultiplyBy(const Napi::CallbackInfo &info);
 };
 
 #endif /* BLST_TS_SIGNATURE_H__ */

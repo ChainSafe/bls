@@ -83,6 +83,7 @@ export class PublicKey implements Serializable {
   toHex(compress?: boolean): string;
   keyValidate(): void;
   isInfinity(): boolean;
+  multiplyBy(randomBytes: BlstBuffer): PublicKey;
 }
 
 export class Signature implements Serializable {
@@ -92,6 +93,7 @@ export class Signature implements Serializable {
   toHex(compress?: boolean): string;
   sigValidate(): void;
   isInfinity(): boolean;
+  multiplyBy(randomBytes: BlstBuffer): Signature;
 }
 
 /**

@@ -22,6 +22,8 @@ class P1Wrapper {
     virtual bool InGroup() = 0;
     virtual void Serialize(bool compress, blst::byte *out) = 0;
     virtual void AddTo(blst::P1 &point) = 0;
+    virtual blst::P1 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) = 0;
     virtual P1AffineGroup AsAffine() = 0;
 };
 
@@ -36,6 +38,15 @@ class P1 : public P1Wrapper {
         compress ? _point.compress(out) : _point.serialize(out);
     }
     void AddTo(blst::P1 &point) override { point.add(_point); };
+    blst::P1 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) override {
+        blst::byte out[96];
+        _point.serialize(out);
+        // this should get std::move all the way into the P1 member value
+        blst::P1 point{out, 96};
+        point.mult(rand_bytes, rand_bytes_length);
+        return point;
+    };
     P1AffineGroup AsAffine() override {
         P1AffineGroup group{std::make_unique<blst::P1_Affine>(_point), nullptr};
         group.raw_point = group.smart_pointer.get();
@@ -54,6 +65,15 @@ class P1Affine : public P1Wrapper {
         compress ? _point.compress(out) : _point.serialize(out);
     }
     void AddTo(blst::P1 &point) override { point.add(_point); };
+    blst::P1 MultiplyBy(
+        blst::byte *rand_bytes, size_t rand_bytes_length) override {
+        blst::byte out[96];
+        _point.serialize(out);
+        // this should get std::move all the way into the P1 member value
+        blst::P1 point{out, 96};
+        point.mult(rand_bytes, rand_bytes_length);
+        return point;
+    };
     P1AffineGroup AsAffine() override {
         P1AffineGroup group{nullptr, &_point};
         return group;
@@ -70,6 +90,7 @@ class PublicKey : public Napi::ObjectWrap<PublicKey> {
     Napi::Value Serialize(const Napi::CallbackInfo &info);
     Napi::Value KeyValidate(const Napi::CallbackInfo &info);
     Napi::Value IsInfinity(const Napi::CallbackInfo &info);
+    Napi::Value MultiplyBy(const Napi::CallbackInfo &info);
 };
 
 #endif /* BLST_TS_PUBLIC_KEY_H__ */

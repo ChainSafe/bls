@@ -44,12 +44,14 @@ Napi::Value SecretKey::FromKeygen(const Napi::CallbackInfo &info) {
     Napi::Value ikm_value = info[0];
 
     BLST_TS_UNWRAP_UINT_8_ARRAY(ikm_value, ikm, "ikm")
+    // Check for less than 32 bytes so consumers don't accidentally create
+    // zero keys 
     if (ikm.ByteLength() < BLST_TS_SECRET_KEY_LENGTH) {
         std::ostringstream msg;
         msg << "ikm must be greater than or equal to "
             << BLST_TS_SECRET_KEY_LENGTH << " bytes";
         Napi::TypeError::New(env, msg.str()).ThrowAsJavaScriptException();
-        return scope.Escape(env.Undefined());
+        return env.Undefined();
     }
 
     bool is_external = true;
@@ -73,8 +75,8 @@ Napi::Value SecretKey::FromKeygen(const Napi::CallbackInfo &info) {
     }
 
     // Check if key is zero and set flag if so. Several specs depend on this
-    // check.  Do after building instead of checking incoming bytes incase
-    // info changes the key
+    // check (signing with zero key). Do after building instead of checking
+    // incoming bytes incase info changes the key
     blst::byte key_bytes[BLST_TS_SECRET_KEY_LENGTH];
     sk->_key->to_bendian(key_bytes);
     if (is_zero_bytes(key_bytes, 0, BLST_TS_SECRET_KEY_LENGTH)) {
@@ -101,6 +103,8 @@ Napi::Value SecretKey::Deserialize(const Napi::CallbackInfo &info) {
         {Napi::External<bool>::New(env, &is_external)});
     SecretKey *sk = SecretKey::Unwrap(wrapped);
 
+    // Check if key is zero and set flag if so. Several specs depend on this
+    // check (signing with zero key)
     if (is_zero_bytes(sk_bytes.Data(), 0, sk_bytes.ByteLength())) {
         sk->_is_zero_key = true;
     }
@@ -155,7 +159,7 @@ Napi::Value SecretKey::Sign(const Napi::CallbackInfo &info) {
 
     Napi::Value msg_value = info[0];
     BLST_TS_UNWRAP_UINT_8_ARRAY(msg_value, msg, "msg")
-    
+
     Napi::Object sig_obj = module->_signature_ctr.New(
         // Default to jacobian coordinates
         {Napi::External<P2Wrapper>::New(env, new P2{blst::P2{}}),

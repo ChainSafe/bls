@@ -21,6 +21,10 @@ void PublicKey::Init(
             "isInfinity",
             &PublicKey::IsInfinity,
             static_cast<napi_property_attributes>(napi_enumerable)),
+        InstanceMethod(
+            "multiplyBy",
+            &PublicKey::MultiplyBy,
+            static_cast<napi_property_attributes>(napi_enumerable)),
     };
 
     Napi::Function ctr = DefineClass(env, "PublicKey", proto, module);
@@ -130,6 +134,21 @@ Napi::Value PublicKey::KeyValidate(const Napi::CallbackInfo &info) {
     return info.Env().Undefined();
 }
 
-Napi::Value PublicKey::IsInfinity(const Napi::CallbackInfo &info) {
-    BLST_TS_IS_INFINITY
+Napi::Value PublicKey::IsInfinity(const Napi::CallbackInfo &info){
+    BLST_TS_IS_INFINITY}
+
+Napi::Value PublicKey::MultiplyBy(const Napi::CallbackInfo &info) {
+    BLST_TS_FUNCTION_PREAMBLE(info, env, module)
+    Napi::Value rand_bytes_value = info[0];
+    BLST_TS_UNWRAP_UINT_8_ARRAY(rand_bytes_value, rand_bytes, "randomBytes")
+
+    Napi::Object pk_obj = module->_public_key_ctr.New(
+        // Default to jacobian coordinates
+        {Napi::External<P1Wrapper>::New(
+             env,
+             new P1{_point->MultiplyBy(
+                 rand_bytes.Data(), rand_bytes.ByteLength())}),
+         Napi::Boolean::New(env, false)});
+
+    return scope.Escape(pk_obj);
 }

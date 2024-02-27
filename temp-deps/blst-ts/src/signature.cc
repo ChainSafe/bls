@@ -22,6 +22,10 @@ void Signature::Init(
             "isInfinity",
             &Signature::IsInfinity,
             static_cast<napi_property_attributes>(napi_enumerable)),
+        InstanceMethod(
+            "multiplyBy",
+            &Signature::MultiplyBy,
+            static_cast<napi_property_attributes>(napi_enumerable)),
     };
 
     Napi::Function ctr = DefineClass(env, "Signature", proto, module);
@@ -127,6 +131,21 @@ Napi::Value Signature::SigValidate(const Napi::CallbackInfo &info) {
     return env.Undefined();
 }
 
-Napi::Value Signature::IsInfinity(const Napi::CallbackInfo &info) {
-    BLST_TS_IS_INFINITY
+Napi::Value Signature::IsInfinity(const Napi::CallbackInfo &info){
+    BLST_TS_IS_INFINITY}
+
+Napi::Value Signature::MultiplyBy(const Napi::CallbackInfo &info) {
+    BLST_TS_FUNCTION_PREAMBLE(info, env, module)
+    Napi::Value rand_bytes_value = info[0];
+    BLST_TS_UNWRAP_UINT_8_ARRAY(rand_bytes_value, rand_bytes, "randomBytes")
+
+    Napi::Object sig_obj = module->_signature_ctr.New(
+        // Default to jacobian coordinates
+        {Napi::External<P2Wrapper>::New(
+             env,
+             new P2{_point->MultiplyBy(
+                 rand_bytes.Data(), rand_bytes.ByteLength())}),
+         Napi::Boolean::New(env, false)});
+
+    return scope.Escape(sig_obj);
 }
