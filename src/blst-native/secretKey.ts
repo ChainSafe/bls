@@ -29,7 +29,8 @@ export class SecretKey implements ISecretKey {
   }
 
   sign(message: Uint8Array): Signature {
-    return new Signature(this.key.sign(message));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return (Signature as any).friendBuild(this.key.sign(message));
   }
 
   toPublicKey(): PublicKey {

@@ -6,7 +6,7 @@ import {PublicKey} from "./publicKey.js";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 
 export class Signature implements ISignature {
-  constructor(private readonly sig: blst.Signature) {}
+  private constructor(private readonly sig: blst.Signature) {}
 
   /** @param type Defaults to `CoordType.affine` */
   static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate = true): Signature {
@@ -32,6 +32,13 @@ export class Signature implements ISignature {
     return blst.verifyMultipleAggregateSignatures(
       sets.map((s) => ({message: s.message, publicKey: (s.publicKey as any).key, signature: s.signature.sig}))
     );
+  }
+
+  /**
+   * Implemented for SecretKey to be able to call .sign()
+   */
+  private static friendBuild(sig: blst.Signature): Signature {
+    return new Signature(sig);
   }
 
   verify(publicKey: PublicKey, message: Uint8Array): boolean {

@@ -26,6 +26,9 @@ export class PublicKey implements IPublicKey {
     return new PublicKey(pk);
   }
 
+  /**
+   * Implemented for SecretKey to be able to call .toPublicKey()
+   */
   private static friendBuild(key: blst.PublicKey): PublicKey {
     return new PublicKey(key);
   }
