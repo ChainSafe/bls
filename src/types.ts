@@ -46,6 +46,7 @@ export declare class PublicKey {
   /** @param format Defaults to `PointFormat.compressed` */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
+  multiplyBy(bytes: Uint8Array): PublicKey;
 }
 
 export declare class Signature {
@@ -63,6 +64,7 @@ export declare class Signature {
   /** @param format Defaults to `PointFormat.compressed` */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
+  multiplyBy(bytes: Uint8Array): Signature;
 }
 
 export type Implementation = "herumi" | "blst-native";

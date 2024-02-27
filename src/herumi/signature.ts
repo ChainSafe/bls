@@ -90,4 +90,9 @@ export class Signature implements ISignature {
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  multiplyBy(bytes: Uint8Array): Signature {
+    throw new Error("multiplyBy is not implemented by bls-eth-wasm");
+  }
 }

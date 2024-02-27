@@ -58,4 +58,12 @@ export class PublicKey implements IPublicKey {
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  multiplyBy(bytes: Uint8Array): PublicKey {
+    // const a = getContext();
+    // const randomness = new a.FR(8);
+    // return new PublicKey(a.mul(this.value, randomness));
+    throw new Error("multiplyBy is not implemented by bls-eth-wasm");
+  }
 }

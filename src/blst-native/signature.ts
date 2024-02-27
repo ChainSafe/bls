@@ -70,6 +70,10 @@ export class Signature implements ISignature {
     return bytesToHex(this.toBytes(format));
   }
 
+  multiplyBy(bytes: Uint8Array): Signature {
+    return new Signature(this.sig.multiplyBy(bytes));
+  }
+
   private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {
     // If this set is simply an infinity signature and infinity publicKey then skip verification.
     // This has the effect of always declaring that this sig/publicKey combination is valid.
