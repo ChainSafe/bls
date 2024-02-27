@@ -21,4 +21,5 @@ export declare class Signature implements ISignature {
     verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean;
     toBytes(format?: PointFormat): Uint8Array;
     toHex(format?: PointFormat): string;
+    multiplyBy(bytes: Uint8Array): Signature;
 }

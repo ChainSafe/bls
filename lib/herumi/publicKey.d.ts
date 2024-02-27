@@ -8,4 +8,5 @@ export declare class PublicKey implements IPublicKey {
     static aggregate(publicKeys: PublicKey[]): PublicKey;
     toBytes(format?: PointFormat): Uint8Array;
     toHex(format?: PointFormat): string;
+    multiplyBy(bytes: Uint8Array): PublicKey;
 }
