@@ -3,7 +3,7 @@
 [![codecov](https://codecov.io/gh/ChainSafe/lodestar/branch/master/graph/badge.svg)](https://codecov.io/gh/ChainSafe/lodestar)
 ![ETH2.0_Spec_Version 1.0.0](https://img.shields.io/badge/ETH2.0_Spec_Version-1.0.0-2e86c1.svg)
 ![ES Version](https://img.shields.io/badge/ES-2022-yellow)
-![Node Version](https://img.shields.io/badge/node-14.8-green)
+![Node Version](https://img.shields.io/badge/node-18-green)
 
 Javascript library for BLS (Boneh-Lynn-Shacham) signatures and signature aggregation, tailored for use in Eth2.
 

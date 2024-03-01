@@ -9,7 +9,7 @@ let blsGlobalPromise: Promise<void> | null = null;
 // Patch to fix multiVerify() calls on a browser with polyfilled NodeJS crypto
 declare global {
   interface Window {
-    msCrypto: typeof window["crypto"];
+    msCrypto: (typeof window)["crypto"];
   }
 }
 

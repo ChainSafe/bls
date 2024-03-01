@@ -24,14 +24,14 @@ export class BlsMultiThreadNaive {
     this.format = impl === "blst-native" ? PointFormat.uncompressed : PointFormat.compressed;
     this.pool = Pool(
       () =>
-        (spawn(
+        spawn(
           // There is still an annoyance dealing with ESM imports here:
           // threads.js attempts to require.resolve any files passed to Worker, and
           // the esm module resolver requires the .js extension, even though the .js file does not actually exist.
           // The solution for now:
           // Pass in the script path as an absolute path and suppress threads.js default behavior when importing
           new Worker(path.join(__dirname, "./worker.js"), {suppressResolveScript: true, suppressTranspileTS: true})
-        ) as any) as Promise<Thread & ThreadType>,
+        ) as any as Promise<Thread & ThreadType>,
       workerCount
     );
   }
