@@ -10,8 +10,7 @@
     ".": {
       "import": "./lib/herumi/index.js",
       "node": "./lib/blst-native/index.js",
-      "browser": "./lib/herumi/web.js",
-      "bun": "./lib/herumi/index.js"
+      "browser": "./lib/herumi/web.js"
     },
     "./types": {
       "import": "./lib/types.js"
