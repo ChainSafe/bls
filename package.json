@@ -8,7 +8,8 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./lib/index.js"
+      "import": "./lib/index.js",
+      "browser": "./lib/herumi/web.js"
     },
     "./types": {
       "import": "./lib/types.js"
