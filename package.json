@@ -8,8 +8,7 @@
   "type": "module",
   "exports": {
     ".": {
-      "import": "./lib/herumi/index.js",
-      "node": "./lib/blst-native/index.js",
+      "import": "./lib/index.js",
       "browser": "./lib/herumi/web.js"
     },
     "./types": {
