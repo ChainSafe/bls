@@ -1,7 +1,5 @@
-import crypto from "crypto";
-
 export function randomMessage(): Uint8Array {
-  return crypto.randomBytes(32);
+  return crypto.getRandomValues(new Uint8Array(32));
 }
 
 export function getN<T>(n: number, getter: () => T): T[] {

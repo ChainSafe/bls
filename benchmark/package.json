@@ -5,8 +5,8 @@
   "exports": "./index.js",
   "license": "MIT",
   "scripts": {
-    "benchmark": "ts-node-esm index",
-    "benchmark:all": "ts-node-esm index && ts-node-esm noble && ts-node-esm verifyMultipleSignaturesSavings"
+    "benchmark": "node --loader ts-node/esm index",
+    "benchmark:all": "node --loader ts-node/esm index.ts && node --loader ts-node/esm noble.ts && node --loader ts-node/esm verifyMultipleSignaturesSavings.ts"
   },
   "dependencies": {
     "noble-bls12-381": "^0.7.2"
