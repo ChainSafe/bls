@@ -1,4 +1,4 @@
-import * as blst from "../../temp-deps/blst-ts/lib/index.js";
+import blst from "@chainsafe/blst";
 import {EmptyAggregateError} from "../errors.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
 import {PointFormat, PublicKey as IPublicKey, CoordType} from "../types.js";
@@ -8,7 +8,7 @@ export class PublicKey implements IPublicKey {
 
   /** @param type Defaults to `CoordType.jacobian` */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey {
-    const pk = blst.PublicKey.deserialize(bytes, type);
+    const pk = blst.PublicKey.deserialize(bytes, type as unknown as blst.CoordType);
     if (validate) pk.keyValidate();
     return new PublicKey(pk);
   }

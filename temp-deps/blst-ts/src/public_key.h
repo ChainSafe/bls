@@ -1,14 +1,10 @@
-#ifndef BLST_TS_PUBLIC_KEY_H__
-#define BLST_TS_PUBLIC_KEY_H__
-
-#include <memory>
+#pragma once
 
 #include "addon.h"
-#include "blst.hpp"
-#include "napi.h"
 
-#define BLST_TS_PUBLIC_KEY_LENGTH_COMPRESSED 48U
-#define BLST_TS_PUBLIC_KEY_LENGTH_UNCOMPRESSED 96U
+namespace blst_ts {
+static const size_t public_key_length_compressed = 48;
+static const size_t public_key_length_uncompressed = 96;
 
 typedef struct {
     std::unique_ptr<blst::P1_Affine> smart_pointer;
@@ -18,71 +14,50 @@ typedef struct {
 class P1Wrapper {
    public:
     virtual ~P1Wrapper() = default;
-    virtual bool IsInfinite() = 0;
-    virtual bool InGroup() = 0;
-    virtual void Serialize(bool compress, blst::byte *out) = 0;
-    virtual void AddTo(blst::P1 &point) = 0;
-    virtual blst::P1 MultiplyBy(
-        blst::byte *rand_bytes, size_t rand_bytes_length) = 0;
+    virtual bool IsInfinite() const = 0;
+    virtual bool InGroup() const = 0;
+    virtual void AddTo(blst::P1 &point) const = 0;
+    virtual void Serialize(bool compress, blst::byte *out) const = 0;
     virtual P1AffineGroup AsAffine() = 0;
+    virtual blst::P1 MultiplyBy(
+        const blst::byte *rand_bytes, const size_t rand_bytes_length) const = 0;
 };
 
-class P1 : public P1Wrapper {
+class P1 final : public P1Wrapper {
+   private:
     blst::P1 _point;
 
    public:
     P1(blst::P1 point) : _point(std::move(point)) {}
-    bool IsInfinite() override { return _point.is_inf(); }
-    bool InGroup() override { return _point.in_group(); }
-    void Serialize(bool compress, blst::byte *out) override {
-        compress ? _point.compress(out) : _point.serialize(out);
-    }
-    void AddTo(blst::P1 &point) override { point.add(_point); };
+    bool IsInfinite() const final { return _point.is_inf(); }
+    bool InGroup() const final { return _point.in_group(); }
+    void AddTo(blst::P1 &point) const final { point.add(_point); };
+    void Serialize(bool compress, blst::byte *out) const final;
+    P1AffineGroup AsAffine() final;
     blst::P1 MultiplyBy(
-        blst::byte *rand_bytes, size_t rand_bytes_length) override {
-        blst::byte out[96];
-        _point.serialize(out);
-        // this should get std::move all the way into the P1 member value
-        blst::P1 point{out, 96};
-        point.mult(rand_bytes, rand_bytes_length);
-        return point;
-    };
-    P1AffineGroup AsAffine() override {
-        P1AffineGroup group{std::make_unique<blst::P1_Affine>(_point), nullptr};
-        group.raw_point = group.smart_pointer.get();
-        return group;
-    };
+        const blst::byte *rand_bytes,
+        const size_t rand_bytes_length) const final;
 };
 
-class P1Affine : public P1Wrapper {
+class P1Affine final : public P1Wrapper {
+   private:
     blst::P1_Affine _point;
 
    public:
     P1Affine(blst::P1_Affine point) : _point(std::move(point)) {}
-    bool IsInfinite() override { return _point.is_inf(); }
-    bool InGroup() override { return _point.in_group(); }
-    void Serialize(bool compress, blst::byte *out) override {
-        compress ? _point.compress(out) : _point.serialize(out);
-    }
-    void AddTo(blst::P1 &point) override { point.add(_point); };
+    bool IsInfinite() const final { return _point.is_inf(); }
+    bool InGroup() const final { return _point.in_group(); }
+    void AddTo(blst::P1 &point) const final { point.add(_point); }
+    void Serialize(bool compress, blst::byte *out) const final;
+    P1AffineGroup AsAffine() final;
     blst::P1 MultiplyBy(
-        blst::byte *rand_bytes, size_t rand_bytes_length) override {
-        blst::byte out[96];
-        _point.serialize(out);
-        // this should get std::move all the way into the P1 member value
-        blst::P1 point{out, 96};
-        point.mult(rand_bytes, rand_bytes_length);
-        return point;
-    };
-    P1AffineGroup AsAffine() override {
-        P1AffineGroup group{nullptr, &_point};
-        return group;
-    }
+        const blst::byte *rand_bytes,
+        const size_t rand_bytes_length) const final;
 };
 
-class PublicKey : public Napi::ObjectWrap<PublicKey> {
+class PublicKey final : public Napi::ObjectWrap<PublicKey> {
    public:
-    std::unique_ptr<P1Wrapper> _point;
+    std::unique_ptr<P1Wrapper> point;
 
     static void Init(Napi::Env env, Napi::Object &exports, BlstTsAddon *module);
     static Napi::Value Deserialize(const Napi::CallbackInfo &info);
@@ -92,5 +67,4 @@ class PublicKey : public Napi::ObjectWrap<PublicKey> {
     Napi::Value IsInfinity(const Napi::CallbackInfo &info);
     Napi::Value MultiplyBy(const Napi::CallbackInfo &info);
 };
-
-#endif /* BLST_TS_PUBLIC_KEY_H__ */
+}  // namespace blst_ts

@@ -1,11 +1,10 @@
-import * as blst from "../../temp-deps/blst-ts/lib/index.js";
-import { PointFormat, Signature as ISignature } from "../types.js";
+import { PointFormat, Signature as ISignature, CoordType } from "../types.js";
 import { PublicKey } from "./publicKey.js";
 export declare class Signature implements ISignature {
     private readonly sig;
     private constructor();
     /** @param type Defaults to `CoordType.affine` */
-    static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate?: boolean): Signature;
+    static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): Signature;
     static fromHex(hex: string): Signature;
     static aggregate(signatures: Signature[]): Signature;
     static verifyMultipleSignatures(sets: {

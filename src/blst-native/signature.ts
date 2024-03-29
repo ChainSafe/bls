@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import * as blst from "../../temp-deps/blst-ts/lib/index.js";
+import blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature} from "../types.js";
+import {PointFormat, Signature as ISignature, CoordType} from "../types.js";
 import {PublicKey} from "./publicKey.js";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 
@@ -9,8 +9,8 @@ export class Signature implements ISignature {
   private constructor(private readonly sig: blst.Signature) {}
 
   /** @param type Defaults to `CoordType.affine` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate = true): Signature {
-    const sig = blst.Signature.deserialize(bytes, type);
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): Signature {
+    const sig = blst.Signature.deserialize(bytes, type as unknown as blst.CoordType);
     if (validate) sig.sigValidate();
     return new Signature(sig);
   }

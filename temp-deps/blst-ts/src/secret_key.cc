@@ -1,9 +1,12 @@
 #include "secret_key.h"
 
+using namespace std::string_literals;
+
+namespace blst_ts {
 void SecretKey::Init(
     Napi::Env env, Napi::Object &exports, BlstTsAddon *module) {
     Napi::HandleScope scope(env);
-    auto proto = {
+    std::initializer_list<Napi::ClassPropertyDescriptor<SecretKey>> proto = {
         StaticMethod(
             "fromKeygen",
             &SecretKey::FromKeygen,
@@ -29,59 +32,62 @@ void SecretKey::Init(
     };
 
     Napi::Function ctr = DefineClass(env, "SecretKey", proto, module);
-    module->_secret_key_ctr = Napi::Persistent(ctr);
+    module->secret_key_ctr = Napi::Persistent(ctr);
     exports.Set(Napi::String::New(env, "SecretKey"), ctr);
 
     exports.Get("BLST_CONSTANTS")
         .As<Napi::Object>()
         .Set(
             Napi::String::New(env, "SECRET_KEY_LENGTH"),
-            Napi::Number::New(env, BLST_TS_SECRET_KEY_LENGTH));
+            Napi::Number::New(env, secret_key_length));
 }
 
 Napi::Value SecretKey::FromKeygen(const Napi::CallbackInfo &info) {
     BLST_TS_FUNCTION_PREAMBLE(info, env, module)
     Napi::Value ikm_value = info[0];
+    Napi::Value info_value = info[1];
 
     BLST_TS_UNWRAP_UINT_8_ARRAY(ikm_value, ikm, "ikm")
     // Check for less than 32 bytes so consumers don't accidentally create
-    // zero keys 
-    if (ikm.ByteLength() < BLST_TS_SECRET_KEY_LENGTH) {
-        std::ostringstream msg;
-        msg << "ikm must be greater than or equal to "
-            << BLST_TS_SECRET_KEY_LENGTH << " bytes";
-        Napi::TypeError::New(env, msg.str()).ThrowAsJavaScriptException();
+    // zero keys
+    if (ikm.ByteLength() < secret_key_length) {
+        Napi::TypeError::New(
+            env,
+            "ikm must be greater than or equal to "s +
+                std::to_string(secret_key_length) + " bytes"s)
+            .ThrowAsJavaScriptException();
         return env.Undefined();
     }
 
+    // just need to pass some value to the External constructor. debug builds
+    // have hard crash check for nullptr
     bool is_external = true;
-    Napi::Object wrapped = module->_secret_key_ctr.New(
+    Napi::Object wrapped = module->secret_key_ctr.New(
         {Napi::External<bool>::New(env, &is_external)});
     SecretKey *sk = SecretKey::Unwrap(wrapped);
 
     // If `info` string is passed use it otherwise use default without
-    if (!info[1].IsUndefined()) {
-        if (!info[1].IsString()) {
+    if (!info_value.IsUndefined()) {
+        if (!info_value.IsString()) {
             Napi::TypeError::New(env, "BLST_ERROR: info must be a string")
                 .ThrowAsJavaScriptException();
             return env.Undefined();
         }
-        sk->_key->keygen(
+        sk->key->keygen(
             ikm.Data(),
             ikm.ByteLength(),
-            info[1].As<Napi::String>().Utf8Value());
+            info_value.As<Napi::String>().Utf8Value());
     } else {
-        sk->_key->keygen(ikm.Data(), ikm.ByteLength());
+        sk->key->keygen(ikm.Data(), ikm.ByteLength());
     }
 
     // Check if key is zero and set flag if so. Several specs depend on this
     // check (signing with zero key). Do after building instead of checking
     // incoming bytes incase info changes the key
-    blst::byte key_bytes[BLST_TS_SECRET_KEY_LENGTH];
-    sk->_key->to_bendian(key_bytes);
-    if (is_zero_bytes(key_bytes, 0, BLST_TS_SECRET_KEY_LENGTH)) {
-        sk->_is_zero_key = true;
-    }
+    blst::byte key_bytes[secret_key_length];
+
+    sk->key->to_bendian(key_bytes);
+    sk->is_zero_key = blst_ts::is_zero_bytes(key_bytes, 0, secret_key_length);
 
     return scope.Escape(wrapped);
 }
@@ -91,33 +97,35 @@ Napi::Value SecretKey::Deserialize(const Napi::CallbackInfo &info) {
 
     Napi::Value sk_bytes_value = info[0];
     BLST_TS_UNWRAP_UINT_8_ARRAY(sk_bytes_value, sk_bytes, "skBytes")
-    std::string err_out{"BLST_ERROR: skBytes"};
-    if (!is_valid_length(
-            err_out, sk_bytes.ByteLength(), BLST_TS_SECRET_KEY_LENGTH)) {
-        Napi::TypeError::New(env, err_out).ThrowAsJavaScriptException();
+    if (std::optional<std::string> err_msg = blst_ts::is_valid_length(
+            sk_bytes.ByteLength(), secret_key_length)) {
+        Napi::TypeError::New(env, "BLST_ERROR: skBytes"s + *err_msg)
+            .ThrowAsJavaScriptException();
         return env.Undefined();
     }
 
+    // just need to pass some value to the External constructor. debug builds
+    // have hard crash check for nullptr
     bool is_external = true;
-    Napi::Object wrapped = module->_secret_key_ctr.New(
+    Napi::Object wrapped = module->secret_key_ctr.New(
         {Napi::External<bool>::New(env, &is_external)});
     SecretKey *sk = SecretKey::Unwrap(wrapped);
 
     // Check if key is zero and set flag if so. Several specs depend on this
     // check (signing with zero key)
-    if (is_zero_bytes(sk_bytes.Data(), 0, sk_bytes.ByteLength())) {
-        sk->_is_zero_key = true;
-    }
+    sk->is_zero_key =
+        blst_ts::is_zero_bytes(sk_bytes.Data(), 0, sk_bytes.ByteLength());
+
     // Deserialize key
-    sk->_key->from_bendian(sk_bytes.Data());
+    sk->key->from_bendian(sk_bytes.Data());
 
     return scope.Escape(wrapped);
 }
 
 SecretKey::SecretKey(const Napi::CallbackInfo &info)
     : Napi::ObjectWrap<SecretKey>{info},
-      _key{std::make_unique<blst::SecretKey>()},
-      _is_zero_key{false} {
+      key{std::make_unique<blst::SecretKey>()},
+      is_zero_key{false} {
     Napi::Env env = info.Env();
     Napi::HandleScope scope(env);
     // Check that constructor was called from C++ and not JS. Externals can only
@@ -125,7 +133,6 @@ SecretKey::SecretKey(const Napi::CallbackInfo &info)
     if (!info[0].IsExternal()) {
         Napi::Error::New(env, "SecretKey constructor is private")
             .ThrowAsJavaScriptException();
-        return;
     }
 }
 
@@ -134,23 +141,23 @@ Napi::Value SecretKey::Serialize(const Napi::CallbackInfo &info) {
     Napi::EscapableHandleScope scope(env);
 
     Napi::Buffer<uint8_t> serialized =
-        Napi::Buffer<uint8_t>::New(env, BLST_TS_SECRET_KEY_LENGTH);
-    _key->to_bendian(serialized.Data());
+        Napi::Buffer<uint8_t>::New(env, secret_key_length);
+    key->to_bendian(serialized.Data());
 
     return scope.Escape(serialized);
 }
 
 Napi::Value SecretKey::ToPublicKey(const Napi::CallbackInfo &info) {
     BLST_TS_FUNCTION_PREAMBLE(info, env, module)
-    return scope.Escape(module->_public_key_ctr.New(
-        {Napi::External<P1Wrapper>::New(env, new P1{blst::P1{*_key}}),
+    return scope.Escape(module->public_key_ctr.New(
+        {Napi::External<P1Wrapper>::New(env, new P1{blst::P1{*key}}),
          Napi::Boolean::New(env, false)}));
 }
 
 Napi::Value SecretKey::Sign(const Napi::CallbackInfo &info) {
     BLST_TS_FUNCTION_PREAMBLE(info, env, module)
     // Check for zero key and throw error to meet spec requirements
-    if (_is_zero_key) {
+    if (is_zero_key) {
         Napi::TypeError::New(
             env, "BLST_ERROR: cannot sign message with zero private key")
             .ThrowAsJavaScriptException();
@@ -160,12 +167,13 @@ Napi::Value SecretKey::Sign(const Napi::CallbackInfo &info) {
     Napi::Value msg_value = info[0];
     BLST_TS_UNWRAP_UINT_8_ARRAY(msg_value, msg, "msg")
 
-    Napi::Object sig_obj = module->_signature_ctr.New(
+    Napi::Object sig_obj = module->signature_ctr.New(
         // Default to jacobian coordinates
         {Napi::External<P2Wrapper>::New(env, new P2{blst::P2{}}),
          Napi::Boolean::New(env, false)});
     Signature *sig = Napi::ObjectWrap<Signature>::Unwrap(sig_obj);
-    sig->_point->Sign(*_key, msg.Data(), msg.ByteLength(), module->_dst);
+    sig->point->Sign(*key, msg.Data(), msg.ByteLength(), module->dst);
 
     return scope.Escape(sig_obj);
 }
+}  // namespace blst_ts

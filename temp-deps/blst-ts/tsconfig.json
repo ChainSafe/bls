@@ -1,12 +1,13 @@
 {
   "compilerOptions": {
     "noEmit": true,
-    "target": "ESNext",
-    "module": "ESNext",
-    "moduleResolution": "NodeNext",
     "lib": [
-      "ESNext"
+      "ESNext",
+      "ESNext.BigInt",
     ],
+    "sourceMap": true,
+    "declaration": true,
+    "declarationMap": true,
     "strict": true,
     "alwaysStrict": true,
     "strictNullChecks": true,
@@ -16,9 +17,10 @@
     "noImplicitAny": true,
     "noImplicitThis": true,
     "noImplicitReturns": true,
-    "declaration": true,
-    "sourceMap": true,
-    "declarationMap": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "downlevelIteration": true,
+    "allowJs": true,
+    "checkJs": false,
+    "pretty": true,
   }
 }

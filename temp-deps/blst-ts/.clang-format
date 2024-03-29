@@ -1,8 +1,0 @@
-BasedOnStyle: Google
-IndentWidth: 4
-AlignAfterOpenBracket: AlwaysBreak
-AllowAllParametersOfDeclarationOnNextLine: True
-AlignEscapedNewlines: Right
-BinPackArguments: False
-BinPackParameters: False
-InsertNewlineAtEOF: True

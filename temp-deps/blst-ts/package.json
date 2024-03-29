@@ -1,89 +1,86 @@
 {
-  "name": "@chainsafe/blst-ts",
+  "name": "@chainsafe/blst",
   "version": "1.0.0",
+  "author": "ChainSafe Systems",
   "description": "Typescript wrapper for supranational/blst native bindings, a highly performant BLS12-381 signature library",
   "scripts": {
-    "clean": "npm run clean:dist; npm run clean:build",
+    "install": "ts-node scripts/install",
+    "clean": "npm run clean:dist && npm run clean:gyp && npm run clean:prebuild",
     "clean:dist": "rm -rf dist",
-    "clean:build": "node-gyp clean && node-gyp configure",
-    "dev": "ts-node tools/dev",
-    "build": "node-gyp build",
-    "build:clean": "npm run clean && npm run build",
-    "build:debug": "node-gyp build --debug",
+    "clean:gyp": "node-gyp clean && node-gyp configure",
+    "clean:prebuild": "rm -rf prebuild",
+    "build": "yarn build:gyp && yarn build:ts",
+    "build:gyp": "node-gyp build",
+    "build:gyp:debug": "node-gyp build --debug",
+    "build:ts": "tsc --project tsconfig.build.json && cp -R lib/ dist/lib",
+    "build:esm": "tsc --project tsconfig.mjs.json",
     "build:fuzz": "tsc --project tsconfig.fuzz.json",
-    "lint:ts": "eslint --color --ext .ts lib/ test/",
-    "lint:c": "clang-format -i ./src/*",
+    "build:clean": "npm run clean && npm run install && npm run build:ts",
+    "dev": "ts-node tools/dev",
     "lint": "npm run lint:c && npm run lint:ts",
+    "lint:c": "clang-format -i ./src/*",
+    "lint:ts": "eslint --color --ext .js,.mjs,.cjs,.ts lib/ scripts/ test/ utils/",
     "test": "yarn test:unit && yarn test:spec",
     "test:fuzz": "ts-node test/fuzz/fuzz.test.ts",
+    "test:memory": "node -r ts-node/register --expose-gc test/memory/memory.test.ts",
+    "test:perf": "UV_THREADPOOL_SIZE=$(nproc) NODE_OPTIONS='--loader=ts-node/esm' ts-node-esm node_modules/.bin/benchmark --config .benchrc.yaml test/perf/*.test.ts",
+    "test:spec": "mocha test/spec/**/*.test.ts",
     "test:unit": "mocha test/unit/**/*.test.ts",
-    "test:spec": "mocha 'test/spec/**/*.test.ts'",
     "download-spec-tests": "node -r ts-node/register test/spec/downloadTests.ts"
   },
   "dependencies": {
-    "bindings": "^1.5.0",
     "node-addon-api": "^6.1.0",
-    "node-gyp": "^9.3.1"
+    "node-gyp": "^10.0.1",
+    "ts-node": "^10.9.1"
   },
   "devDependencies": {
+    "@chainsafe/threads": "^1.11.1",
+    "@dapplion/benchmark": "^0.2.4",
     "@jazzer.js/core": "^2.1.0",
-    "@types/chai": "^4.3.4",
-    "@types/mocha": "^10.0.1",
-    "@types/node": "^18.15.11",
-    "@typescript-eslint/eslint-plugin": "^5.58.0",
-    "@typescript-eslint/parser": "^5.58.0",
-    "chai": "^4.3.7",
+    "@types/chai": "^4.2.13",
+    "@types/js-yaml": "^4.0.5",
+    "@types/mocha": "^8.0.3",
+    "@types/node": "^20.11.28",
+    "@types/tar": "^6.1.4",
+    "@typescript-eslint/eslint-plugin": "^7.4.0",
+    "@typescript-eslint/parser": "^7.4.0",
+    "chai": "^4.2.0",
     "chokidar": "^3.5.3",
-    "eslint": "^8.38.0",
-    "eslint-plugin-import": "^2.27.5",
+    "eslint": "^8.57.0",
+    "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "mocha": "^10.2.0",
-    "node-fetch": "2.6.6",
-    "prettier": "^2.8.7",
-    "tar": "^6.1.14",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.4"
+    "eslint-plugin-prettier": "^5.1.3",
+    "js-yaml": "^4.1.0",
+    "mocha": "^8.1.3",
+    "minipass": "^3.3.5",
+    "prettier": "^3.1.1",
+    "tar": "^6.1.4",
+    "typescript": "^5.2.2"
   },
-  "gypfile": true,
-  "private": false,
+  "main": "./dist/lib/index.js",
+  "types": "./dist/lib/index.d.ts",
   "files": [
+    "build/bindings",
+    "blst/bindings/blst_aux.h",
+    "blst/bindings/blst.h",
+    "blst/bindings/blst.hpp",
+    "blst/build/*",
+    "blst/src/*",
+    "dist",
+    "prebuild",
+    "scripts/install.ts",
+    "src",
+    "utils",
     "binding.gyp",
-    "deps",
-    "lib",
-    "src"
+    "LICENSE",
+    "package.json",
+    "tsconfig.json"
   ],
-  "type": "module",
-  "main": "./lib/index.js",
-  "module": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "exports": {
-    ".": {
-      "require": "./lib/index.js",
-      "import": "./lib/index.js",
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
-    }
-  },
-  "typesVersions": {
-    "*": {
-      "*": [
-        "./lib/index.d.ts"
-      ]
-    }
-  },
-  "publishConfig": {
-    "exports": {
-      ".": "./import/index.js"
-    },
-    "types": "./import/index.d.ts"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ChainSafe/blst-ts.git"
   },
   "keywords": [],
-  "author": "ChainSafe Systems",
   "license": "Apache-2.0",
   "bugs": {
     "url": "https://github.com/ChainSafe/blst-ts/issues"

@@ -3,8 +3,8 @@
     {
       'target_name': 'blst_ts_addon',
       'sources': [
-        'deps/blst/src/server.c',
-        'deps/blst/build/assembly.S',
+        'blst/src/server.c',
+        'blst/build/assembly.S',
         'src/addon.cc',
         'src/secret_key.cc',
         'src/public_key.cc',
@@ -12,7 +12,7 @@
         'src/functions.cc',
       ],
       'include_dirs': [
-        'deps/blst/bindings',
+        'blst/bindings',
         "<!@(node -p \"require('node-addon-api').include_dir\")",
       ],
       'dependencies': [ "<!(node -p \"require('node-addon-api').gyp\")" ],
@@ -27,6 +27,7 @@
           '-Wpedantic',
       ],
       'cflags_cc': [
+          '-std=c++17',
           '-fexceptions',
           '-Werror',
           '-Wall',
@@ -41,6 +42,7 @@
               'VCCLCompilerTool': {
                 'ExceptionHandling': 1,
                 'EnablePREfast': 'true',
+                'AdditionalOptions': [ '/std:c++17' ], 
               },
             },
           }
@@ -52,6 +54,7 @@
         ['OS=="mac"', {
           'xcode_settings': {
             'OTHER_CFLAGS': ['-fvisibility=hidden'],
+            'CLANG_CXX_LANGUAGE_STANDARD': 'c++17',
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'CLANG_CXX_LIBRARY': 'libc++',
             'MACOSX_DEPLOYMENT_TARGET': '12',

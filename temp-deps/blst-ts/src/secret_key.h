@@ -1,20 +1,18 @@
-#ifndef BLST_TS_SECRET_KEY_H__
-#define BLST_TS_SECRET_KEY_H__
+#pragma once
 
 #include <memory>
 
 #include "addon.h"
-#include "blst.hpp"
-#include "napi.h"
 #include "public_key.h"
 #include "signature.h"
 
-#define BLST_TS_SECRET_KEY_LENGTH 32U
+namespace blst_ts {
+static const size_t secret_key_length = 32;
 
-class SecretKey : public Napi::ObjectWrap<SecretKey> {
+class SecretKey final : public Napi::ObjectWrap<SecretKey> {
    public:
-    std::unique_ptr<blst::SecretKey> _key;
-    bool _is_zero_key;
+    std::unique_ptr<blst::SecretKey> key;
+    bool is_zero_key;
 
     static void Init(Napi::Env env, Napi::Object &exports, BlstTsAddon *module);
     static Napi::Value FromKeygen(const Napi::CallbackInfo &info);
@@ -24,5 +22,4 @@ class SecretKey : public Napi::ObjectWrap<SecretKey> {
     Napi::Value ToPublicKey(const Napi::CallbackInfo &info);
     Napi::Value Sign(const Napi::CallbackInfo &info);
 };
-
-#endif /* BLST_TS_SECRET_KEY_H__ */
+}  // namespace blst_ts

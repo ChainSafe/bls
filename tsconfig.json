@@ -1,17 +1,30 @@
 {
-  "include": ["src", "test"],
+  "include": [
+    "src",
+    "test"
+  ],
   "compilerOptions": {
     "outDir": "lib",
     "target": "es2019",
     "module": "esnext",
     "moduleResolution": "Node",
     "pretty": true,
-    "lib": ["esnext.bigint", "DOM"],
-    "typeRoots": ["./node_modules/@types"],
+    "lib": [
+      "esnext.bigint",
+      "DOM"
+    ],
+    "typeRoots": [
+      "./node_modules/@types"
+    ],
     "declaration": true,
     "strict": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
-    "esModuleInterop": true
-  }
+    "esModuleInterop": true,
+    "paths": {
+      "@chainsafe/blst": [
+        "./temp-deps/blst-ts/dist/esm/lib/index.d.mts"
+      ]
+    }
+  },
 }

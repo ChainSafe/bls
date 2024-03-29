@@ -1,4 +1,7 @@
-import {CoordType} from "../temp-deps/blst-ts/lib/index.js";
+export enum CoordType {
+  affine = 0,
+  jacobian = 1,
+}
 
 export type PublicKeyArg = PublicKey | Uint8Array;
 export type SignatureArg = Signature | Uint8Array;
@@ -79,5 +82,3 @@ export interface SignatureSet {
   publicKey: PublicKey;
   signature: Signature;
 }
-
-export {CoordType};

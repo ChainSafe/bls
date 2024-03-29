@@ -69,9 +69,9 @@
     "lint:fix": "yarn run lint --fix",
     "prepublishOnly": "yarn build",
     "test:web": "karma start karma.conf.cjs",
-    "test:unit": "mocha 'test/unit/**/*.test.ts'",
-    "test:coverage": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha 'test/unit/**/*.test.ts' && nyc report",
-    "test:spec": "mocha 'test/spec/**/*.test.ts'",
+    "test:unit": "mocha test/unit/**/*.test.ts",
+    "test:coverage": "nyc --cache-dir .nyc_output∑/.cache -r lcov -e .ts mocha 'test/unit/**/*.test.ts' && nyc report",
+    "test:spec": "mocha test/spec/**/*.test.ts",
     "test": "yarn run test:unit && yarn run test:spec",
     "download-spec-tests": "node --loader ts-node/esm test/downloadSpecTests.ts",
     "coverage": "codecov -F bls",
@@ -79,6 +79,7 @@
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"
   },
   "dependencies": {
+    "@chainsafe/blst": "file:./temp-deps/blst-ts",
     "@chainsafe/bls-keygen": "^0.4.0",
     "bls-eth-wasm": "^0.4.8",
     "randombytes": "^2.1.0"

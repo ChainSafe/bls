@@ -65,7 +65,8 @@ typings/
 dist/
 # lib/
 !temp-deps/lib/
-!temp-deps/blst-ts/deps/blst/build
+!temp-deps/blst-ts/build
+!temp-deps/blst-ts/dist
 benchmark-reports
 
 .vscode/
