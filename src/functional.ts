@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import blst from "@chainsafe/blst";
+import blst from "../temp-deps/blst-ts/dist/lib/index.js";
 import {IBls, PublicKeyArg, SignatureArg} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";

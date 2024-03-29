@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import blst from "@chainsafe/blst";
+import blst from "../../temp-deps/blst-ts/dist/lib/index.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
 import {PointFormat, Signature as ISignature, CoordType} from "../types.js";
 import {PublicKey} from "./publicKey.js";

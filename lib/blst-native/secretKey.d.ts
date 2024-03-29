@@ -1,4 +1,4 @@
-import blst from "@chainsafe/blst";
+import blst from "../../temp-deps/blst-ts/dist/lib/index.js";
 import { SecretKey as ISecretKey } from "../types.js";
 import { PublicKey } from "./publicKey.js";
 import { Signature } from "./signature.js";
