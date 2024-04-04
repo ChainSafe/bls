@@ -1,24 +1,11 @@
-import blst from "../src/blst-native/index.js";
-import herumi from "../src/herumi/index.js";
-import {IBls} from "../src/types.js";
-
-export type Implementation = "blst" | "herumi";
-
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-export function getBls(implementation: Implementation): IBls {
-  switch (implementation) {
-    case "blst":
-      return blst;
-    case "herumi":
-      return herumi;
-  }
-}
+import {getImplementation} from "../src/getImplementation.js";
+import {IBls, Implementation} from "../src/types.js";
 
 export async function runForAllImplementations(
   callback: (bls: IBls, implementation: Implementation) => void
 ): Promise<void> {
-  for (const implementation of ["blst", "herumi"] as Implementation[]) {
-    const bls = getBls(implementation);
+  for (const implementation of ["blst-native", "herumi"] as Implementation[]) {
+    const bls = await getImplementation(implementation);
     callback(bls, implementation);
   }
 }
