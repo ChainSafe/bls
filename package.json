@@ -3,7 +3,7 @@
   "version": "7.1.3",
   "description": "Implementation of bls signature verification for ethereum 2.0",
   "engines": {
-    "node": ">=14.8.0"
+    "node": ">=18"
   },
   "type": "module",
   "exports": {
@@ -73,9 +73,9 @@
     "test:coverage": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha 'test/unit/**/*.test.ts' && nyc report",
     "test:spec": "mocha 'test/spec/**/*.test.ts'",
     "test": "yarn run test:unit && yarn run test:spec",
-    "download-test-cases": "ts-node-esm test/downloadSpecTests.ts",
+    "download-test-cases": "node --loader ts-node/esm test/downloadSpecTests.ts",
     "coverage": "codecov -F bls",
-    "benchmark": "ts-node-esm benchmark",
+    "benchmark": "node --loader ts-node/esm benchmark/index.ts",
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"
   },
   "dependencies": {
