@@ -1,4 +1,4 @@
-import blst from "../../temp-deps/blst-ts/dist/lib/index.js";
+import blst from "@chainsafe/blst";
 import {EmptyAggregateError} from "../errors.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
 import {PointFormat, PublicKey as IPublicKey, CoordType} from "../types.js";
