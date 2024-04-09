@@ -1,5 +1,3 @@
-import randomBytes from "randombytes";
-export { randomBytes };
 /**
  * Validate bytes to prevent confusing WASM errors downstream if bytes is null
  */

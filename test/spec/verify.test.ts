@@ -1,5 +1,5 @@
 import path from "path";
-import {describeDirectorySpecTest, InputType} from "@chainsafe/lodestar-spec-test-util";
+import {describeDirectorySpecTest, InputType} from "@lodestar/spec-test-util";
 import {hexToBytes} from "../../src/helpers/index.js";
 import {SPEC_TESTS_DIR} from "../params.js";
 import {describeForAllImplementations} from "../switch.js";
@@ -13,6 +13,7 @@ interface IVerifyTestCase {
     };
     output: boolean;
   };
+  meta?: unknown;
 }
 
 describeForAllImplementations((bls) => {
