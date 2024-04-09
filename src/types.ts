@@ -12,12 +12,12 @@ export interface IBls {
   Signature: typeof Signature;
 
   sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array;
-  aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array;
-  aggregateSignatures(signatures: Uint8Array[]): Uint8Array;
-  verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean;
-  verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean;
-  verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean;
-  verifyMultipleSignatures(sets: {publicKey: Uint8Array; message: Uint8Array; signature: Uint8Array}[]): boolean;
+  aggregatePublicKeys(publicKeys: PublicKeyArg[]): Uint8Array;
+  aggregateSignatures(signatures: SignatureArg[]): Uint8Array;
+  verify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): boolean;
+  verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): boolean;
+  verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): boolean;
+  verifyMultipleSignatures(sets: {publicKey: PublicKeyArg; message: Uint8Array; signature: SignatureArg}[]): boolean;
   asyncVerify(message: Uint8Array, publicKey: PublicKeyArg, signature: SignatureArg): Promise<boolean>;
   asyncVerifyAggregate(message: Uint8Array, publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
   asyncVerifyMultiple(messages: Uint8Array[], publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
