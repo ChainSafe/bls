@@ -1,16 +1,16 @@
-import * as blst from "@chainsafe/blst";
+import blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature} from "../types.js";
+import {CoordType, PointFormat, Signature as ISignature} from "../types.js";
 import {PublicKey} from "./publicKey.js";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 
-export class Signature extends blst.Signature implements ISignature {
-  constructor(value: ConstructorParameters<typeof blst.Signature>[0]) {
+export class Signature implements ISignature {
+  private constructor(value: ConstructorParameters<typeof blst.Signature>[0]) {
     super(value);
   }
 
   /** @param type Defaults to `CoordType.affine` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate = true): Signature {
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): Signature {
     const sig = blst.Signature.fromBytes(bytes, type);
     if (validate) sig.sigValidate();
     return new Signature(sig.value);
@@ -62,6 +62,10 @@ export class Signature extends blst.Signature implements ISignature {
 
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
+  }
+
+  multiplyBy(bytes: Uint8Array): Signature {
+    return new Signature(this.value.multiplyBy(bytes));
   }
 
   private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {

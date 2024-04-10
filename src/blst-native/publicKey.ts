@@ -1,16 +1,14 @@
-import * as blst from "@chainsafe/blst";
+import blst from "@chainsafe/blst";
 import {EmptyAggregateError} from "../errors.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, PublicKey as IPublicKey} from "../types.js";
+import {CoordType, PointFormat, PublicKey as IPublicKey} from "../types.js";
 
-export class PublicKey extends blst.PublicKey implements IPublicKey {
-  constructor(value: ConstructorParameters<typeof blst.PublicKey>[0]) {
-    super(value);
-  }
+export class PublicKey implements IPublicKey {
+  private constructor(private readonly key: blst.PublicKey) {}
 
   /** @param type Defaults to `CoordType.jacobian` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate?: boolean): PublicKey {
-    const pk = blst.PublicKey.fromBytes(bytes, type);
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey {
+    const pk = blst.PublicKey.deserialize(bytes, (type as unknown) as blst.CoordType);
     if (validate) pk.keyValidate();
     return new PublicKey(pk.value);
   }
@@ -38,5 +36,9 @@ export class PublicKey extends blst.PublicKey implements IPublicKey {
 
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
+  }
+
+  multiplyBy(bytes: Uint8Array): PublicKey {
+    return new PublicKey(this.value.multiplyBy(bytes));
   }
 }

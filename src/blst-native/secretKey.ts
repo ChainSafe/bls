@@ -1,4 +1,4 @@
-import * as blst from "@chainsafe/blst";
+import blst from "@chainsafe/blst";
 import crypto from "crypto";
 import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
 import {SECRET_KEY_LENGTH} from "../constants.js";
@@ -9,7 +9,7 @@ import {ZeroSecretKeyError} from "../errors.js";
 
 export class SecretKey implements ISecretKey {
   readonly value: blst.SecretKey;
-  constructor(value: blst.SecretKey) {
+  private constructor(value: blst.SecretKey) {
     this.value = value;
   }
 
@@ -19,7 +19,7 @@ export class SecretKey implements ISecretKey {
       throw new ZeroSecretKeyError();
     }
 
-    const sk = blst.SecretKey.fromBytes(bytes);
+    const sk = blst.SecretKey.deserialize(bytes);
     return new SecretKey(sk);
   }
 
@@ -33,7 +33,7 @@ export class SecretKey implements ISecretKey {
   }
 
   sign(message: Uint8Array): Signature {
-    return new Signature(this.value.sign(message).value);
+    return new Signature(this.value.sign(message));
   }
 
   toPublicKey(): PublicKey {
