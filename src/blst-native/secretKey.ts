@@ -8,10 +8,7 @@ import {Signature} from "./signature.js";
 import {ZeroSecretKeyError} from "../errors.js";
 
 export class SecretKey implements ISecretKey {
-  readonly value: blst.SecretKey;
-  private constructor(value: blst.SecretKey) {
-    this.value = value;
-  }
+  constructor(private readonly value: blst.SecretKey) {}
 
   static fromBytes(bytes: Uint8Array): SecretKey {
     // draft-irtf-cfrg-bls-signature-04 does not allow SK == 0
@@ -33,16 +30,18 @@ export class SecretKey implements ISecretKey {
   }
 
   sign(message: Uint8Array): Signature {
-    return new Signature(this.value.sign(message));
+    // @ts-expect-error Need to hack private constructor with static method
+    return Signature.friendBuild(this.value.sign(message));
   }
 
   toPublicKey(): PublicKey {
     const pk = this.value.toPublicKey();
-    return new PublicKey(pk.value);
+    // @ts-expect-error Need to hack private constructor with static method
+    return PublicKey.friendBuild(pk);
   }
 
   toBytes(): Uint8Array {
-    return this.value.toBytes();
+    return this.value.serialize();
   }
 
   toHex(): string {
