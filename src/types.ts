@@ -1,5 +1,22 @@
+export type Implementation = "herumi" | "blst-native";
 export type PublicKeyArg = PublicKey | Uint8Array;
 export type SignatureArg = Signature | Uint8Array;
+
+export interface SignatureSet {
+  message: Uint8Array;
+  publicKey: PublicKeyArg;
+  signature: SignatureArg;
+}
+
+export enum PointFormat {
+  compressed = "compressed",
+  uncompressed = "uncompressed",
+}
+
+export enum CoordType {
+  affine = 0,
+  jacobian = 1,
+}
 
 export interface IBls {
   implementation: Implementation;
@@ -13,14 +30,12 @@ export interface IBls {
   verify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): boolean;
   verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): boolean;
   verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): boolean;
-  verifyMultipleSignatures(sets: {publicKey: PublicKeyArg; message: Uint8Array; signature: SignatureArg}[]): boolean;
+  verifyMultipleSignatures(sets: SignatureSet[]): boolean;
   secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array;
-  asyncVerify(message: Uint8Array, publicKey: PublicKeyArg, signature: SignatureArg): Promise<boolean>;
-  asyncVerifyAggregate(message: Uint8Array, publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
-  asyncVerifyMultiple(messages: Uint8Array[], publicKeys: PublicKeyArg[], signature: SignatureArg): Promise<boolean>;
-  asyncVerifyMultipleSignatures(
-    sets: {message: Uint8Array; publicKey: PublicKeyArg; signature: SignatureArg}[]
-  ): Promise<boolean>;
+  asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean>;
+  asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): Promise<boolean>;
+  asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): Promise<boolean>;
+  asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean>;
 }
 
 export declare class SecretKey {
@@ -64,22 +79,4 @@ export declare class Signature {
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
   multiplyBy(bytes: Uint8Array): Signature;
-}
-
-export type Implementation = "herumi" | "blst-native";
-
-export enum PointFormat {
-  compressed = "compressed",
-  uncompressed = "uncompressed",
-}
-
-export enum CoordType {
-  affine = 0,
-  jacobian = 1,
-}
-
-export interface SignatureSet {
-  message: Uint8Array;
-  publicKey: PublicKeyArg;
-  signature: SignatureArg;
 }

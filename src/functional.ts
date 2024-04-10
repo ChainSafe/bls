@@ -1,3 +1,4 @@
+import blst from "@chainsafe/blst";
 import {IBls, PublicKey, PublicKeyArg, Signature, SignatureArg, SignatureSet} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
@@ -6,10 +7,11 @@ import {NotInitializedError} from "./errors.js";
 // eslint-disable-next-line max-len
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types
 export function functionalInterfaceFactory({
+  implementation,
   SecretKey,
   PublicKey,
   Signature,
-}: Pick<IBls, "SecretKey" | "PublicKey" | "Signature">) {
+}: Pick<IBls, "implementation" | "SecretKey" | "PublicKey" | "Signature">) {
   /**
    * Signs given message using secret key.
    * @param secretKey
@@ -175,13 +177,30 @@ export function functionalInterfaceFactory({
     }
   }
 
+  function convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return publicKey instanceof PublicKey ? ((publicKey as any).value as blst.PublicKey) : publicKey;
+  }
+
+  function convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return signature instanceof Signature ? ((signature as any).value as blst.Signature) : signature;
+  }
+
   /**
    * Verifies if signature is message signed with given public key.
    * @param publicKey
    * @param message
    * @param signature
    */
-  async function asyncVerify(message: Uint8Array, publicKey: PublicKeyArg, signature: SignatureArg): Promise<boolean> {}
+  async function asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean> {
+    if (implementation === "herumi") return verify(publicKey, message, signature);
+    try {
+      return blst.asyncVerify(message, convertToBlstPublicKeyArg(publicKey), convertToBlstSignatureArg(signature));
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Verifies if aggregated signature is same message signed with given public keys.
@@ -190,10 +209,21 @@ export function functionalInterfaceFactory({
    * @param signature
    */
   async function asyncVerifyAggregate(
-    message: Uint8Array,
     publicKeys: PublicKeyArg[],
+    message: Uint8Array,
     signature: SignatureArg
-  ): Promise<boolean> {}
+  ): Promise<boolean> {
+    if (implementation === "herumi") return verifyAggregate(publicKeys, message, signature);
+    try {
+      return blst.asyncFastAggregateVerify(
+        message,
+        publicKeys.map((key) => convertToBlstPublicKeyArg(key)),
+        convertToBlstSignatureArg(signature)
+      );
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Verifies if signature is list of message signed with corresponding public key.
@@ -203,10 +233,21 @@ export function functionalInterfaceFactory({
    * @param fast Check if all messages are different
    */
   async function asyncVerifyMultiple(
-    messages: Uint8Array[],
     publicKeys: PublicKeyArg[],
+    messages: Uint8Array[],
     signature: SignatureArg
-  ): Promise<boolean> {}
+  ): Promise<boolean> {
+    if (implementation === "herumi") return verifyMultiple(publicKeys, messages, signature);
+    try {
+      return blst.asyncAggregateVerify(
+        messages,
+        publicKeys.map((key) => convertToBlstPublicKeyArg(key)),
+        convertToBlstSignatureArg(signature)
+      );
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Verifies multiple signatures at once returning true if all valid or false
@@ -218,7 +259,20 @@ export function functionalInterfaceFactory({
    * verify on its own but will if it's added to a specific predictable signature
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
-  async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {}
+  async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
+    if (implementation === "herumi") return verifyMultipleSignatures(sets);
+    try {
+      return blst.asyncVerifyMultipleAggregateSignatures(
+        sets.map((set) => ({
+          message: set.message,
+          publicKey: convertToBlstPublicKeyArg(set.publicKey),
+          signature: convertToBlstSignatureArg(set.signature),
+        }))
+      );
+    } catch {
+      return false;
+    }
+  }
 
   /**
    * Computes a public key from a secret key
@@ -233,9 +287,13 @@ export function functionalInterfaceFactory({
     aggregateSignatures,
     aggregatePublicKeys,
     verify,
+    asyncVerify,
     verifyAggregate,
+    asyncVerifyAggregate,
     verifyMultiple,
+    asyncVerifyMultiple,
     verifyMultipleSignatures,
+    asyncVerifyMultipleSignatures,
     secretKeyToPublicKey,
   };
 }
