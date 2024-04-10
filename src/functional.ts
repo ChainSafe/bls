@@ -29,7 +29,9 @@ export function functionalInterfaceFactory({
    * @param signatures
    */
   function aggregateSignatures(signatures: SignatureArg[]): Uint8Array {
-    const agg = Signature.aggregate(signatures.map((p) => Signature.fromBytes(p)));
+    const agg = Signature.aggregate(
+      signatures.map((sig) => (sig instanceof Uint8Array ? Signature.fromBytes(sig) : sig))
+    );
     return agg.toBytes();
   }
 
@@ -38,7 +40,7 @@ export function functionalInterfaceFactory({
    * @param publicKeys
    */
   function aggregatePublicKeys(publicKeys: PublicKeyArg[]): Uint8Array {
-    const agg = PublicKey.aggregate(publicKeys.map((p) => PublicKey.fromBytes(p)));
+    const agg = PublicKey.aggregate(publicKeys.map((pk) => (pk instanceof Uint8Array ? PublicKey.fromBytes(pk) : pk)));
     return agg.toBytes();
   }
 
