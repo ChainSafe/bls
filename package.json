@@ -73,7 +73,7 @@
     "test:coverage": "nyc --cache-dir .nyc_output/.cache -r lcov -e .ts mocha 'test/unit/**/*.test.ts' && nyc report",
     "test:spec": "mocha 'test/spec/**/*.test.ts'",
     "test": "yarn run test:unit && yarn run test:spec",
-    "download-test-cases": "node --loader ts-node/esm test/downloadSpecTests.ts",
+    "download-spec-tests": "node --loader ts-node/esm test/downloadSpecTests.ts",
     "coverage": "codecov -F bls",
     "benchmark": "node --loader ts-node/esm benchmark/index.ts",
     "benchmark:all": "cd benchmark && yarn install && yarn benchmark:all"
@@ -120,7 +120,7 @@
     "v8-profiler-next": "1.10.0"
   },
   "peerDependencies": {
-    "@chainsafe/blst": "^0.2.4"
+    "@chainsafe/blst": "^1.0.0"
   },
   "peerDependenciesMeta": {
     "@chainsafe/blst": {
