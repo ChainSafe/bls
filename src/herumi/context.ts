@@ -21,6 +21,7 @@ export async function setupBls(): Promise<void> {
     if (typeof window === "object") {
       const crypto = window.crypto || window.msCrypto;
       // getRandomValues is not typed in `bls-eth-wasm` because it's not meant to be exposed
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
       // @ts-ignore
       bls.getRandomValues = (x) => crypto.getRandomValues(x);
     }
