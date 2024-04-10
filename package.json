@@ -83,7 +83,7 @@
     "bls-eth-wasm": "^1.1.1"
   },
   "devDependencies": {
-    "@chainsafe/blst": "^0.2.4",
+    "@chainsafe/blst": "^1.0.0",
     "@chainsafe/eslint-plugin-node": "^11.2.3",
     "@chainsafe/threads": "^1.9.0",
     "@lodestar/spec-test-util": "1.13.0",
