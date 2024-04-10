@@ -1,3 +1,4 @@
+const path = require('path');
 const ResolveTypeScriptPlugin = require("resolve-typescript-plugin");
 
 module.exports = {
@@ -7,7 +8,13 @@ module.exports = {
     filename: "dist/bundle.js",
   },
   module: {
-    rules: [{test: /\.(ts)$/, use: {loader: "ts-loader", options: {transpileOnly: true}}}],
+    rules: [
+      {test: /\.(ts)$/, use: {loader: "ts-loader", options: {transpileOnly: true}}},
+      {
+        test: /@chainsafe\/blst/,
+        use: 'null-loader',
+      },
+    ],
   },
   optimization: {
     // Disable minification for better debugging on Karma tests
@@ -16,14 +23,17 @@ module.exports = {
   },
   devtool: "source-map",
   resolve: {
-    plugins: [new ResolveTypeScriptPlugin()],
+    plugins: [
+      new ResolveTypeScriptPlugin(),
+    ],
     alias: {
-      "crypto": "crypto-browserify"
+      "crypto": "crypto-browserify",
+      './blst-native/index.js': path.resolve(__dirname, './src/herumi/index.js')
     },
     fallback: {
       fs: false,
       path: false,
-      stream: false
+      stream: false,
     },
   },
   experiments: {
