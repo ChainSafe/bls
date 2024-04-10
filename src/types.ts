@@ -63,6 +63,6 @@ export enum PointFormat {
 }
 
 export enum CoordType {
-  affine,
-  jacobian,
+  affine = 0,
+  jacobian = 1,
 }
