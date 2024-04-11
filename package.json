@@ -1,6 +1,6 @@
 {
   "name": "@chainsafe/bls",
-  "version": "7.2.0",
+  "version": "8.0.0",
   "description": "Implementation of bls signature verification for ethereum 2.0",
   "engines": {
     "node": ">=18"
