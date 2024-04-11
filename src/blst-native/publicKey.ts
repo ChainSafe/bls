@@ -7,7 +7,7 @@ export class PublicKey implements IPublicKey {
   private constructor(private readonly value: blst.PublicKey) {}
 
   /** @param type Defaults to `CoordType.jacobian` */
-  static fromBytes(bytes: Uint8Array, type?: CoordType, validate?: boolean): PublicKey {
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): PublicKey {
     // need to hack the CoordType so @chainsafe/blst is not a required dep
     const pk = blst.PublicKey.deserialize(bytes, (type as unknown) as blst.CoordType);
     if (validate) pk.keyValidate();
