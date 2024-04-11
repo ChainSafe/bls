@@ -165,16 +165,6 @@ export function functionalInterfaceFactory({
     }
   }
 
-  function convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return publicKey instanceof PublicKey ? ((publicKey as any).value as blst.PublicKey) : publicKey;
-  }
-
-  function convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return signature instanceof Signature ? ((signature as any).value as blst.Signature) : signature;
-  }
-
   /**
    * Verifies if signature is message signed with given public key.
    */
@@ -258,6 +248,16 @@ export function functionalInterfaceFactory({
   function secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array {
     validateBytes(secretKey, "secretKey");
     return SecretKey.fromBytes(secretKey).toPublicKey().toBytes();
+  }
+
+  function convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return publicKey instanceof PublicKey ? ((publicKey as any).value as blst.PublicKey) : publicKey;
+  }
+
+  function convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    return signature instanceof Signature ? ((signature as any).value as blst.Signature) : signature;
   }
 
   return {
