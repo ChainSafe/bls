@@ -90,4 +90,13 @@ export class Signature implements ISignature {
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
   }
+
+  multiplyBy(_bytes: Uint8Array): Signature {
+    // TODO: I found this in the code but its not exported. Need to figure out
+    //       how to implement
+    // const a = getContext();
+    // const randomness = new a.FR(8);
+    // return new Signature(a.mul(this.value, randomness));
+    throw new Error("multiplyBy is not implemented by bls-eth-wasm");
+  }
 }

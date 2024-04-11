@@ -1,9 +1,9 @@
 import path from "path";
 import {describeDirectorySpecTest, InputType} from "@lodestar/spec-test-util";
 import {hexToBytes} from "../../src/helpers/index.js";
+import {CoordType} from "../../src/types.js";
 import {SPEC_TESTS_DIR} from "../params.js";
 import {describeForAllImplementations} from "../switch.js";
-import {CoordType} from "@chainsafe/blst";
 
 interface IAggregateSigsVerifyTestCase {
   data: {

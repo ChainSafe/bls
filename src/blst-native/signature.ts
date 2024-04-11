@@ -1,19 +1,18 @@
-import * as blst from "@chainsafe/blst";
+import blst from "@chainsafe/blst";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature} from "../types.js";
+import {CoordType, PointFormat, Signature as ISignature} from "../types.js";
 import {PublicKey} from "./publicKey.js";
 import {EmptyAggregateError, ZeroSignatureError} from "../errors.js";
 
-export class Signature extends blst.Signature implements ISignature {
-  constructor(value: ConstructorParameters<typeof blst.Signature>[0]) {
-    super(value);
-  }
+export class Signature implements ISignature {
+  private constructor(private readonly value: blst.Signature) {}
 
   /** @param type Defaults to `CoordType.affine` */
-  static fromBytes(bytes: Uint8Array, type?: blst.CoordType, validate = true): Signature {
-    const sig = blst.Signature.fromBytes(bytes, type);
+  static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): Signature {
+    // need to hack the CoordType so @chainsafe/blst is not a required dep
+    const sig = blst.Signature.deserialize(bytes, (type as unknown) as blst.CoordType);
     if (validate) sig.sigValidate();
-    return new Signature(sig.value);
+    return new Signature(sig);
   }
 
   static fromHex(hex: string): Signature {
@@ -25,38 +24,56 @@ export class Signature extends blst.Signature implements ISignature {
       throw new EmptyAggregateError();
     }
 
-    const agg = blst.aggregateSignatures(signatures);
-    return new Signature(agg.value);
+    const agg = blst.aggregateSignatures(signatures.map(({value}) => value));
+    return new Signature(agg);
   }
 
   static verifyMultipleSignatures(sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[]): boolean {
     return blst.verifyMultipleAggregateSignatures(
-      sets.map((s) => ({msg: s.message, pk: s.publicKey, sig: s.signature}))
+      // @ts-expect-error Need to hack type to get access to the private `value`
+      sets.map((s) => ({message: s.message, publicKey: s.publicKey.value, signature: s.signature.value}))
     );
+  }
+
+  /**
+   * Implemented for SecretKey to be able to call .sign()
+   */
+  private static friendBuild(sig: blst.Signature): Signature {
+    return new Signature(sig);
   }
 
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
-    if (this.value.is_inf()) {
+    if (this.value.isInfinity()) {
       throw new ZeroSignatureError();
     }
 
-    return blst.verify(message, publicKey, this);
+    // @ts-expect-error Need to hack type to get access to the private `value`
+    return blst.verify(message, publicKey.value, this.value);
   }
 
   verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
-    return blst.fastAggregateVerify(message, publicKeys, this);
+    return blst.fastAggregateVerify(
+      message,
+      // @ts-expect-error Need to hack type to get access to the private `value`
+      publicKeys.map((pk) => pk.value),
+      this.value
+    );
   }
 
   verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
-    return blst.aggregateVerify(messages, publicKeys, this);
+    return this.aggregateVerify(
+      messages,
+      // @ts-expect-error Need to hack type to get access to the private `value`
+      publicKeys.map((pk) => pk.value)
+    );
   }
 
   toBytes(format?: PointFormat): Uint8Array {
     if (format === PointFormat.uncompressed) {
-      return this.value.serialize();
+      return this.value.serialize(false);
     } else {
-      return this.value.compress();
+      return this.value.serialize(true);
     }
   }
 
@@ -64,14 +81,18 @@ export class Signature extends blst.Signature implements ISignature {
     return bytesToHex(this.toBytes(format));
   }
 
+  multiplyBy(bytes: Uint8Array): Signature {
+    return new Signature(this.value.multiplyBy(bytes));
+  }
+
   private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {
     // If this set is simply an infinity signature and infinity publicKey then skip verification.
     // This has the effect of always declaring that this sig/publicKey combination is valid.
     // for Eth2.0 specs tests
-    if (this.value.is_inf() && pks.length === 1 && pks[0].value.is_inf()) {
+    if (this.value.isInfinity() && pks.length === 1 && pks[0].isInfinity()) {
       return true;
     }
 
-    return blst.aggregateVerify(msgs, pks, this);
+    return blst.aggregateVerify(msgs, pks, this.value);
   }
 }

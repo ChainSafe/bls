@@ -25,7 +25,7 @@ jobs:
       - name: Unit tests
         run: yarn test:unit
       - name: Download spec tests
-        run: yarn download-test-cases
+        run: yarn download-spec-tests
       - name: Spec tests
         run: yarn test:spec
       - name: Web tests
