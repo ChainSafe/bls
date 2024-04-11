@@ -14,8 +14,6 @@ export function functionalInterfaceFactory({
 }: Pick<IBls, "implementation" | "SecretKey" | "PublicKey" | "Signature">) {
   /**
    * Signs given message using secret key.
-   * @param secretKey
-   * @param message
    */
   function sign(secretKey: Uint8Array, message: Uint8Array): Uint8Array {
     validateBytes(secretKey, "secretKey");
@@ -26,7 +24,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Compines all given signature into one.
-   * @param signatures
    */
   function aggregateSignatures(signatures: SignatureArg[]): Uint8Array {
     const agg = Signature.aggregate(
@@ -37,7 +34,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Combines all given public keys into single one
-   * @param publicKeys
    */
   function aggregatePublicKeys(publicKeys: PublicKeyArg[]): Uint8Array {
     const agg = PublicKey.aggregate(publicKeys.map((pk) => (pk instanceof Uint8Array ? PublicKey.fromBytes(pk) : pk)));
@@ -46,9 +42,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if signature is message signed with given public key.
-   * @param publicKey
-   * @param message
-   * @param signature
    */
   function verify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): boolean {
     try {
@@ -79,9 +72,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if aggregated signature is same message signed with given public keys.
-   * @param publicKeys
-   * @param message
-   * @param signature
    */
   function verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): boolean {
     try {
@@ -114,10 +104,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if signature is list of message signed with corresponding public key.
-   * @param publicKeys
-   * @param messages
-   * @param signature
-   * @param fast Check if all messages are different
    */
   function verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): boolean {
     if (publicKeys.length === 0 || publicKeys.length != messages.length) {
@@ -191,9 +177,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if signature is message signed with given public key.
-   * @param publicKey
-   * @param message
-   * @param signature
    */
   async function asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean> {
     if (implementation === "herumi") return verify(publicKey, message, signature);
@@ -206,9 +189,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if aggregated signature is same message signed with given public keys.
-   * @param publicKeys
-   * @param message
-   * @param signature
    */
   async function asyncVerifyAggregate(
     publicKeys: PublicKeyArg[],
@@ -229,10 +209,6 @@ export function functionalInterfaceFactory({
 
   /**
    * Verifies if signature is list of message signed with corresponding public key.
-   * @param publicKeys
-   * @param messages
-   * @param signature
-   * @param fast Check if all messages are different
    */
   async function asyncVerifyMultiple(
     publicKeys: PublicKeyArg[],
