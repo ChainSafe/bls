@@ -80,7 +80,6 @@
   },
   "dependencies": {
     "@chainsafe/bls-keygen": "^0.4.0",
-    "@noble/hashes": "^1.4.0",
     "bls-eth-wasm": "^1.1.1"
   },
   "devDependencies": {
@@ -88,6 +87,7 @@
     "@chainsafe/eslint-plugin-node": "^11.2.3",
     "@chainsafe/threads": "^1.9.0",
     "@lodestar/spec-test-util": "1.13.0",
+    "@noble/hashes": "^1.4.0",
     "@types/chai": "^4.2.9",
     "@types/mocha": "^10.0.0",
     "@types/node": "^20.11.13",
@@ -95,7 +95,6 @@
     "@typescript-eslint/parser": "^4.31.1",
     "buffer": "^6.0.3",
     "chai": "^4.3.6",
-    "crypto-browserify": "^3.12.0",
     "eslint": "^7.14.0",
     "eslint-plugin-import": "^2.20.1",
     "eslint-plugin-prettier": "^3.1.4",
