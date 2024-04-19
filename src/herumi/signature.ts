@@ -2,7 +2,7 @@ import type {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context.js";
 import {PublicKey} from "./publicKey.js";
 import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
-import {PointFormat, Signature as ISignature, CoordType} from "../types.js";
+import {SignatureSet, PointFormat, Signature as ISignature, CoordType} from "../types.js";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors.js";
 import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants.js";
 
@@ -52,13 +52,22 @@ export class Signature implements ISignature {
     return new Signature(signature);
   }
 
-  static verifyMultipleSignatures(sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[]): boolean {
+  static verifyMultipleSignatures(sets: SignatureSet[]): boolean {
     const context = getContext();
     return context.multiVerify(
       sets.map((s) => s.publicKey.value),
       sets.map((s) => s.signature.value),
       sets.map((s) => s.message)
     );
+  }
+
+  static async asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
+    // eslint-disable-next-line no-console
+    console.log(
+      "asyncVerifyMultipleSignatures is not implemented by bls-eth-wasm.\n" +
+        "Please use the synchronous Signature.verifyMultipleSignatures instead"
+    );
+    return Signature.verifyMultipleSignatures(sets);
   }
 
   verify(publicKey: PublicKey, message: Uint8Array): boolean {
@@ -77,6 +86,30 @@ export class Signature implements ISignature {
       publicKeys.map((key) => key.value),
       concatUint8Arrays(messages)
     );
+  }
+
+  async asyncVerify(publicKey: PublicKey, message: Uint8Array): Promise<boolean> {
+    // eslint-disable-next-line no-console
+    console.log("asyncVerify is not implemented by bls-eth-wasm.\nPlease use the synchronous Signature.verify instead");
+    return this.verify(publicKey, message);
+  }
+
+  async asyncVerifyAggregate(publicKeys: PublicKey[], message: Uint8Array): Promise<boolean> {
+    // eslint-disable-next-line no-console
+    console.log(
+      "asyncVerifyAggregate is not implemented by bls-eth-wasm.\n" +
+        "Please use the synchronous Signature.verifyAggregate instead"
+    );
+    return this.verifyAggregate(publicKeys, message);
+  }
+
+  async asyncVerifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): Promise<boolean> {
+    // eslint-disable-next-line no-console
+    console.log(
+      "asyncVerifyMultiple is not implemented by bls-eth-wasm.\n" +
+        "Please use the synchronous Signature.verifyMultiple instead"
+    );
+    return this.verifyMultiple(publicKeys, messages);
   }
 
   toBytes(format?: PointFormat): Uint8Array {

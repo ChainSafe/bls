@@ -1,4 +1,3 @@
-import blst from "@chainsafe/blst";
 import {IBls, PublicKey, PublicKeyArg, Signature, SignatureArg, SignatureSet} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
@@ -171,7 +170,8 @@ export function functionalInterfaceFactory({
   async function asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean> {
     if (implementation === "herumi") return verify(publicKey, message, signature);
     try {
-      return blst.asyncVerify(message, convertToBlstPublicKeyArg(publicKey), convertToBlstSignatureArg(signature));
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.asyncVerify(publicKey, message);
     } catch {
       return false;
     }
@@ -187,11 +187,8 @@ export function functionalInterfaceFactory({
   ): Promise<boolean> {
     if (implementation === "herumi") return verifyAggregate(publicKeys, message, signature);
     try {
-      return blst.asyncFastAggregateVerify(
-        message,
-        publicKeys.map((key) => convertToBlstPublicKeyArg(key)),
-        convertToBlstSignatureArg(signature)
-      );
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.asyncVerifyAggregate(publicKeys, message);
     } catch {
       return false;
     }
@@ -207,11 +204,8 @@ export function functionalInterfaceFactory({
   ): Promise<boolean> {
     if (implementation === "herumi") return verifyMultiple(publicKeys, messages, signature);
     try {
-      return blst.asyncAggregateVerify(
-        messages,
-        publicKeys.map((key) => convertToBlstPublicKeyArg(key)),
-        convertToBlstSignatureArg(signature)
-      );
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.asyncVerifyMultiple(publicKeys, messages);
     } catch {
       return false;
     }
@@ -229,17 +223,7 @@ export function functionalInterfaceFactory({
    */
   async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
     if (implementation === "herumi") return verifyMultipleSignatures(sets);
-    try {
-      return blst.asyncVerifyMultipleAggregateSignatures(
-        sets.map((set) => ({
-          message: set.message,
-          publicKey: convertToBlstPublicKeyArg(set.publicKey),
-          signature: convertToBlstSignatureArg(set.signature),
-        }))
-      );
-    } catch {
-      return false;
-    }
+    return Signature.asyncVerifyMultipleSignatures(sets);
   }
 
   /**
@@ -248,16 +232,6 @@ export function functionalInterfaceFactory({
   function secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array {
     validateBytes(secretKey, "secretKey");
     return SecretKey.fromBytes(secretKey).toPublicKey().toBytes();
-  }
-
-  function convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return publicKey instanceof PublicKey ? ((publicKey as any).value as blst.PublicKey) : publicKey;
-  }
-
-  function convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return signature instanceof Signature ? ((signature as any).value as blst.Signature) : signature;
   }
 
   return {
