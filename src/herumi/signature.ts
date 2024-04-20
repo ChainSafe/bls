@@ -78,7 +78,7 @@ export class Signature implements ISignature {
       validateBytes(signature, "signature");
       sig = Signature.fromBytes(signature);
     } else {
-      // need to cast to herumi key instead of ISignature
+      // need to cast to herumi sig instead of ISignature
       sig = signature as Signature;
     }
     return sig.value;
