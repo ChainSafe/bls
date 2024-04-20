@@ -1,7 +1,7 @@
 import blst from "@chainsafe/blst";
 import {EmptyAggregateError} from "../errors.js";
 import {bytesToHex, hexToBytes} from "../helpers/index.js";
-import {CoordType, PointFormat, PublicKey as IPublicKey} from "../types.js";
+import {CoordType, PointFormat, PublicKey as IPublicKey, PublicKeyArg} from "../types.js";
 
 export class PublicKey implements IPublicKey {
   private constructor(private readonly value: blst.PublicKey) {}
@@ -18,13 +18,17 @@ export class PublicKey implements IPublicKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(publicKeys: PublicKey[]): PublicKey {
+  static aggregate(publicKeys: PublicKeyArg[]): PublicKey {
     if (publicKeys.length === 0) {
       throw new EmptyAggregateError();
     }
 
-    const pk = blst.aggregatePublicKeys(publicKeys.map(({value}) => value));
+    const pk = blst.aggregatePublicKeys(publicKeys.map(PublicKey.convertToBlstPublicKeyArg));
     return new PublicKey(pk);
+  }
+
+  static convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
+    return publicKey instanceof PublicKey ? publicKey.value : (publicKey as Uint8Array);
   }
 
   /**

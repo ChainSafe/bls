@@ -19,34 +19,37 @@ export class Signature implements ISignature {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(signatures: Signature[]): Signature {
+  static aggregate(signatures: SignatureArg[]): Signature {
     if (signatures.length === 0) {
       throw new EmptyAggregateError();
     }
 
-    const agg = blst.aggregateSignatures(signatures.map(({value}) => value));
+    const agg = blst.aggregateSignatures(signatures.map(Signature.convertToBlstSignatureArg));
     return new Signature(agg);
   }
 
-  static verifyMultipleSignatures(sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[]): boolean {
+  static verifyMultipleSignatures(sets: SignatureSet[]): boolean {
     return blst.verifyMultipleAggregateSignatures(
-      // @ts-expect-error Need to hack type to get access to the private `value`
-      sets.map((s) => ({message: s.message, publicKey: s.publicKey.value, signature: s.signature.value}))
+      sets.map((set) => ({
+        message: set.message,
+        publicKey: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
+        signature: Signature.convertToBlstSignatureArg(set.signature),
+      }))
     );
   }
 
-  static async asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    try {
-      return blst.asyncVerifyMultipleAggregateSignatures(
-        sets.map((set) => ({
-          message: set.message,
-          publicKey: Signature.convertToBlstPublicKeyArg(set.publicKey),
-          signature: Signature.convertToBlstSignatureArg(set.signature),
-        }))
-      );
-    } catch {
-      return false;
-    }
+  static asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
+    return blst.asyncVerifyMultipleAggregateSignatures(
+      sets.map((set) => ({
+        message: set.message,
+        publicKey: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
+        signature: Signature.convertToBlstSignatureArg(set.signature),
+      }))
+    );
+  }
+
+  static convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
+    return signature instanceof Signature ? signature.value : (signature as Uint8Array);
   }
 
   /**
@@ -56,70 +59,42 @@ export class Signature implements ISignature {
     return new Signature(sig);
   }
 
-  private static convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return publicKey instanceof Uint8Array ? publicKey : publicKey.value;
-  }
+  verify(publicKey: PublicKeyArg, message: Uint8Array): boolean {
+    // TODO (@matthewkeil) The note in aggregateVerify and the checks in this method
+    // do not seem to go together. Need to check the spec further.
 
-  private static convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    return signature instanceof Uint8Array ? signature : signature.value;
-  }
-
-  verify(publicKey: PublicKey, message: Uint8Array): boolean {
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
     if (this.value.isInfinity()) {
       throw new ZeroSignatureError();
     }
-
-    // @ts-expect-error Need to hack type to get access to the private `value`
-    return blst.verify(message, publicKey.value, this.value);
+    return blst.verify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
   }
 
-  verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
-    return blst.fastAggregateVerify(
-      message,
-      // @ts-expect-error Need to hack type to get access to the private `value`
-      publicKeys.map((pk) => pk.value),
-      this.value
-    );
+  verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): boolean {
+    return blst.fastAggregateVerify(message, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 
-  verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
-    return this.aggregateVerify(
-      messages,
-      // @ts-expect-error Need to hack type to get access to the private `value`
-      publicKeys.map((pk) => pk.value)
-    );
+  verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): boolean {
+    return this.aggregateVerify(publicKeys, messages, false);
   }
 
   async asyncVerify(publicKey: PublicKeyArg, message: Uint8Array): Promise<boolean> {
+    // TODO (@matthewkeil) The note in aggregateVerify and the checks in this method
+    // do not seem to go together. Need to check the spec further.
+
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
     if (this.value.isInfinity()) {
       throw new ZeroSignatureError();
     }
-    // @ts-expect-error Need to hack type to get access to the private `value`
-    return blst.asyncVerify(message, publicKey.value, this.value);
+    return blst.asyncVerify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
   }
 
   async asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): Promise<boolean> {
-    return blst.asyncFastAggregateVerify(
-      message,
-      // @ts-expect-error Need to hack type to get access to the private `value`
-      publicKeys.map((pk) => pk.value),
-      this.value
-    );
+    return blst.asyncFastAggregateVerify(message, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 
   async asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): Promise<boolean> {
-    // If this set is simply an infinity signature and infinity publicKey then skip verification.
-    // This has the effect of always declaring that this sig/publicKey combination is valid.
-    // for Eth2.0 specs tests
-    const pks = publicKeys.map(Signature.convertToBlstPublicKeyArg);
-    if (this.value.isInfinity() && publicKeys.length === 1 && publicKeys[0].isInfinity()) {
-      return true;
-    }
-    return blst.asyncAggregateVerify(messages, , this.value);
+    return this.aggregateVerify(publicKeys, messages, true);
   }
 
   toBytes(format?: PointFormat): Uint8Array {
@@ -138,14 +113,36 @@ export class Signature implements ISignature {
     return new Signature(this.value.multiplyBy(bytes));
   }
 
-  private aggregateVerify(msgs: Uint8Array[], pks: blst.PublicKey[]): boolean {
+  private aggregateVerify<T extends false>(publicKeys: PublicKeyArg[], messages: Uint8Array[], runAsync: T): boolean;
+  private aggregateVerify<T extends true>(
+    publicKeys: PublicKeyArg[],
+    messages: Uint8Array[],
+    runAsync: T
+  ): Promise<boolean>;
+  private aggregateVerify<T extends boolean>(
+    publicKeys: PublicKeyArg[],
+    messages: Uint8Array[],
+    runAsync: T
+  ): Promise<boolean> | boolean {
+    // TODO (@matthewkeil) The note in verify and the checks in this method
+    // do not seem to go together. Need to check the spec further.
+
     // If this set is simply an infinity signature and infinity publicKey then skip verification.
     // This has the effect of always declaring that this sig/publicKey combination is valid.
     // for Eth2.0 specs tests
-    if (this.value.isInfinity() && pks.length === 1 && pks[0].isInfinity()) {
-      return true;
+    if (publicKeys.length === 1) {
+      // eslint-disable-next-line prettier/prettier
+      const pk: PublicKey = publicKeys[0] instanceof Uint8Array 
+        ? PublicKey.fromBytes(publicKeys[0]) 
+        : (publicKeys[0] as PublicKey); // need to cast to blst-native key instead of IPublicKey
+      // @ts-expect-error Need to hack type to get access to the private `value`
+      if (this.value.isInfinity() && pk.value.isInfinity()) {
+        return runAsync ? Promise.resolve(true) : true;
+      }
     }
 
-    return blst.aggregateVerify(msgs, pks, this.value);
+    return runAsync
+      ? blst.asyncAggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value)
+      : blst.aggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 }
