@@ -1,4 +1,4 @@
-import {IBls, PublicKey, PublicKeyArg, Signature, SignatureArg, SignatureSet} from "./types.js";
+import {IBls, PublicKeyArg, SignatureArg, SignatureSet} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
 
@@ -25,18 +25,14 @@ export function functionalInterfaceFactory({
    * Compines all given signature into one.
    */
   function aggregateSignatures(signatures: SignatureArg[]): Uint8Array {
-    const agg = Signature.aggregate(
-      signatures.map((sig) => (sig instanceof Uint8Array ? Signature.fromBytes(sig) : sig))
-    );
-    return agg.toBytes();
+    return Signature.aggregate(signatures).toBytes();
   }
 
   /**
    * Combines all given public keys into single one
    */
   function aggregatePublicKeys(publicKeys: PublicKeyArg[]): Uint8Array {
-    const agg = PublicKey.aggregate(publicKeys.map((pk) => (pk instanceof Uint8Array ? PublicKey.fromBytes(pk) : pk)));
-    return agg.toBytes();
+    return PublicKey.aggregate(publicKeys).toBytes();
   }
 
   /**
@@ -44,25 +40,12 @@ export function functionalInterfaceFactory({
    */
   function verify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): boolean {
     try {
-      validateBytes(message, "message");
-
-      let pk: PublicKey;
-      if (publicKey instanceof Uint8Array) {
-        validateBytes(publicKey, "publicKey");
-        pk = PublicKey.fromBytes(publicKey);
-      } else {
-        pk = publicKey;
-      }
-
-      let sig: Signature;
-      if (signature instanceof Uint8Array) {
+      if (implementation === "herumi" && signature instanceof Uint8Array) {
         validateBytes(signature, "signature");
-        sig = Signature.fromBytes(signature);
-      } else {
-        sig = signature;
       }
 
-      return sig.verify(pk, message);
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.verify(publicKey, message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -74,27 +57,12 @@ export function functionalInterfaceFactory({
    */
   function verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): boolean {
     try {
-      validateBytes(message, "message");
-
-      const pks: PublicKey[] = [];
-      for (const pk of publicKeys) {
-        if (pk instanceof Uint8Array) {
-          validateBytes(pk, "publicKey");
-          pks.push(PublicKey.fromBytes(pk));
-        } else {
-          pks.push(pk);
-        }
-      }
-
-      let sig: Signature;
-      if (signature instanceof Uint8Array) {
+      if (implementation === "herumi" && signature instanceof Uint8Array) {
         validateBytes(signature, "signature");
-        sig = Signature.fromBytes(signature);
-      } else {
-        sig = signature;
       }
 
-      return sig.verifyAggregate(pks, message);
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.verifyAggregate(publicKeys, message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -105,32 +73,18 @@ export function functionalInterfaceFactory({
    * Verifies if signature is list of message signed with corresponding public key.
    */
   function verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): boolean {
-    if (publicKeys.length === 0 || publicKeys.length != messages.length) {
-      return false;
-    }
-
+    // TODO: (@matthewkeil) blst-ts has this check but throws an error instead of returning false.  Moving to
+    //       the herumi and commenting here for now.  Will double check spec on what is appropriate.
+    // if (publicKeys.length === 0 || publicKeys.length != messages.length) {
+    //   return false;
+    // }
     try {
-      validateBytes(messages, "message");
-
-      const pks: PublicKey[] = [];
-      for (const pk of publicKeys) {
-        if (pk instanceof Uint8Array) {
-          validateBytes(pk, "publicKey");
-          pks.push(PublicKey.fromBytes(pk));
-        } else {
-          pks.push(pk);
-        }
-      }
-
-      let sig: Signature;
-      if (signature instanceof Uint8Array) {
+      if (implementation === "herumi" && signature instanceof Uint8Array) {
         validateBytes(signature, "signature");
-        sig = Signature.fromBytes(signature);
-      } else {
-        sig = signature;
       }
 
-      return sig.verifyMultiple(pks, messages);
+      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
+      return sig.verifyMultiple(publicKeys, messages);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -148,16 +102,8 @@ export function functionalInterfaceFactory({
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
   function verifyMultipleSignatures(sets: SignatureSet[]): boolean {
-    if (!sets) throw Error("sets is null or undefined");
-
     try {
-      return Signature.verifyMultipleSignatures(
-        sets.map((s) => ({
-          publicKey: s.publicKey instanceof Uint8Array ? PublicKey.fromBytes(s.publicKey) : s.publicKey,
-          message: s.message,
-          signature: s.signature instanceof Uint8Array ? Signature.fromBytes(s.signature) : s.signature,
-        }))
-      );
+      return Signature.verifyMultipleSignatures(sets);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -170,9 +116,11 @@ export function functionalInterfaceFactory({
   async function asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean> {
     if (implementation === "herumi") return verify(publicKey, message, signature);
     try {
+      // must be in try/catch in case sig is invalid
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
       return sig.asyncVerify(publicKey, message);
-    } catch {
+    } catch (e) {
+      if (e instanceof NotInitializedError) throw e;
       return false;
     }
   }
@@ -189,7 +137,8 @@ export function functionalInterfaceFactory({
     try {
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
       return sig.asyncVerifyAggregate(publicKeys, message);
-    } catch {
+    } catch (e) {
+      if (e instanceof NotInitializedError) throw e;
       return false;
     }
   }
@@ -206,7 +155,8 @@ export function functionalInterfaceFactory({
     try {
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
       return sig.asyncVerifyMultiple(publicKeys, messages);
-    } catch {
+    } catch (e) {
+      if (e instanceof NotInitializedError) throw e;
       return false;
     }
   }
@@ -222,8 +172,13 @@ export function functionalInterfaceFactory({
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
   async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    if (implementation === "herumi") return verifyMultipleSignatures(sets);
-    return Signature.asyncVerifyMultipleSignatures(sets);
+    try {
+      if (implementation === "herumi") return Signature.verifyMultipleSignatures(sets);
+      return Signature.asyncVerifyMultipleSignatures(sets);
+    } catch (e) {
+      if (e instanceof NotInitializedError) throw e;
+      return false;
+    }
   }
 
   /**
