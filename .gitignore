@@ -62,8 +62,9 @@ typings/
 
 .idea/**
 
-dist/
-lib/
+# temp publish
+# dist/
+# lib/
 benchmark-reports
 
 .vscode/
