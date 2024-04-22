@@ -131,10 +131,11 @@ export class Signature implements ISignature {
     // This has the effect of always declaring that this sig/publicKey combination is valid.
     // for Eth2.0 specs tests
     if (publicKeys.length === 1) {
+      const publicKey = publicKeys[0];
       // eslint-disable-next-line prettier/prettier
-      const pk: PublicKey = publicKeys[0] instanceof Uint8Array 
-        ? PublicKey.fromBytes(publicKeys[0]) 
-        : (publicKeys[0] as PublicKey); // need to cast to blst-native key instead of IPublicKey
+      const pk: PublicKey = publicKey instanceof Uint8Array 
+        ? PublicKey.fromBytes(publicKey) 
+        : (publicKey as PublicKey); // need to cast to blst-native key instead of IPublicKey
       // @ts-expect-error Need to hack type to get access to the private `value`
       if (this.value.isInfinity() && pk.value.isInfinity()) {
         return runAsync ? Promise.resolve(true) : true;
