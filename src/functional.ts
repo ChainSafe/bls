@@ -132,7 +132,7 @@ export function functionalInterfaceFactory({
     try {
       // must be in try/catch in case sig is invalid
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.asyncVerify(publicKey, message);
+      return await sig.asyncVerify(publicKey, message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -150,7 +150,7 @@ export function functionalInterfaceFactory({
     if (implementation === "herumi") return verifyAggregate(publicKeys, message, signature);
     try {
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.asyncVerifyAggregate(publicKeys, message);
+      return await sig.asyncVerifyAggregate(publicKeys, message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -168,7 +168,7 @@ export function functionalInterfaceFactory({
     if (implementation === "herumi") return verifyMultiple(publicKeys, messages, signature);
     try {
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.asyncVerifyMultiple(publicKeys, messages);
+      return await sig.asyncVerifyMultiple(publicKeys, messages);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -188,7 +188,7 @@ export function functionalInterfaceFactory({
   async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
     try {
       if (implementation === "herumi") return Signature.verifyMultipleSignatures(sets);
-      return Signature.asyncVerifyMultipleSignatures(sets);
+      return await Signature.asyncVerifyMultipleSignatures(sets);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
