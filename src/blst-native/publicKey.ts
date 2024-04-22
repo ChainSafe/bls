@@ -28,7 +28,8 @@ export class PublicKey implements IPublicKey {
   }
 
   static convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
-    return publicKey instanceof PublicKey ? publicKey.value : (publicKey as Uint8Array);
+    // need to cast to blst-native key instead of IPublicKey
+    return publicKey instanceof Uint8Array ? publicKey : (publicKey as PublicKey).value;
   }
 
   /**
