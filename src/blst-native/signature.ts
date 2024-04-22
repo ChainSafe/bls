@@ -49,7 +49,8 @@ export class Signature implements ISignature {
   }
 
   static convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
-    return signature instanceof Signature ? signature.value : (signature as Uint8Array);
+    // Need to cast to blst-native Signature instead of ISignature
+    return signature instanceof Uint8Array ? signature : (signature as Signature).value;
   }
 
   /**
