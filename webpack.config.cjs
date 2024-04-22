@@ -21,13 +21,11 @@ module.exports = {
     plugins: [
       new ResolveTypeScriptPlugin(),
     ],
-    alias: {
-      "crypto": "crypto-browserify",
-    },
     fallback: {
       fs: false,
       path: false,
       stream: false,
+      crypto: false,
       child_process: false,
     },
   },

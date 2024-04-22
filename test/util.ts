@@ -1,7 +1,7 @@
-import crypto from "crypto";
+import {randomBytes} from "@noble/hashes/utils";
 
 export function randomMessage(): Uint8Array {
-  return crypto.randomBytes(32);
+  return randomBytes(32);
 }
 
 export function getN<T>(n: number, getter: () => T): T[] {
