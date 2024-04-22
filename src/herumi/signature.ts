@@ -64,11 +64,6 @@ export class Signature implements ISignature {
   }
 
   static async asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    // eslint-disable-next-line no-console
-    console.log(
-      "asyncVerifyMultipleSignatures is not implemented by bls-eth-wasm.\n" +
-        "Please use the synchronous Signature.verifyMultipleSignatures instead"
-    );
     return Signature.verifyMultipleSignatures(sets);
   }
 
@@ -111,26 +106,14 @@ export class Signature implements ISignature {
   }
 
   async asyncVerify(publicKey: PublicKey, message: Uint8Array): Promise<boolean> {
-    // eslint-disable-next-line no-console
-    console.log("asyncVerify is not implemented by bls-eth-wasm.\nPlease use the synchronous Signature.verify instead");
     return this.verify(publicKey, message);
   }
 
   async asyncVerifyAggregate(publicKeys: PublicKey[], message: Uint8Array): Promise<boolean> {
-    // eslint-disable-next-line no-console
-    console.log(
-      "asyncVerifyAggregate is not implemented by bls-eth-wasm.\n" +
-        "Please use the synchronous Signature.verifyAggregate instead"
-    );
     return this.verifyAggregate(publicKeys, message);
   }
 
   async asyncVerifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): Promise<boolean> {
-    // eslint-disable-next-line no-console
-    console.log(
-      "asyncVerifyMultiple is not implemented by bls-eth-wasm.\n" +
-        "Please use the synchronous Signature.verifyMultiple instead"
-    );
     return this.verifyMultiple(publicKeys, messages);
   }
 
