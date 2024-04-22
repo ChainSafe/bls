@@ -2,6 +2,20 @@ import {IBls, PublicKeyArg, SignatureArg, SignatureSet} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
 
+/**
+ * NOTE:
+ *
+ * This conditional block below is present in most functions and is Herumi specific to prevent
+ * downstream issues in the WASM code. It is not necessary to validateBytes for blst-native
+ * code. The check for blst-native is implemented in the native layer.  All other byte checks
+ * for the herumi code paths are found in the herumi classes for performance reasons as they
+ * are byte-wise, only are required for the WASM and will unnecessarily slow down the 
+ * blst-native side.
+ */
+// if (implementation === "herumi" && signature instanceof Uint8Array) {
+//   validateBytes(signature, "signature");
+// }
+
 // Returned type is enforced at each implementation's index
 // eslint-disable-next-line max-len
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type,@typescript-eslint/explicit-module-boundary-types
