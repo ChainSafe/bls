@@ -9,7 +9,7 @@ import {NotInitializedError} from "./errors.js";
  * downstream issues in the WASM code. It is not necessary to validateBytes for blst-native
  * code. The check for blst-native is implemented in the native layer.  All other byte checks
  * for the herumi code paths are found in the herumi classes for performance reasons as they
- * are byte-wise, only are required for the WASM and will unnecessarily slow down the 
+ * are byte-wise, only are required for the WASM and will unnecessarily slow down the
  * blst-native side.
  */
 // if (implementation === "herumi" && signature instanceof Uint8Array) {
