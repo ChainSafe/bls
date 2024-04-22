@@ -25,6 +25,7 @@ module.exports = {
       fs: false,
       path: false,
       stream: false,
+      crypto: false,
       child_process: false,
     },
   },
