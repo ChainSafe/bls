@@ -21,6 +21,8 @@ yarn add @chainsafe/bls @chainsafe/blst
 
 By default, native bindings will be used if in NodeJS and they are installed. A WASM implementation ("herumi") is used as a fallback in case any error occurs.
 
+The `blst-native` implementation offers a multi-threaded approach to verification and utilizes the libuv worker pool to verification.  It is a more performant options synchronously and FAR better when utilized asynchronously.  All verification functions provide sync and async versions.  Both the `blst-native` and `herumi` implementations offer verification functions with `async` prefixes as free functions and also on their respective classes. This was done to preserve the isomorphic architecture of this library. In reality however, only the `blst-native` bindings have the ability to implement a promise based approach. In the `herumi` version the async version just proxies to the sync version under the hood.
+
 ```ts
 import bls from "@chainsafe/bls";
 
@@ -106,7 +108,7 @@ Results are in `ops/sec (x times slower)`, where `x times slower` = times slower
 
 \* `blst` and `herumi` performed 100 runs each, `noble` 10 runs.
 
-Results from CI run https://github.com/ChainSafe/bls/runs/1513710175?check_suite_focus=true#step:12:13
+Results from CI run <https://github.com/ChainSafe/bls/runs/1513710175?check_suite_focus=true#step:12:13>
 
 ## Spec versioning
 
