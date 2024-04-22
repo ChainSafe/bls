@@ -1,4 +1,3 @@
-const path = require('path');
 const ResolveTypeScriptPlugin = require("resolve-typescript-plugin");
 
 module.exports = {
@@ -10,10 +9,6 @@ module.exports = {
   module: {
     rules: [
       {test: /\.(ts)$/, use: {loader: "ts-loader", options: {transpileOnly: true}}},
-      {
-        test: /@chainsafe\/blst/,
-        use: 'null-loader',
-      },
     ],
   },
   optimization: {
@@ -28,12 +23,12 @@ module.exports = {
     ],
     alias: {
       "crypto": "crypto-browserify",
-      './blst-native/index.js': path.resolve(__dirname, './src/herumi/index.js')
     },
     fallback: {
       fs: false,
       path: false,
       stream: false,
+      child_process: false,
     },
   },
   experiments: {

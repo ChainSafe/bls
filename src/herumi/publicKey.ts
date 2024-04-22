@@ -1,7 +1,7 @@
-import type {PublicKeyType} from "bls-eth-wasm";
+import {PublicKeyType} from "bls-eth-wasm";
 import {getContext} from "./context.js";
-import {bytesToHex, hexToBytes, isZeroUint8Array} from "../helpers/index.js";
-import {PointFormat, PublicKey as IPublicKey} from "../types.js";
+import {bytesToHex, hexToBytes, isZeroUint8Array, validateBytes} from "../helpers/index.js";
+import {PointFormat, PublicKey as IPublicKey, PublicKeyArg} from "../types.js";
 import {EmptyAggregateError, InvalidLengthError, ZeroPublicKeyError} from "../errors.js";
 import {PUBLIC_KEY_LENGTH_COMPRESSED, PUBLIC_KEY_LENGTH_UNCOMPRESSED} from "../constants.js";
 
@@ -35,16 +35,28 @@ export class PublicKey implements IPublicKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(publicKeys: PublicKey[]): PublicKey {
+  static aggregate(publicKeys: PublicKeyArg[]): PublicKey {
     if (publicKeys.length === 0) {
       throw new EmptyAggregateError();
     }
-
-    const agg = new PublicKey(publicKeys[0].value.clone());
-    for (const pk of publicKeys.slice(1)) {
-      agg.value.add(pk.value);
+    const context = getContext();
+    const agg = new context.PublicKey();
+    for (const publicKey of publicKeys) {
+      agg.add(PublicKey.convertToPublicKeyType(publicKey));
     }
-    return agg;
+    return new PublicKey(agg);
+  }
+
+  static convertToPublicKeyType(publicKey: PublicKeyArg): PublicKeyType {
+    let pk: PublicKey;
+    if (publicKey instanceof Uint8Array) {
+      validateBytes(publicKey, "publicKey");
+      pk = PublicKey.fromBytes(publicKey);
+    } else {
+      // need to cast to herumi key instead of IPublicKey
+      pk = publicKey as PublicKey;
+    }
+    return pk.value;
   }
 
   toBytes(format?: PointFormat): Uint8Array {
