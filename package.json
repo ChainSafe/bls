@@ -121,7 +121,7 @@
     "v8-profiler-next": "1.10.0"
   },
   "peerDependencies": {
-    "@chainsafe/blst": "^1.0.0"
+    "@chainsafe/blst": "^2.0.1"
   },
   "peerDependenciesMeta": {
     "@chainsafe/blst": {
