@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import type {SecretKey, PublicKey, Signature, IBls} from "../../src/types.js";
-import { randomMessage } from "../util.js";
+import {randomMessage} from "../util.js";
 
 describe("types named exports", async () => {
   let bls: IBls;

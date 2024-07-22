@@ -123,11 +123,13 @@ export function functionalInterfaceFactory({
    */
   function verifyMultipleSignatures(sets: SerializedSignatureSet[]): boolean {
     try {
-      return Signature.verifyMultipleSignatures(sets.map((set) => ({
-        message: set.message,
-        publicKey: PublicKey.fromBytes(set.publicKey),
-        signature: Signature.fromBytes(set.signature),
-      })));
+      return Signature.verifyMultipleSignatures(
+        sets.map((set) => ({
+          message: set.message,
+          publicKey: PublicKey.fromBytes(set.publicKey),
+          signature: Signature.fromBytes(set.signature),
+        }))
+      );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;

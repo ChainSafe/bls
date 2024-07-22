@@ -36,9 +36,7 @@ export class BlsMultiThreadNaive {
   }
 
   async verify(pk: PublicKey, msg: Uint8Array, sig: Signature): Promise<boolean> {
-    return this.pool.queue((worker) =>
-      worker.verify(this.impl, pk.toBytes(), msg, sig.toBytes())
-    );
+    return this.pool.queue((worker) => worker.verify(this.impl, pk.toBytes(), msg, sig.toBytes()));
   }
 
   async verifyMultipleAggregateSignatures(
