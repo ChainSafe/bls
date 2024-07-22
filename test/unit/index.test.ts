@@ -189,7 +189,7 @@ export function runIndexTests(bls: IBls): void {
 
     it("should fail verify empty message", () => {
       const n = 4;
-      const sets = getN(n, (i) => {
+      const sets = getN(n, () => {
         const sk = bls.SecretKey.fromKeygen();
         const publicKey = sk.toPublicKey();
         const message = randomMessage();
