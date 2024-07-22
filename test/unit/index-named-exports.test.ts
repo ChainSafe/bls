@@ -1,5 +1,6 @@
 import {expect} from "chai";
 import type {SecretKey, PublicKey, Signature, IBls} from "../../src/types.js";
+import { randomMessage } from "../util.js";
 
 describe("types named exports", async () => {
   let bls: IBls;
@@ -16,7 +17,7 @@ describe("types named exports", async () => {
       return sig.verify(pk, msg);
     }
 
-    const sk = bls.SecretKey.fromKeygen();
+    const sk = bls.SecretKey.fromKeygen(randomMessage());
     const msg = new Uint8Array(32);
     const sig = sk.sign(msg);
     const pk = sk.toPublicKey();
@@ -24,7 +25,7 @@ describe("types named exports", async () => {
   });
 
   it("Make sure exported classes are compatible with interface", () => {
-    const sk: SecretKey = bls.SecretKey.fromKeygen();
+    const sk: SecretKey = bls.SecretKey.fromKeygen(randomMessage());
     const pk: PublicKey = sk.toPublicKey();
     const sig: Signature = sk.sign(new Uint8Array(32));
     pk;

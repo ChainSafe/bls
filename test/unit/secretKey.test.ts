@@ -4,8 +4,8 @@ import {IBls} from "../../src/types.js";
 export function runSecretKeyTests(bls: IBls): void {
   describe("SecretKey", () => {
     it("should generate fromKeygen secret key", () => {
-      const secretKey1 = bls.SecretKey.fromKeygen();
-      const secretKey2 = bls.SecretKey.fromKeygen();
+      const secretKey1 = bls.SecretKey.fromKeygen(Buffer.alloc(32, 1));
+      const secretKey2 = bls.SecretKey.fromKeygen(Buffer.alloc(32, 2));
       expect(secretKey1.toHex()).to.not.be.equal(secretKey2.toHex());
     });
 

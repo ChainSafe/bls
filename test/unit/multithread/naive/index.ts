@@ -1,5 +1,5 @@
 import {spawn, Pool, Worker, Thread} from "@chainsafe/threads";
-import {Implementation, PointFormat, PublicKey, Signature} from "../../../../src/types.js";
+import {Implementation, PublicKey, Signature} from "../../../../src/types.js";
 import {WorkerApi} from "./worker.js";
 
 type ThreadType = {
@@ -14,14 +14,9 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export class BlsMultiThreadNaive {
   impl: Implementation;
   pool: Pool<Thread & ThreadType>;
-  format: PointFormat;
 
   constructor(impl: Implementation, workerCount?: number) {
     this.impl = impl;
-    // Use compressed for herumi for now.
-    // THe worker is not able to deserialize from uncompressed
-    // `Error: err _wrapDeserialize`
-    this.format = impl === "blst-native" ? PointFormat.uncompressed : PointFormat.compressed;
     this.pool = Pool(
       () =>
         (spawn(
@@ -42,7 +37,7 @@ export class BlsMultiThreadNaive {
 
   async verify(pk: PublicKey, msg: Uint8Array, sig: Signature): Promise<boolean> {
     return this.pool.queue((worker) =>
-      worker.verify(this.impl, pk.toBytes(PointFormat.uncompressed), msg, sig.toBytes(PointFormat.uncompressed))
+      worker.verify(this.impl, pk.toBytes(), msg, sig.toBytes())
     );
   }
 
@@ -53,9 +48,9 @@ export class BlsMultiThreadNaive {
       worker.verifyMultipleAggregateSignatures(
         this.impl,
         sets.map((s) => ({
-          publicKey: s.publicKey.toBytes(PointFormat.uncompressed),
+          publicKey: s.publicKey.toBytes(),
           message: s.message,
-          signature: s.signature.toBytes(PointFormat.uncompressed),
+          signature: s.signature.toBytes(),
         }))
       )
     );

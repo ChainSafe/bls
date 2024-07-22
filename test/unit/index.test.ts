@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {Buffer} from "buffer";
-import {IBls, PointFormat} from "../../src/types.js";
+import {IBls} from "../../src/types.js";
 import {getN, randomMessage} from "../util.js";
 import {hexToBytes} from "../../src/helpers/index.js";
 import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data.js";
@@ -8,7 +8,7 @@ import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature
 export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
-    const sk = bls.SecretKey.fromKeygen();
+    const sk = bls.SecretKey.fromKeygen(randomMessage());
     const pk = sk.toPublicKey();
     const msg = randomMessage();
     const sig = sk.sign(msg);
@@ -24,7 +24,7 @@ export function runIndexTests(bls: IBls): void {
       );
       let sig;
       try {
-        sig = bls.Signature.fromBytes(POINT_NOT_IN_G2, undefined, true);
+        sig = bls.Signature.fromBytes(POINT_NOT_IN_G2, true);
       } catch {
         /* eslint-disable no-empty */
       }
@@ -74,7 +74,7 @@ export function runIndexTests(bls: IBls): void {
 
   describe("verify multiple", () => {
     it("should verify aggregated signatures", () => {
-      const sks = getN(4, () => bls.SecretKey.fromKeygen());
+      const sks = getN(4, () => bls.SecretKey.fromKeygen(randomMessage()));
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
 
@@ -94,7 +94,7 @@ export function runIndexTests(bls: IBls): void {
     it("should verify aggregated signatures - same message", () => {
       const n = 4;
       const msg = randomMessage();
-      const sks = getN(n, () => bls.SecretKey.fromKeygen());
+      const sks = getN(n, () => bls.SecretKey.fromKeygen(randomMessage()));
       const pks = sks.map((sk) => sk.toPublicKey());
       const sigs = sks.map((sk) => sk.sign(msg));
 
@@ -118,7 +118,7 @@ export function runIndexTests(bls: IBls): void {
     });
 
     it("should fail verify empty message", () => {
-      const sks = getN(2, () => bls.SecretKey.fromKeygen());
+      const sks = getN(2, () => bls.SecretKey.fromKeygen(randomMessage()));
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
       const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[1])];
@@ -134,7 +134,7 @@ export function runIndexTests(bls: IBls): void {
     it("Should verify multiple signatures", () => {
       const n = 4;
       const sets = getN(n, () => {
-        const sk = bls.SecretKey.fromKeygen();
+        const sk = bls.SecretKey.fromKeygen(randomMessage());
         const publicKey = sk.toPublicKey();
         const message = randomMessage();
         const signature = sk.sign(message);
@@ -189,8 +189,8 @@ export function runIndexTests(bls: IBls): void {
 
     it("should fail verify empty message", () => {
       const n = 4;
-      const sets = getN(n, () => {
-        const sk = bls.SecretKey.fromKeygen();
+      const sets = getN(n, (i) => {
+        const sk = bls.SecretKey.fromKeygen(Buffer.alloc(32, i));
         const publicKey = sk.toPublicKey();
         const message = randomMessage();
         const signature = sk.sign(message);
@@ -215,13 +215,13 @@ export function runIndexTests(bls: IBls): void {
 
     it("Should serialize comp pubkey", () => {
       const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
-      const pkHexComp = sk.toPublicKey().toHex(PointFormat.compressed);
+      const pkHexComp = sk.toPublicKey().toHex();
       expect(pkHexComp).to.equal(pkHexCompExpected, "Wrong pkHexComp");
     });
 
     it("Should serialize uncomp pubkey", () => {
       const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
-      const pkHexUncomp = sk.toPublicKey().toHex(PointFormat.uncompressed);
+      const pkHexUncomp = sk.toPublicKey().toHex(false);
       expect(pkHexUncomp).to.equal(pkHexUncompExpected, "Wrong pkHexUncomp");
     });
 
