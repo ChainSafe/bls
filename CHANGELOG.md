@@ -7,7 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [9.0.0] - TODO
 
-- TODO
+### Features
+
+- simplify interface [#182](https://github.com/ChainSafe/bls/pull/182)
 
 ## [7.1.1] - 2022-05-15
 
