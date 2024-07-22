@@ -1,3 +1,4 @@
+import crypto from "crypto";
 import blst from "@chainsafe/blst";
 import {SecretKey as ISecretKey} from "../types.js";
 import {PublicKey} from "./publicKey.js";
