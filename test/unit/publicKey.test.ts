@@ -15,7 +15,7 @@ export function runPublicKeyTests(bls: IBls): void {
     });
 
     it("from secret key", () => {
-      bls.SecretKey.fromKeygen(Buffer.alloc(32)).toPublicKey();
+      bls.SecretKey.fromKeygen().toPublicKey();
     });
   });
 }

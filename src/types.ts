@@ -54,7 +54,7 @@ export declare class SecretKey {
   private constructor(...t: any);
   static fromBytes(bytes: Uint8Array): SecretKey;
   static fromHex(hex: string): SecretKey;
-  static fromKeygen(entropy: Uint8Array): SecretKey;
+  static fromKeygen(entropy?: Uint8Array): SecretKey;
   sign(message: Uint8Array): Signature;
   toPublicKey(): PublicKey;
   toBytes(): Uint8Array;

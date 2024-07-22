@@ -20,8 +20,8 @@ export class SecretKey implements ISecretKey {
     return new SecretKey(blst.SecretKey.fromHex(hex));
   }
 
-  static fromKeygen(entropy: Uint8Array): SecretKey {
-    return new SecretKey(blst.SecretKey.fromKeygen(entropy));
+  static fromKeygen(entropy?: Uint8Array): SecretKey {
+    return new SecretKey(blst.SecretKey.fromKeygen(entropy ?? crypto.getRandomValues(new Uint8Array(32))));
   }
 
   sign(message: Uint8Array): Signature {

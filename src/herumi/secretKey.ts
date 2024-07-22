@@ -1,5 +1,5 @@
 import type {SecretKeyType} from "bls-eth-wasm";
-import {deriveKeyFromEntropy} from "@chainsafe/bls-keygen";
+import {deriveKeyFromEntropy, generateRandomSecretKey} from "@chainsafe/bls-keygen";
 import {SECRET_KEY_LENGTH} from "../constants.js";
 import {getContext} from "./context.js";
 import {PublicKey} from "./publicKey.js";
@@ -34,8 +34,8 @@ export class SecretKey implements ISecretKey {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static fromKeygen(entropy: Uint8Array): SecretKey {
-    const sk = deriveKeyFromEntropy(entropy);
+  static fromKeygen(entropy?: Uint8Array): SecretKey {
+    const sk = entropy ? deriveKeyFromEntropy(entropy) : generateRandomSecretKey();
     return this.fromBytes(sk);
   }
 

@@ -8,7 +8,7 @@ import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature
 export function runIndexTests(bls: IBls): void {
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
   function getRandomData() {
-    const sk = bls.SecretKey.fromKeygen(randomMessage());
+    const sk = bls.SecretKey.fromKeygen();
     const pk = sk.toPublicKey();
     const msg = randomMessage();
     const sig = sk.sign(msg);
@@ -74,7 +74,7 @@ export function runIndexTests(bls: IBls): void {
 
   describe("verify multiple", () => {
     it("should verify aggregated signatures", () => {
-      const sks = getN(4, () => bls.SecretKey.fromKeygen(randomMessage()));
+      const sks = getN(4, () => bls.SecretKey.fromKeygen());
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
 
@@ -94,7 +94,7 @@ export function runIndexTests(bls: IBls): void {
     it("should verify aggregated signatures - same message", () => {
       const n = 4;
       const msg = randomMessage();
-      const sks = getN(n, () => bls.SecretKey.fromKeygen(randomMessage()));
+      const sks = getN(n, () => bls.SecretKey.fromKeygen());
       const pks = sks.map((sk) => sk.toPublicKey());
       const sigs = sks.map((sk) => sk.sign(msg));
 
@@ -118,7 +118,7 @@ export function runIndexTests(bls: IBls): void {
     });
 
     it("should fail verify empty message", () => {
-      const sks = getN(2, () => bls.SecretKey.fromKeygen(randomMessage()));
+      const sks = getN(2, () => bls.SecretKey.fromKeygen());
       const msgs = getN(2, () => randomMessage());
       const pks = sks.map((sk) => sk.toPublicKey());
       const sigs = [sks[0].sign(msgs[0]), sks[1].sign(msgs[1])];
@@ -134,7 +134,7 @@ export function runIndexTests(bls: IBls): void {
     it("Should verify multiple signatures", () => {
       const n = 4;
       const sets = getN(n, () => {
-        const sk = bls.SecretKey.fromKeygen(randomMessage());
+        const sk = bls.SecretKey.fromKeygen();
         const publicKey = sk.toPublicKey();
         const message = randomMessage();
         const signature = sk.sign(message);
@@ -190,7 +190,7 @@ export function runIndexTests(bls: IBls): void {
     it("should fail verify empty message", () => {
       const n = 4;
       const sets = getN(n, (i) => {
-        const sk = bls.SecretKey.fromKeygen(Buffer.alloc(32, i));
+        const sk = bls.SecretKey.fromKeygen();
         const publicKey = sk.toPublicKey();
         const message = randomMessage();
         const signature = sk.sign(message);
