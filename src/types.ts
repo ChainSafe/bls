@@ -2,8 +2,8 @@ export type Implementation = "herumi" | "blst-native";
 
 export interface SerializedSignatureSet {
   message: Uint8Array;
-  publicKey: PublicKey;
-  signature: Signature;
+  publicKey: Uint8Array;
+  signature: Uint8Array;
 }
 
 export interface SignatureSet {
@@ -46,13 +46,15 @@ export interface IBls {
    * a message by a public key. This function catches invalid input and return false for bad keys or
    * signatures. Use the `Signature.verifyMultipleSignatures` if throwing is desired.
    */
-  verifyMultipleSignatures(sets: SignatureSet[]): boolean;
+  verifyMultipleSignatures(sets: SerializedSignatureSet[]): boolean;
 }
 
 export declare class SecretKey {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  private constructor(...t: any);
   static fromBytes(bytes: Uint8Array): SecretKey;
   static fromHex(hex: string): SecretKey;
-  static fromKeygen(entropy?: Uint8Array): SecretKey;
+  static fromKeygen(entropy: Uint8Array): SecretKey;
   sign(message: Uint8Array): Signature;
   toPublicKey(): PublicKey;
   toBytes(): Uint8Array;
@@ -60,16 +62,20 @@ export declare class SecretKey {
 }
 
 export declare class PublicKey {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  private constructor(...t: any);
   static fromBytes(bytes: Uint8Array, validate?: boolean): PublicKey;
   static fromHex(hex: string, validate?: boolean): PublicKey;
   static aggregate(publicKeys: PublicKey[]): PublicKey;
-  /** @param compressed Defaults to `true` */
-  toBytes(compressed?: boolean): Uint8Array;
-  /** @param compressed Defaults to `true` */
-  toHex(compressed?: boolean): string;
+  /** @param compress Defaults to `true` */
+  toBytes(compress?: boolean): Uint8Array;
+  /** @param compress Defaults to `true` */
+  toHex(compress?: boolean): string;
 }
 
 export declare class Signature {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+  private constructor(...t: any);
   /**  @param validate When using `herumi` implementation, signature validation is always on regardless of this flag. */
   static fromBytes(bytes: Uint8Array, validate?: boolean): Signature;
   /**  @param validate When using `herumi` implementation, signature validation is always on regardless of this flag. */
@@ -100,8 +106,8 @@ export declare class Signature {
    * Note: the number of keys and messages must match.
    */
   verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean;
-  /** @param compressed Defaults to `true` */
-  toBytes(compressed?: boolean): Uint8Array;
-  /** @param compressed Defaults to `true` */
-  toHex(compressed?: boolean): string;
+  /** @param compress Defaults to `true` */
+  toBytes(compress?: boolean): Uint8Array;
+  /** @param compress Defaults to `true` */
+  toHex(compress?: boolean): string;
 }

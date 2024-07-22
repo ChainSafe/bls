@@ -2,7 +2,7 @@ import type {SignatureType} from "bls-eth-wasm";
 import {getContext} from "./context.js";
 import {PublicKey} from "./publicKey.js";
 import {bytesToHex, concatUint8Arrays, hexToBytes, isZeroUint8Array, validateBytes} from "../helpers/index.js";
-import {SignatureSet, PointFormat, Signature as ISignature, CoordType, PublicKeyArg, SignatureArg} from "../types.js";
+import {SignatureSet, Signature as ISignature} from "../types.js";
 import {EmptyAggregateError, InvalidLengthError, InvalidOrderError} from "../errors.js";
 import {SIGNATURE_LENGTH_COMPRESSED, SIGNATURE_LENGTH_UNCOMPRESSED} from "../constants.js";
 
@@ -18,10 +18,9 @@ export class Signature implements ISignature {
   }
 
   /**
-   * @param type Does not affect `herumi` implementation, always de-serializes to `jacobian`
    * @param validate With `herumi` implementation signature validation is always on regardless of this flag.
    */
-  static fromBytes(bytes: Uint8Array, _type?: CoordType, _validate = true): Signature {
+  static fromBytes(bytes: Uint8Array, _validate = true): Signature {
     const context = getContext();
     const signature = new context.Signature();
     if (!isZeroUint8Array(bytes)) {
@@ -41,14 +40,14 @@ export class Signature implements ISignature {
     return this.fromBytes(hexToBytes(hex));
   }
 
-  static aggregate(signatures: SignatureArg[]): Signature {
+  static aggregate(signatures: Signature[]): Signature {
     if (signatures.length === 0) {
       throw new EmptyAggregateError();
     }
 
     const context = getContext();
     const agg = new context.Signature();
-    agg.aggregate(signatures.map(Signature.convertToSignatureType));
+    agg.aggregate(signatures.map((sig) => sig["value"]));
     return new Signature(agg);
   }
 
@@ -57,35 +56,26 @@ export class Signature implements ISignature {
 
     const context = getContext();
     return context.multiVerify(
-      sets.map((s) => PublicKey.convertToPublicKeyType(s.publicKey)),
-      sets.map((s) => Signature.convertToSignatureType(s.signature)),
+      sets.map((s) => (s.publicKey as PublicKey)["value"]),
+      sets.map((s) => (s.signature as Signature)["value"]),
       sets.map((s) => s.message)
     );
   }
 
-  static convertToSignatureType(signature: SignatureArg): SignatureType {
-    let sig: Signature;
-    if (signature instanceof Uint8Array) {
-      validateBytes(signature, "signature");
-      sig = Signature.fromBytes(signature);
-    } else {
-      // need to cast to herumi sig instead of ISignature
-      sig = signature as Signature;
-    }
-    return sig.value;
-  }
-
-  verify(publicKey: PublicKeyArg, message: Uint8Array): boolean {
+  verify(publicKey: PublicKey, message: Uint8Array): boolean {
     validateBytes(message, "message");
-    return PublicKey.convertToPublicKeyType(publicKey).verify(this.value, message);
+    return publicKey["value"].verify(this.value, message);
   }
 
-  verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): boolean {
+  verifyAggregate(publicKeys: PublicKey[], message: Uint8Array): boolean {
     validateBytes(message, "message");
-    return this.value.fastAggregateVerify(publicKeys.map(PublicKey.convertToPublicKeyType), message);
+    return this.value.fastAggregateVerify(
+      publicKeys.map((pk) => pk["value"]),
+      message
+    );
   }
 
-  verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): boolean {
+  verifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): boolean {
     // TODO: (@matthewkeil) this was in the verifyMultiple free function but was moved here for herumi. blst-native
     //       does this check but throws error instead of returning false.  Need to double check spec on which is
     //       correct handling
@@ -96,20 +86,20 @@ export class Signature implements ISignature {
     validateBytes(messages, "message");
 
     return this.value.aggregateVerifyNoCheck(
-      publicKeys.map(PublicKey.convertToPublicKeyType),
+      publicKeys.map((pk) => pk["value"]),
       concatUint8Arrays(messages)
     );
   }
 
-  toBytes(format?: PointFormat): Uint8Array {
-    if (format === PointFormat.uncompressed) {
+  toBytes(compress = true): Uint8Array {
+    if (!compress) {
       return this.value.serializeUncompressed();
     } else {
       return this.value.serialize();
     }
   }
 
-  toHex(format?: PointFormat): string {
-    return bytesToHex(this.toBytes(format));
+  toHex(compress = true): string {
+    return bytesToHex(this.toBytes(compress));
   }
 }

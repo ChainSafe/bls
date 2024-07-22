@@ -1,4 +1,4 @@
-import {IBls, PublicKeyArg, SignatureArg, SignatureSet} from "./types.js";
+import {IBls, SerializedSignatureSet} from "./types.js";
 import {validateBytes} from "./helpers/index.js";
 import {NotInitializedError} from "./errors.js";
 
@@ -38,28 +38,28 @@ export function functionalInterfaceFactory({
   /**
    * Compines all given signature into one.
    */
-  function aggregateSignatures(signatures: SignatureArg[]): Uint8Array {
-    return Signature.aggregate(signatures).toBytes();
+  function aggregateSignatures(signatures: Uint8Array[]): Uint8Array {
+    return Signature.aggregate(signatures.map((sig) => Signature.fromBytes(sig))).toBytes();
   }
 
   /**
    * Combines all given public keys into single one
    */
-  function aggregatePublicKeys(publicKeys: PublicKeyArg[]): Uint8Array {
-    return PublicKey.aggregate(publicKeys).toBytes();
+  function aggregatePublicKeys(publicKeys: Uint8Array[]): Uint8Array {
+    return PublicKey.aggregate(publicKeys.map((pk) => PublicKey.fromBytes(pk))).toBytes();
   }
 
   /**
    * Verifies if signature is message signed with given public key.
    */
-  function verify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): boolean {
+  function verify(publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array): boolean {
     try {
       if (implementation === "herumi" && signature instanceof Uint8Array) {
         validateBytes(signature, "signature");
       }
 
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.verify(publicKey, message);
+      return sig.verify(PublicKey.fromBytes(publicKey), message);
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -69,14 +69,17 @@ export function functionalInterfaceFactory({
   /**
    * Verifies if aggregated signature is same message signed with given public keys.
    */
-  function verifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): boolean {
+  function verifyAggregate(publicKeys: Uint8Array[], message: Uint8Array, signature: Uint8Array): boolean {
     try {
       if (implementation === "herumi" && signature instanceof Uint8Array) {
         validateBytes(signature, "signature");
       }
 
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.verifyAggregate(publicKeys, message);
+      return sig.verifyAggregate(
+        publicKeys.map((pk) => PublicKey.fromBytes(pk)),
+        message
+      );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -86,7 +89,7 @@ export function functionalInterfaceFactory({
   /**
    * Verifies if signature is list of message signed with corresponding public key.
    */
-  function verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): boolean {
+  function verifyMultiple(publicKeys: Uint8Array[], messages: Uint8Array[], signature: Uint8Array): boolean {
     // TODO: (@matthewkeil) blst-ts has this check but throws an error instead of returning false.  Moving to
     //       the herumi and commenting here for now.  Will double check spec on what is appropriate.
     // if (publicKeys.length === 0 || publicKeys.length != messages.length) {
@@ -98,7 +101,10 @@ export function functionalInterfaceFactory({
       }
 
       const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return sig.verifyMultiple(publicKeys, messages);
+      return sig.verifyMultiple(
+        publicKeys.map((pk) => PublicKey.fromBytes(pk)),
+        messages
+      );
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
@@ -115,9 +121,13 @@ export function functionalInterfaceFactory({
    * verify on its own but will if it's added to a specific predictable signature
    * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
    */
-  function verifyMultipleSignatures(sets: SignatureSet[]): boolean {
+  function verifyMultipleSignatures(sets: SerializedSignatureSet[]): boolean {
     try {
-      return Signature.verifyMultipleSignatures(sets);
+      return Signature.verifyMultipleSignatures(sets.map((set) => ({
+        message: set.message,
+        publicKey: PublicKey.fromBytes(set.publicKey),
+        signature: Signature.fromBytes(set.signature),
+      })));
     } catch (e) {
       if (e instanceof NotInitializedError) throw e;
       return false;
