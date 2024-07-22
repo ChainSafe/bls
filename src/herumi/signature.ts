@@ -63,10 +63,6 @@ export class Signature implements ISignature {
     );
   }
 
-  static async asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    return Signature.verifyMultipleSignatures(sets);
-  }
-
   static convertToSignatureType(signature: SignatureArg): SignatureType {
     let sig: Signature;
     if (signature instanceof Uint8Array) {
@@ -105,18 +101,6 @@ export class Signature implements ISignature {
     );
   }
 
-  async asyncVerify(publicKey: PublicKey, message: Uint8Array): Promise<boolean> {
-    return this.verify(publicKey, message);
-  }
-
-  async asyncVerifyAggregate(publicKeys: PublicKey[], message: Uint8Array): Promise<boolean> {
-    return this.verifyAggregate(publicKeys, message);
-  }
-
-  async asyncVerifyMultiple(publicKeys: PublicKey[], messages: Uint8Array[]): Promise<boolean> {
-    return this.verifyMultiple(publicKeys, messages);
-  }
-
   toBytes(format?: PointFormat): Uint8Array {
     if (format === PointFormat.uncompressed) {
       return this.value.serializeUncompressed();
@@ -127,14 +111,5 @@ export class Signature implements ISignature {
 
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
-  }
-
-  multiplyBy(_bytes: Uint8Array): Signature {
-    // TODO: I found this in the code but its not exported. Need to figure out
-    //       how to implement
-    // const a = getContext();
-    // const randomness = new a.FR(8);
-    // return new Signature(a.mul(this.value, randomness));
-    throw new Error("multiplyBy is not implemented by bls-eth-wasm");
   }
 }

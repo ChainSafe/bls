@@ -50,8 +50,4 @@ export class PublicKey implements IPublicKey {
   toHex(format?: PointFormat): string {
     return bytesToHex(this.toBytes(format));
   }
-
-  multiplyBy(bytes: Uint8Array): PublicKey {
-    return new PublicKey(this.value.multiplyBy(bytes));
-  }
 }

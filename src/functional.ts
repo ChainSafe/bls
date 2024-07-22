@@ -125,77 +125,6 @@ export function functionalInterfaceFactory({
   }
 
   /**
-   * Verifies if signature is message signed with given public key.
-   */
-  async function asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean> {
-    if (implementation === "herumi") return verify(publicKey, message, signature);
-    try {
-      // must be in try/catch in case sig is invalid
-      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return await sig.asyncVerify(publicKey, message);
-    } catch (e) {
-      if (e instanceof NotInitializedError) throw e;
-      return false;
-    }
-  }
-
-  /**
-   * Verifies if aggregated signature is same message signed with given public keys.
-   */
-  async function asyncVerifyAggregate(
-    publicKeys: PublicKeyArg[],
-    message: Uint8Array,
-    signature: SignatureArg
-  ): Promise<boolean> {
-    if (implementation === "herumi") return verifyAggregate(publicKeys, message, signature);
-    try {
-      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return await sig.asyncVerifyAggregate(publicKeys, message);
-    } catch (e) {
-      if (e instanceof NotInitializedError) throw e;
-      return false;
-    }
-  }
-
-  /**
-   * Verifies if signature is list of message signed with corresponding public key.
-   */
-  async function asyncVerifyMultiple(
-    publicKeys: PublicKeyArg[],
-    messages: Uint8Array[],
-    signature: SignatureArg
-  ): Promise<boolean> {
-    if (implementation === "herumi") return verifyMultiple(publicKeys, messages, signature);
-    try {
-      const sig = signature instanceof Signature ? signature : Signature.fromBytes(signature);
-      return await sig.asyncVerifyMultiple(publicKeys, messages);
-    } catch (e) {
-      if (e instanceof NotInitializedError) throw e;
-      return false;
-    }
-  }
-
-  /**
-   * Verifies multiple signatures at once returning true if all valid or false
-   * if at least one is not. Optimization useful when knowing which signature is
-   * wrong is not relevant, i.e. verifying an entire Eth2.0 block.
-   *
-   * This method provides a safe way to do so by multiplying each signature by
-   * a random number so an attacker cannot craft a malicious signature that won't
-   * verify on its own but will if it's added to a specific predictable signature
-   * https://ethresear.ch/t/fast-verification-of-multiple-bls-signatures/5407
-   */
-  async function asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    try {
-      if (implementation === "herumi") return Signature.verifyMultipleSignatures(sets);
-      return await Signature.asyncVerifyMultipleSignatures(sets);
-    } catch (e) {
-      if (e instanceof NotInitializedError) throw e;
-      return false;
-    }
-  }
-
-  /**
    * Computes a public key from a secret key
    */
   function secretKeyToPublicKey(secretKey: Uint8Array): Uint8Array {
@@ -208,13 +137,9 @@ export function functionalInterfaceFactory({
     aggregateSignatures,
     aggregatePublicKeys,
     verify,
-    asyncVerify,
     verifyAggregate,
-    asyncVerifyAggregate,
     verifyMultiple,
-    asyncVerifyMultiple,
     verifyMultipleSignatures,
-    asyncVerifyMultipleSignatures,
     secretKeyToPublicKey,
   };
 }

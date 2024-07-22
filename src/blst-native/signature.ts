@@ -38,16 +38,6 @@ export class Signature implements ISignature {
     );
   }
 
-  static asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    return blst.asyncVerifyMultipleAggregateSignatures(
-      sets.map((set) => ({
-        message: set.message,
-        publicKey: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
-        signature: Signature.convertToBlstSignatureArg(set.signature),
-      }))
-    );
-  }
-
   static convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
     // Need to cast to blst-native Signature instead of ISignature
     return signature instanceof Uint8Array ? signature : (signature as Signature).value;
@@ -76,26 +66,7 @@ export class Signature implements ISignature {
   }
 
   verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): boolean {
-    return this.aggregateVerify(publicKeys, messages, false);
-  }
-
-  async asyncVerify(publicKey: PublicKeyArg, message: Uint8Array): Promise<boolean> {
-    // TODO (@matthewkeil) The note in aggregateVerify and the checks in this method
-    // do not seem to go together. Need to check the spec further.
-
-    // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
-    if (this.value.isInfinity()) {
-      throw new ZeroSignatureError();
-    }
-    return blst.asyncVerify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
-  }
-
-  async asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): Promise<boolean> {
-    return blst.asyncFastAggregateVerify(message, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
-  }
-
-  async asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): Promise<boolean> {
-    return this.aggregateVerify(publicKeys, messages, true);
+    return this.aggregateVerify(publicKeys, messages);
   }
 
   toBytes(format?: PointFormat): Uint8Array {
@@ -110,21 +81,7 @@ export class Signature implements ISignature {
     return bytesToHex(this.toBytes(format));
   }
 
-  multiplyBy(bytes: Uint8Array): Signature {
-    return new Signature(this.value.multiplyBy(bytes));
-  }
-
-  private aggregateVerify<T extends false>(publicKeys: PublicKeyArg[], messages: Uint8Array[], runAsync: T): boolean;
-  private aggregateVerify<T extends true>(
-    publicKeys: PublicKeyArg[],
-    messages: Uint8Array[],
-    runAsync: T
-  ): Promise<boolean>;
-  private aggregateVerify<T extends boolean>(
-    publicKeys: PublicKeyArg[],
-    messages: Uint8Array[],
-    runAsync: T
-  ): Promise<boolean> | boolean {
+  private aggregateVerify(publicKeys: PublicKeyArg[], messages: Uint8Array[]): boolean {
     // TODO (@matthewkeil) The note in verify and the checks in this method
     // do not seem to go together. Need to check the spec further.
 
@@ -143,8 +100,6 @@ export class Signature implements ISignature {
       }
     }
 
-    return runAsync
-      ? blst.asyncAggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value)
-      : blst.aggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
+    return blst.aggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 }

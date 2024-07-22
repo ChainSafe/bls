@@ -64,31 +64,6 @@ export interface IBls {
    * signatures. Use the `Signature.verifyMultipleSignatures` if throwing is desired.
    */
   verifyMultipleSignatures(sets: SignatureSet[]): boolean;
-  /**
-   * Will asynchronously verify a signature. This function catches invalid input and return false for
-   * bad keys or signatures. Use the `Signature.asyncVerify` method if throwing is desired.
-   */
-  asyncVerify(publicKey: PublicKeyArg, message: Uint8Array, signature: SignatureArg): Promise<boolean>;
-  /**
-   * Will asynchronously verify a signature over a message by multiple aggregated keys. This function
-   * catches invalid input and return false for bad keys or signatures. Use the
-   * `Signature.asyncVerifyAggregate` if throwing is desired.
-   */
-  asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array, signature: SignatureArg): Promise<boolean>;
-  /**
-   * Will asynchronously verify an aggregated signature over a number of messages each signed by a
-   * different key. This function catches invalid input and return false for bad keys or signatures.
-   * Use the `Signature.asyncVerifyAggregate` if throwing is desired.
-   *
-   * Note: the number of keys and messages must match.
-   */
-  asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[], signature: SignatureArg): Promise<boolean>;
-  /**
-   * Will asynchronously verify a group of SignatureSets where each contains a signature signed for
-   * a message by a public key. This function catches invalid input and return false for bad keys or
-   * signatures. Use the Signature.asyncVerifyMultipleSignatures if throwing is desired.
-   */
-  asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean>;
 }
 
 export declare class SecretKey {
@@ -113,7 +88,6 @@ export declare class PublicKey {
   /** @param format Defaults to `PointFormat.compressed` */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
-  multiplyBy(bytes: Uint8Array): PublicKey;
 }
 
 export declare class Signature {
@@ -130,12 +104,6 @@ export declare class Signature {
    * invalid input. Use the free function `verifyMultipleSignatures` if throwing is not desired.
    */
   static verifyMultipleSignatures(sets: SignatureSet[]): boolean;
-  /**
-   * Will asynchronously verify a group of SignatureSets where each contains a signature signed for
-   * a message by a public key. This version of the function will potentially throw errors for
-   * invalid input. Use the free function `verifyMultipleSignatures` if throwing is not desired.
-   */
-  static asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean>;
   /**
    * Will synchronously verify a signature. This version of the function will potentially throw
    * errors for invalid input. Use the free function `verify` if throwing is not desired.
@@ -156,28 +124,8 @@ export declare class Signature {
    */
   verifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): boolean;
   /**
-   * Will asynchronously verify a signature.  This version of the function will potentially throw
-   * errors for invalid input. Use the free function `asyncVerify` if throwing is not desired.
-   */
-  asyncVerify(publicKey: PublicKeyArg, message: Uint8Array): Promise<boolean>;
-  /**
-   * Will asynchronously verify a signature over a message by multiple aggregated keys.  This
-   * version of the function will potentially throw errors for invalid input. Use the free function
-   * `asyncVerifyAggregate` if throwing is not desired.
-   */
-  asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): Promise<boolean>;
-  /**
-   * Will asynchronously verify an aggregated signature over a number of messages each signed by a
-   * different key. This version of the function will potentially throw errors for invalid input.
-   * Use the free function `asyncVerifyMultiple` if throwing is not desired.
-   *
-   * Note: the number of keys and messages must match.
-   */
-  asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): Promise<boolean>;
-  /**
    * @default format - `PointFormat.compressed`
    */
   toBytes(format?: PointFormat): Uint8Array;
   toHex(format?: PointFormat): string;
-  multiplyBy(bytes: Uint8Array): Signature;
 }
