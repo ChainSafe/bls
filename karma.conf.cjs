@@ -23,6 +23,7 @@ module.exports = function (config) {
       resolve: webpackConfig.resolve,
       experiments: webpackConfig.experiments,
       optimization: webpackConfig.optimization,
+      externals: webpackConfig.externals,
       stats: {warnings:false},
     },
     reporters: ["spec"],
