@@ -1,7 +1,6 @@
 import path from "path";
 import {describeDirectorySpecTest, InputType} from "@lodestar/spec-test-util";
 import {hexToBytes} from "../../src/helpers/index.js";
-import {CoordType} from "../../src/types.js";
 import {SPEC_TESTS_DIR} from "../params.js";
 import {describeForAllImplementations} from "../switch.js";
 
@@ -25,7 +24,7 @@ describeForAllImplementations((bls) => {
       const {pubkeys, message, signature} = testCase.data.input;
       try {
         return bls.Signature.fromBytes(hexToBytes(signature)).verifyAggregate(
-          pubkeys.map((hex) => bls.PublicKey.fromBytes(hexToBytes(hex), CoordType.jacobian, true)),
+          pubkeys.map((hex) => bls.PublicKey.fromBytes(hexToBytes(hex), true)),
           hexToBytes(message)
         );
       } catch (e) {

@@ -4,8 +4,8 @@ export function randomMessage(): Uint8Array {
   return randomBytes(32);
 }
 
-export function getN<T>(n: number, getter: () => T): T[] {
-  return Array.from({length: n}, () => getter());
+export function getN<T>(n: number, getter: (i: number) => T): T[] {
+  return Array.from({length: n}, (_, i) => getter(i));
 }
 
 export function range(n: number): number[] {

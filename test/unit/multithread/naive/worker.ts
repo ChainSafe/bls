@@ -1,5 +1,5 @@
 import {expose} from "@chainsafe/threads/worker";
-import {CoordType, Implementation} from "../../../../src/types.js";
+import {Implementation} from "../../../../src/types.js";
 import bls, {init} from "../../../../src/switchable.js";
 
 export type WorkerApi = typeof workerApi;
@@ -7,8 +7,8 @@ export type WorkerApi = typeof workerApi;
 const workerApi = {
   async verify(impl: Implementation, publicKey: Uint8Array, message: Uint8Array, signature: Uint8Array) {
     await init(impl);
-    const pk = bls.PublicKey.fromBytes(publicKey, CoordType.affine);
-    const sig = bls.Signature.fromBytes(signature, CoordType.affine, true);
+    const pk = bls.PublicKey.fromBytes(publicKey);
+    const sig = bls.Signature.fromBytes(signature);
     return sig.verify(pk, message);
   },
   async verifyMultipleAggregateSignatures(
@@ -18,9 +18,9 @@ const workerApi = {
     await init(impl);
     return bls.Signature.verifyMultipleSignatures(
       sets.map((s) => ({
-        publicKey: bls.PublicKey.fromBytes(s.publicKey, CoordType.affine),
+        publicKey: bls.PublicKey.fromBytes(s.publicKey),
         message: s.message,
-        signature: bls.Signature.fromBytes(s.signature, CoordType.affine, true),
+        signature: bls.Signature.fromBytes(s.signature),
       }))
     );
   },

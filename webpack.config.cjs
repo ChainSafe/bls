@@ -29,6 +29,9 @@ module.exports = {
       child_process: false,
     },
   },
+  externals: {
+    "@chainsafe/blst": {}
+  },
   experiments: {
     topLevelAwait: true,
   },

@@ -21,7 +21,7 @@ export function runMultithreadTests(bls: IBls): void {
 
     describe("1 msg, 1 pk", function () {
       const msg = Buffer.from("sample-msg");
-      const sk = bls.SecretKey.fromKeygen(Buffer.alloc(32, 1));
+      const sk = bls.SecretKey.fromKeygen();
       const pk = sk.toPublicKey();
       const sig = sk.sign(msg);
 
@@ -41,7 +41,7 @@ export function runMultithreadTests(bls: IBls): void {
       const sets: {publicKey: PublicKey; message: Uint8Array; signature: Signature}[] = [];
       for (let i = 0; i < n; i++) {
         const message = Buffer.alloc(32, i);
-        const sk = bls.SecretKey.fromKeygen(Buffer.alloc(32, i));
+        const sk = bls.SecretKey.fromKeygen();
         sets.push({message, publicKey: sk.toPublicKey(), signature: sk.sign(message)});
       }
 

@@ -1,6 +1,6 @@
 import {expect} from "chai";
 import {Buffer} from "buffer";
-import {IBls, PointFormat} from "../../src/types.js";
+import {IBls} from "../../src/types.js";
 import {getN, randomMessage} from "../util.js";
 import {hexToBytes} from "../../src/helpers/index.js";
 import {maliciousVerifyMultipleSignaturesData} from "../data/malicious-signature-test-data.js";
@@ -24,7 +24,7 @@ export function runIndexTests(bls: IBls): void {
       );
       let sig;
       try {
-        sig = bls.Signature.fromBytes(POINT_NOT_IN_G2, undefined, true);
+        sig = bls.Signature.fromBytes(POINT_NOT_IN_G2, true);
       } catch {
         /* eslint-disable no-empty */
       }
@@ -215,13 +215,13 @@ export function runIndexTests(bls: IBls): void {
 
     it("Should serialize comp pubkey", () => {
       const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
-      const pkHexComp = sk.toPublicKey().toHex(PointFormat.compressed);
+      const pkHexComp = sk.toPublicKey().toHex();
       expect(pkHexComp).to.equal(pkHexCompExpected, "Wrong pkHexComp");
     });
 
     it("Should serialize uncomp pubkey", () => {
       const sk = bls.SecretKey.fromBytes(hexToBytes(skHex));
-      const pkHexUncomp = sk.toPublicKey().toHex(PointFormat.uncompressed);
+      const pkHexUncomp = sk.toPublicKey().toHex(false);
       expect(pkHexUncomp).to.equal(pkHexUncompExpected, "Wrong pkHexUncomp");
     });
 
