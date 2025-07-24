@@ -10,8 +10,7 @@ export class Signature implements ISignature {
   /** @param type Defaults to `CoordType.affine` */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): Signature {
     // need to hack the CoordType so @chainsafe/blst is not a required dep
-    const sig = blst.Signature.deserialize(bytes, (type as unknown) as blst.CoordType);
-    if (validate) sig.sigValidate();
+    const sig = blst.Signature.fromBytes(bytes, validate);
     return new Signature(sig);
   }
 
@@ -31,26 +30,26 @@ export class Signature implements ISignature {
   static verifyMultipleSignatures(sets: SignatureSet[]): boolean {
     return blst.verifyMultipleAggregateSignatures(
       sets.map((set) => ({
-        message: set.message,
-        publicKey: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
-        signature: Signature.convertToBlstSignatureArg(set.signature),
+        msg: set.message,
+        pk: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
+        sig: Signature.convertToBlstSignatureArg(set.signature),
       }))
     );
   }
 
-  static asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
-    return blst.asyncVerifyMultipleAggregateSignatures(
+  static async asyncVerifyMultipleSignatures(sets: SignatureSet[]): Promise<boolean> {
+    return blst.verifyMultipleAggregateSignatures(
       sets.map((set) => ({
-        message: set.message,
-        publicKey: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
-        signature: Signature.convertToBlstSignatureArg(set.signature),
+        msg: set.message,
+        pk: PublicKey.convertToBlstPublicKeyArg(set.publicKey),
+        sig: Signature.convertToBlstSignatureArg(set.signature),
       }))
     );
   }
 
-  static convertToBlstSignatureArg(signature: SignatureArg): blst.SignatureArg {
+  static convertToBlstSignatureArg(signature: SignatureArg): blst.Signature {
     // Need to cast to blst-native Signature instead of ISignature
-    return signature instanceof Uint8Array ? signature : (signature as Signature).value;
+    return signature instanceof Uint8Array ? blst.Signature.fromBytes(signature) : (signature as Signature).value;
   }
 
   /**
@@ -65,7 +64,9 @@ export class Signature implements ISignature {
     // do not seem to go together. Need to check the spec further.
 
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
-    if (this.value.isInfinity()) {
+    try {
+      this.value.sigValidate(true);
+    } catch {
       throw new ZeroSignatureError();
     }
     return blst.verify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
@@ -84,14 +85,16 @@ export class Signature implements ISignature {
     // do not seem to go together. Need to check the spec further.
 
     // Individual infinity signatures are NOT okay. Aggregated signatures MAY be infinity
-    if (this.value.isInfinity()) {
+    try {
+      this.value.sigValidate(true);
+    } catch {
       throw new ZeroSignatureError();
     }
-    return blst.asyncVerify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
+    return blst.verify(message, PublicKey.convertToBlstPublicKeyArg(publicKey), this.value);
   }
 
   async asyncVerifyAggregate(publicKeys: PublicKeyArg[], message: Uint8Array): Promise<boolean> {
-    return blst.asyncFastAggregateVerify(message, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
+    return blst.fastAggregateVerify(message, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 
   async asyncVerifyMultiple(publicKeys: PublicKeyArg[], messages: Uint8Array[]): Promise<boolean> {
@@ -100,9 +103,9 @@ export class Signature implements ISignature {
 
   toBytes(format?: PointFormat): Uint8Array {
     if (format === PointFormat.uncompressed) {
-      return this.value.serialize(false);
+      return this.value.toBytes(false);
     } else {
-      return this.value.serialize(true);
+      return this.value.toBytes(true);
     }
   }
 
@@ -110,8 +113,8 @@ export class Signature implements ISignature {
     return bytesToHex(this.toBytes(format));
   }
 
-  multiplyBy(bytes: Uint8Array): Signature {
-    return new Signature(this.value.multiplyBy(bytes));
+  multiplyBy(_bytes: Uint8Array): Signature {
+    throw new Error("Not implemented");
   }
 
   private aggregateVerify<T extends false>(publicKeys: PublicKeyArg[], messages: Uint8Array[], runAsync: T): boolean;
@@ -143,8 +146,7 @@ export class Signature implements ISignature {
       }
     }
 
-    return runAsync
-      ? blst.asyncAggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value)
-      : blst.aggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
+    // blst doesn't expose an async version of aggregateVerify, so we use the sync one
+    return blst.aggregateVerify(messages, publicKeys.map(PublicKey.convertToBlstPublicKeyArg), this.value);
   }
 }

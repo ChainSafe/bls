@@ -9,8 +9,7 @@ export class PublicKey implements IPublicKey {
   /** @param type Defaults to `CoordType.jacobian` */
   static fromBytes(bytes: Uint8Array, type?: CoordType, validate = true): PublicKey {
     // need to hack the CoordType so @chainsafe/blst is not a required dep
-    const pk = blst.PublicKey.deserialize(bytes, (type as unknown) as blst.CoordType);
-    if (validate) pk.keyValidate();
+    const pk = blst.PublicKey.fromBytes(bytes, validate);
     return new PublicKey(pk);
   }
 
@@ -27,9 +26,9 @@ export class PublicKey implements IPublicKey {
     return new PublicKey(pk);
   }
 
-  static convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKeyArg {
+  static convertToBlstPublicKeyArg(publicKey: PublicKeyArg): blst.PublicKey {
     // need to cast to blst-native key instead of IPublicKey
-    return publicKey instanceof Uint8Array ? publicKey : (publicKey as PublicKey).value;
+    return publicKey instanceof Uint8Array ? blst.PublicKey.fromBytes(publicKey) : (publicKey as PublicKey).value;
   }
 
   /**
@@ -41,9 +40,9 @@ export class PublicKey implements IPublicKey {
 
   toBytes(format?: PointFormat): Uint8Array {
     if (format === PointFormat.uncompressed) {
-      return this.value.serialize(false);
+      return this.value.toBytes(false);
     } else {
-      return this.value.serialize(true);
+      return this.value.toBytes(true);
     }
   }
 
@@ -51,7 +50,7 @@ export class PublicKey implements IPublicKey {
     return bytesToHex(this.toBytes(format));
   }
 
-  multiplyBy(bytes: Uint8Array): PublicKey {
-    return new PublicKey(this.value.multiplyBy(bytes));
+  multiplyBy(_bytes: Uint8Array): PublicKey {
+    throw new Error("Not implemented");
   }
 }
