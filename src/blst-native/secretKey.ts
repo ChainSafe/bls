@@ -16,7 +16,7 @@ export class SecretKey implements ISecretKey {
       throw new ZeroSecretKeyError();
     }
 
-    const sk = blst.SecretKey.deserialize(bytes);
+    const sk = blst.SecretKey.fromBytes(bytes);
     return new SecretKey(sk);
   }
 
@@ -41,7 +41,7 @@ export class SecretKey implements ISecretKey {
   }
 
   toBytes(): Uint8Array {
-    return this.value.serialize();
+    return this.value.toBytes();
   }
 
   toHex(): string {
