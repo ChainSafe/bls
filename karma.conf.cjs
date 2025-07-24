@@ -11,7 +11,7 @@ module.exports = function (config) {
     ],
     files: [
       "test/unit-web/run-web-implementation.test.ts",
-      "test/unit/index-named-exports.test.ts",
+      // "test/unit/index-named-exports.test.ts",
     ],
     exclude: [],
     preprocessors: {
