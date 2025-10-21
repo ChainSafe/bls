@@ -5,13 +5,17 @@ on:
     branches:
       - 'master'
 
+permissions:
+  id-token: write # Required for OIDC
+  contents: read
+
 jobs:
   tag:
     name: Check and Tag
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Create tag
         id: tag
         uses: butlerlogic/action-autotag@1.1.2
@@ -31,18 +35,18 @@ jobs:
     if: needs.tag.outputs.tag != ''
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
       - name: Setup Nodejs
-        uses: actions/setup-node@v1
+        uses: actions/setup-node@v4
         with:
-          node-version: "20.x"
+          node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
       - name: Install dependencies
         run: yarn install --non-interactive --frozen-lockfile
       - name: Build
         run: yarn run build
       - name: Publish to npm registry
-        run: yarn publish --no-git-tag-version --no-commit-hooks --non-interactive
+        run: npm publish --access public
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create Release
