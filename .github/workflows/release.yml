@@ -41,14 +41,14 @@ jobs:
         with:
           node-version: "24.x"
           registry-url: "https://registry.npmjs.org"
+      - name: Upgrade npm for OIDC
+        run: npm i -g npm@^11.5.1
       - name: Install dependencies
         run: yarn install --non-interactive --frozen-lockfile
       - name: Build
         run: yarn run build
       - name: Publish to npm registry
         run: npm publish --access public
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
